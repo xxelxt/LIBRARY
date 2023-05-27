@@ -17,7 +17,6 @@ public class Books extends Publication {
 		this.Publisher = Publisher;
 	}
 
-
 	public String getAuthor() {
 		return this.Author;
 	}
