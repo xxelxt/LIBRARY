@@ -49,7 +49,7 @@ End If
 
 Set shell = CreateObject("WScript.Shell")
 commandmysql = Q(path & "\mysql") & " -u root -p" & password & " -e " & Q("CREATE DATABASE IF NOT EXISTS library")
-commanddump = Q(path & "\mysqldump") & " -u root -p" & password & " library < " & Q(scriptPath & "\dump.sql")
+commanddump = Q(path & "\mysql") & " -u root -p" & password & " library < " & Q(scriptPath & "\dump.sql")
 
 ' Run the command in CMD
 shell.Run "%comspec% /c " & Q(commandmysql), 1, True
