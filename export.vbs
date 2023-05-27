@@ -42,7 +42,7 @@ Function Q(s)
 End Function
 
 Set shell = CreateObject("WScript.Shell")
-commanddump = Q(path & "\mysqldump") & " -u root -p" & password & " library > " & Q(scriptPath & "\dump.sql")
+commanddump = Q(path & "\mysqldump") & " -u root -p" & password & " --add-drop-database --databases library > " & Q(scriptPath & "\dump.sql")
 
 ' Run the command in CMD
 shell.Run "%comspec% /c " & Q(commanddump), 1, True
