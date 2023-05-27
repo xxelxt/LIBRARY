@@ -2,13 +2,13 @@ package library.user;
 
 public class Student extends Person {
 	private String StudentID;
-	private String ClaName;
+	private String ClassName;
 	private double Fine;
 
 	public Student(String Username, String Password, String Name, String Gender, String Address, String Phone, String StudentID, String Class, double Fine) {
 		super(Username, Password, Name, Gender, Address, Phone);
 		this.StudentID = StudentID;
-		this.ClaName = Class;
+		this.ClassName = ClassName;
 		this.Fine = Fine;
 	}
 
@@ -19,13 +19,17 @@ public class Student extends Person {
 	public void setStudentID(String StudentID) {
 		this.StudentID = StudentID;
 	}
+	
+	
+	
+	
 
 	public String getClassName() {
-		return this.ClaName;
+		return this.ClassName;
 	}
 
 	public void setClassName(String ClassName) {
-		this.ClaName = ClassName;
+		this.ClassName = ClassName;
 	}
 
 	public double getFine() {
@@ -35,5 +39,5 @@ public class Student extends Person {
 	public void setFine(double Fine) {
 		this.Fine = Fine;
 	}
-
+	
 }
