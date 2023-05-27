@@ -1,13 +1,13 @@
-`C:\Program Files\MySQL\MySQL Server 8.0\bin`
+Open terminal here: `C:\Program Files\MySQL\MySQL Server 8.0\bin`
 
 Import MySQL:
 
 ```
-./mysqldump -u root -p library < dump.sql
+mysqldump -u root -p library < dump.sql
 ```
 
 Export MySQL
 
 ```
-./mysqldump -u root -p library > dump.sql
+mysqldump -u root -p library > dump.sql
 ```
