@@ -7,6 +7,13 @@ Set fso = CreateObject("Scripting.FileSystemObject")
 scriptPath = fso.GetParentFolderName(WScript.ScriptFullName)
 inputFile = fso.BuildPath(scriptPath, "CONFIG.txt")
 
+If NOT (fso.FileExists(inputFile)) Then
+	Set OutPutFile = fso.OpenTextFile(inputFile, 2, True)
+	temppass = InputBox("Password cho MySQL:")
+	OutPutFile.Write("password = " & temppass & vbCrLf & "path = C:\Program Files\MySQL\MySQL Server 8.0\bin")
+	OutPutFile.close()
+End If
+
 ' Read the file content
 fileContent = fso.OpenTextFile(inputFile).ReadAll
 
@@ -38,4 +45,4 @@ Set shell = CreateObject("WScript.Shell")
 commanddump = Q(path & "\mysqldump") & " -u root -p" & password & " library > " & Q(scriptPath & "\dump.sql")
 
 ' Run the command in CMD
-shell.Run "%comspec% /c " & Q(commanddump), 1, True
+shell.Run "%comspec% /k " & Q(commanddump), 1, True
