@@ -1,0 +1,2 @@
+password = q12Q!@
+path = D:\MySQL\MySQL Server 8.0\bin
