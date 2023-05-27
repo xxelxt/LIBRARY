@@ -11,32 +11,10 @@ public class Student extends Person {
 		this.ClassName = ClassName;
 		this.Fine = Fine;
 	}
-	
-	
-	
 
 	public String getStudentID() {
 		return this.StudentID;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 
 	public void setStudentID(String StudentID) {
 		this.StudentID = StudentID;
