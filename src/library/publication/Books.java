@@ -5,15 +5,15 @@ import java.sql.Date;
 public class Books extends Publication {
 	
 	private String Author;
-	private String Genre;
-	private int ReIssue;
+	private String Category;
+	private int Reissue;
 	private String Publisher;
 
-	public Books(int PublicationID, String Title, Date ReleaseDate, String Country, int Quantity, String Author, String Genre, int ReIssue, String Publisher) {
+	public Books(int PublicationID, String Title, Date ReleaseDate, String Country, int Quantity, String Author, String Category, int Reissue, String Publisher) {
 		super(PublicationID, Title, ReleaseDate, Country, Quantity);
 		this.Author = Author;
-		this.Genre = Genre;
-		this.ReIssue = ReIssue;
+		this.Category = Category;
+		this.Reissue = Reissue;
 		this.Publisher = Publisher;
 	}
 
@@ -26,20 +26,20 @@ public class Books extends Publication {
 		this.Author = Author;
 	}
 
-	public String getGenre() {
-		return this.Genre;
+	public String getCategory() {
+		return this.Category;
 	}
 
-	public void setGenre(String Genre) {
-		this.Genre = Genre;
+	public void setCategory(String Category) {
+		this.Category = Category;
 	}
 
-	public int getReIssue() {
-		return this.ReIssue;
+	public int getReissue() {
+		return this.Reissue;
 	}
 
-	public void setReIssue(int ReIssue) {
-		this.ReIssue = ReIssue;
+	public void setReIssue(int Reissue) {
+		this.Reissue = Reissue;
 	}
 
 	public String getPublisher() {
