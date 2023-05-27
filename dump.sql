@@ -37,6 +37,33 @@ LOCK TABLES `book` WRITE;
 INSERT INTO `book` VALUES (1,'AAA'),(2,'CCCC'),(3,'AAA'),(4,'BBBA'),(5,'123456');
 /*!40000 ALTER TABLE `book` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `publication`
+--
+
+DROP TABLE IF EXISTS `publication`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `publication` (
+  `PublicationID` varchar(20) NOT NULL,
+  `Title` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+  `ReleaseDate` date DEFAULT NULL,
+  `Country` varchar(20) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
+  `Quantity` int DEFAULT NULL,
+  PRIMARY KEY (`PublicationID`),
+  CONSTRAINT `CHK_Quantity` CHECK ((`Quantity` >= 0))
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `publication`
+--
+
+LOCK TABLES `publication` WRITE;
+/*!40000 ALTER TABLE `publication` DISABLE KEYS */;
+/*!40000 ALTER TABLE `publication` ENABLE KEYS */;
+UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -47,4 +74,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-05-27 17:07:33
+-- Dump completed on 2023-05-27 17:22:25
