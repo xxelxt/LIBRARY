@@ -20,10 +20,6 @@ public class Student extends Person {
 		this.StudentID = StudentID;
 	}
 	
-	
-	
-	
-
 	public String getClassName() {
 		return this.ClassName;
 	}
@@ -39,5 +35,10 @@ public class Student extends Person {
 	public void setFine(double Fine) {
 		this.Fine = Fine;
 	}
+	
+	
+	
+	
+	/* commented on line 42 27/5 */
 	
 }
