@@ -35,9 +35,4 @@ public class Student extends Person {
 		this.Fine = Fine;
 	}
 	
-	
-	
-	
-	/* commented on line 42 27/5 */
-	
 }
