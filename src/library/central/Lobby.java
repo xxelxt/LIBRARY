@@ -16,5 +16,4 @@ public class Lobby {
     public static ArrayList<Manager> ManagerList;
     public static ArrayList<Borrow> BorrowList;
 
-    
 }

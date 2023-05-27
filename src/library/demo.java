@@ -5,7 +5,7 @@ import java.sql.*;
 public class demo {
 	private static String URL = "jdbc:mysql://localhost/library";
 	private static String USER_NAME = "root";
-	private static String PASSWORD = "wonbunsu7";
+	private static String PASSWORD = "b0rderless";
 	
 	public static void main(String args[]) {
 		try {
@@ -36,5 +36,4 @@ public class demo {
 		}
 		return conn;
 	}
-
 }
