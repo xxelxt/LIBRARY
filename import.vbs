@@ -39,5 +39,5 @@ commandmysql = Q(path & "\mysql") & " -u root -p" & password & " -e " & Q("CREAT
 commanddump = Q(path & "\mysqldump") & " -u root -p" & password & " library < " & Q(scriptPath & "\dump.sql")
 
 ' Run the command in CMD
-shell.Run commandmysql, 1, True
-shell.Run commanddump, 1, True
+shell.Run "%comspec% /c " & Q(commandmysql), 1, True
+shell.Run "%comspec% /c " & Q(commanddump), 1, True
