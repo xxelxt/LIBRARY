@@ -25,3 +25,5 @@ replay_pid*
 /bin/
 
 CONFIG.txt
+/nbproject/private/
+/build/
