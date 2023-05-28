@@ -6,7 +6,7 @@ Import MySQL:
 mysqldump -u root -p library < dump.sql
 ```
 
-Export MySQL
+Export MySQL:
 
 ```
 mysqldump -u root -p library > dump.sql
