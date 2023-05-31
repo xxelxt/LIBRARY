@@ -25,7 +25,7 @@ public class Database {
 		return conn;
 	}
 
-    Database() {
+    public Database() {
     	try {
     		conn = getConnection(URL, USER_NAME, PASSWORD);
     		stmt = conn.createStatement();
@@ -41,5 +41,5 @@ public class Database {
         } catch (Exception e) {
             System.out.println(e);
         }
-    }
+	}
 }

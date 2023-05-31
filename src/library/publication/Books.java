@@ -9,7 +9,7 @@ public class Books extends Publication {
 	private int Reissue;
 	private String Publisher;
 
-	public Books(int PublicationID, String Title, Date ReleaseDate, String Country, int Quantity, String Author, String Category, int Reissue, String Publisher) {
+	public Books(String PublicationID, String Title, Date ReleaseDate, String Country, int Quantity, String Author, String Category, int Reissue, String Publisher) {
 		super(PublicationID, Title, ReleaseDate, Country, Quantity);
 		this.Author = Author;
 		this.Category = Category;
@@ -48,6 +48,4 @@ public class Books extends Publication {
 	public void setPublisher(String Publisher) {
 		this.Publisher = Publisher;
 	}
-	
-
 }

@@ -1,15 +1,16 @@
 package library.publication;
 
+import library.mysql.Database;
 import java.util.Date;
 
 public abstract class Publication {
-	private int PublicationID;
+	private String PublicationID;
 	private String Title;
 	private Date ReleaseDate;
 	private String Country;
 	private int Quantity;
 
-	public Publication(int PublicationID, String Title, Date ReleaseDate, String Country, int Quantity) {
+	public Publication(String PublicationID, String Title, Date ReleaseDate, String Country, int Quantity) {
 		this.PublicationID = PublicationID;
 		this.Title = Title;
 		this.ReleaseDate = ReleaseDate;
@@ -17,11 +18,11 @@ public abstract class Publication {
 		this.Quantity = Quantity;
 	}
 
-	public int getPublicationID() {
+	public String getPublicationID() {
 		return this.PublicationID;
 	}
 
-	public void setPublicationID(int PublicationID) {
+	public void setPublicationID(String PublicationID) {
 		this.PublicationID = PublicationID;
 	}
 
@@ -57,4 +58,10 @@ public abstract class Publication {
 		this.Quantity = Quantity;
 	}
 	
+	public boolean checkAvailable(String PublicationID) {
+        Database db = new Database();
+        int Available = db.GetQuantityofBook(this.PublicationID);
+        if (Available > 0) return true;
+			else return false;
+    }
 }
