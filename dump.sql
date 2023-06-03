@@ -26,6 +26,31 @@ CREATE DATABASE /*!32312 IF NOT EXISTS*/ `library` /*!40100 DEFAULT CHARACTER SE
 USE `library`;
 
 --
+-- Table structure for table `authors`
+--
+
+DROP TABLE IF EXISTS `authors`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `authors` (
+  `AuthorID` char(10) NOT NULL,
+  `AuthorName` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+  `AuthorGender` bit(1) DEFAULT NULL,
+  PRIMARY KEY (`AuthorID`),
+  KEY `AuthorName` (`AuthorName`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `authors`
+--
+
+LOCK TABLES `authors` WRITE;
+/*!40000 ALTER TABLE `authors` DISABLE KEYS */;
+/*!40000 ALTER TABLE `authors` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `bookauthors`
 --
 
@@ -33,10 +58,12 @@ DROP TABLE IF EXISTS `bookauthors`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `bookauthors` (
-  `BookID` char(20) NOT NULL,
-  `Author` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
-  PRIMARY KEY (`BookID`,`Author`),
-  CONSTRAINT `bookauthors_ibfk_1` FOREIGN KEY (`BookID`) REFERENCES `books` (`BookID`)
+  `BookID` char(20) DEFAULT NULL,
+  `AuthorID` char(10) DEFAULT NULL,
+  KEY `BookID` (`BookID`),
+  KEY `AuthorID` (`AuthorID`),
+  CONSTRAINT `bookauthors_ibfk_1` FOREIGN KEY (`BookID`) REFERENCES `books` (`BookID`),
+  CONSTRAINT `bookauthors_ibfk_2` FOREIGN KEY (`AuthorID`) REFERENCES `authors` (`AuthorID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -62,8 +89,8 @@ CREATE TABLE `books` (
   `Reissue` tinyint DEFAULT NULL,
   `PublisherID` char(10) DEFAULT NULL,
   PRIMARY KEY (`BookID`),
-  KEY `Category` (`Category`),
   KEY `PublisherID` (`PublisherID`),
+  KEY `Category` (`Category`),
   CONSTRAINT `books_ibfk_1` FOREIGN KEY (`BookID`) REFERENCES `publications` (`PublicationID`),
   CONSTRAINT `books_ibfk_2` FOREIGN KEY (`PublisherID`) REFERENCES `publishers` (`PublisherID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -92,9 +119,14 @@ CREATE TABLE `borrow` (
   `DueDate` date NOT NULL,
   `ReturnedDate` date DEFAULT NULL,
   `FineStatus` bit(1) NOT NULL,
+  `PublicationID` char(20) DEFAULT NULL,
+  `BorrowQuantity` smallint NOT NULL,
+  `ReturnedStatus` varchar(20) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
   PRIMARY KEY (`BorrowID`),
+  KEY `PublicationID` (`PublicationID`),
   KEY `StudentID` (`StudentID`),
-  CONSTRAINT `borrow_ibfk_1` FOREIGN KEY (`StudentID`) REFERENCES `students` (`StudentID`)
+  CONSTRAINT `borrow_ibfk_1` FOREIGN KEY (`StudentID`) REFERENCES `students` (`StudentID`),
+  CONSTRAINT `borrow_ibfk_2` FOREIGN KEY (`PublicationID`) REFERENCES `publications` (`PublicationID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -105,34 +137,6 @@ CREATE TABLE `borrow` (
 LOCK TABLES `borrow` WRITE;
 /*!40000 ALTER TABLE `borrow` DISABLE KEYS */;
 /*!40000 ALTER TABLE `borrow` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `borrowdetails`
---
-
-DROP TABLE IF EXISTS `borrowdetails`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `borrowdetails` (
-  `BorrowID` char(10) DEFAULT NULL,
-  `PublicationID` char(20) DEFAULT NULL,
-  `BorrowQuantity` smallint NOT NULL,
-  `ReturnedStatus` varchar(20) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
-  KEY `BorrowID` (`BorrowID`),
-  KEY `PublicationID` (`PublicationID`),
-  CONSTRAINT `borrowdetails_ibfk_1` FOREIGN KEY (`BorrowID`) REFERENCES `borrow` (`BorrowID`),
-  CONSTRAINT `borrowdetails_ibfk_2` FOREIGN KEY (`PublicationID`) REFERENCES `publications` (`PublicationID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `borrowdetails`
---
-
-LOCK TABLES `borrowdetails` WRITE;
-/*!40000 ALTER TABLE `borrowdetails` DISABLE KEYS */;
-/*!40000 ALTER TABLE `borrowdetails` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -370,4 +374,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-06-03 17:11:38
+-- Dump completed on 2023-06-03 18:01:25
