@@ -628,6 +628,232 @@ public class Database {
         return true;
     }
 
+    public ArrayList<Books> searchBookbyTitle(String title) {
+        ArrayList<Books> resultList = new ArrayList<>();
+    
+        try {
+            String sql = "SELECT b.BookID, p.Title, GROUP_CONCAT(a.AuthorName) as Authors, p.ReleaseDate " +
+                         "FROM Books b " +
+                         "JOIN Publications p ON b.BookID = p.PublicationID " +
+                         "JOIN BookAuthors ba ON b.BookID = ba.BookID " +
+                         "JOIN Authors a ON ba.AuthorID = a.AuthorID " +
+                         "WHERE p.Title LIKE ? " +
+                         "GROUP BY b.BookID, p.Title, p.ReleaseDate";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, "%" + title + "%");
+    
+            ResultSet rs = pstmt.executeQuery();
+    
+            while (rs.next()) {
+                String bookId = rs.getString(1);
+                String bookTitle = rs.getString(2);
+                ArrayList<String> authors = getBookAuthor(bookId);
+                String releaseDate = rs.getString(4);
+    
+                Books result = new Books(bookId, bookTitle, authors, releaseDate);
+                resultList.add(result);
+            }
+    
+            rs.close();
+            pstmt.close();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    
+        return resultList;
+    }
+
+    public ArrayList<Books> searchBookbyCategory(String category) {
+        ArrayList<Books> resultList = new ArrayList<>();
+        
+        try {
+            String sql = "SELECT b.BookID, p.Title, GROUP_CONCAT(a.AuthorName) as Authors, p.ReleaseDate " +
+                         "FROM Books b " +
+                         "JOIN Publications p ON b.BookID = p.PublicationID " +
+                         "JOIN BookAuthors ba ON b.BookID = ba.BookID " +
+                         "JOIN Authors a ON ba.AuthorID = a.AuthorID " +
+                         "WHERE b.Category LIKE ? " + 
+                         "GROUP BY b.BookID, p.Title, p.ReleaseDate";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, "%" + category + "%");
+    
+            ResultSet rs = pstmt.executeQuery();
+    
+            while (rs.next()) {
+                String bookId = rs.getString(1);
+                String bookTitle = rs.getString(2);
+                ArrayList<String> authors = getBookAuthor(bookId);
+                String releaseDate = rs.getString(4);
+    
+                Books result = new Books(bookId, bookTitle, authors, releaseDate);
+                resultList.add(result);
+            }
+    
+            rs.close();
+            pstmt.close();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    
+        return resultList;
+    }
+
+    public ArrayList<Books> searchBookbyAuthor(String authorName) {
+        ArrayList<Books> resultList = new ArrayList<>();
+        
+        try {
+            String sql = "SELECT b.BookID, p.Title, p.ReleaseDate " +
+                         "FROM Books b " +
+                         "JOIN Publications p ON b.BookID = p.PublicationID " +
+                         "JOIN BookAuthors ba ON b.BookID = ba.BookID " +
+                         "JOIN Authors a ON ba.AuthorID = a.AuthorID " +
+                         "WHERE a.AuthorName LIKE ?";
+                         
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, "%" + authorName + "%");
+        
+            ResultSet rs = pstmt.executeQuery();
+        
+            while (rs.next()) {
+                String bookId = rs.getString(1);
+                String bookTitle = rs.getString(2);
+                ArrayList<String> authors = getBookAuthor(bookId);
+                String releaseDate = rs.getString(4);
+    
+                Books result = new Books(bookId, bookTitle, authors, releaseDate);
+                resultList.add(result);
+            }
+        
+            rs.close();
+            pstmt.close();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        
+        return resultList;
+    }
+
+    public ArrayList<PrintMedia> searchPrintMediabyTitle(String title) {
+        ArrayList<PrintMedia> resultList = new ArrayList<>();
+    
+        try {
+            String sql = "SELECT p.PublicationID, p.Title, p.ReleaseDate, pm.ReleaseNumber, pm.PrintType " +
+                         "FROM Publications p " +
+                         "JOIN PrintMedia pm ON p.PublicationID = pm.PrintMediaID " +
+                         "WHERE p.Title LIKE ?";
+            
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, "%" + title + "%");
+            
+            ResultSet rs = pstmt.executeQuery();
+            
+            while (rs.next()) {
+                String publicationId = rs.getString(1);
+                String publicationTitle = rs.getString(2);
+                Date releaseDate = rs.getDate(3);
+                int releaseNumber = rs.getInt(4);
+                String printType = rs.getString(5);
+                
+                PrintMedia printMedia = new PrintMedia(publicationId, publicationTitle, releaseDate, releaseNumber, printType);
+                resultList.add(printMedia);
+            }
+            
+            rs.close();
+            pstmt.close();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        
+        return resultList;
+    }
+
+    public ArrayList<PrintMedia> searchPrintMediabyPrintType(String type) {
+        ArrayList<PrintMedia> resultList = new ArrayList<>();
+    
+        try {
+            String sql = "SELECT p.PublicationID, p.Title, p.ReleaseDate, pm.ReleaseNumber, pm.PrintType " +
+                         "FROM Publications p " +
+                         "JOIN PrintMedia pm ON p.PublicationID = pm.PrintMediaID " +
+                         "WHERE pm.PrintType LIKE ?";
+            
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, "%" + type + "%");
+            
+            ResultSet rs = pstmt.executeQuery();
+            
+            while (rs.next()) {
+                String publicationId = rs.getString(1);
+                String publicationTitle = rs.getString(2);
+                Date releaseDate = rs.getDate(3);
+                int releaseNumber = rs.getInt(4);
+                String printType = rs.getString(5);
+                
+                PrintMedia printMedia = new PrintMedia(publicationId, publicationTitle, releaseDate, releaseNumber, printType);
+                resultList.add(printMedia);
+            }
+            
+            rs.close();
+            pstmt.close();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        
+        return resultList;
+    }
+    
+    ////
+
+    public ArrayList<Books> searchBookbyCategories(List<String> categories) {
+        ArrayList<Books> resultList = new ArrayList<>();
+        
+        try {
+            String sql = "SELECT b.BookID, p.Title, GROUP_CONCAT(a.AuthorName) AS Authors, p.ReleaseDate " +
+                         "FROM Books b " +
+                         "JOIN Publications p ON b.BookID = p.PublicationID " +
+                         "JOIN BookAuthors ba ON b.BookID = ba.BookID " +
+                         "JOIN Authors a ON ba.AuthorID = a.AuthorID " +
+                         "WHERE b.Category IN (";
+            
+            // Create a placeholder for each category
+            StringBuilder categoryPlaceholders = new StringBuilder();
+            for (int i = 0; i < categories.size(); i++) {
+                categoryPlaceholders.append("?");
+                if (i < categories.size() - 1) {
+                    categoryPlaceholders.append(",");
+                }
+            }
+            
+            sql += categoryPlaceholders.toString() + ") " +
+                   "GROUP BY b.BookID, p.Title, p.ReleaseDate";
+            
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            
+            // Set the category values in the prepared statement
+            for (int i = 0; i < categories.size(); i++) {
+                pstmt.setString(i + 1, categories.get(i));
+            }
+            
+            ResultSet rs = pstmt.executeQuery();
+            
+            while (rs.next()) {
+                String bookId = rs.getString("BookID");
+                String bookTitle = rs.getString("Title");
+                ArrayList<String> authors = getBookAuthor(bookId);
+                String releaseDate = rs.getString("ReleaseDate");
+        
+                Books result = new Books(bookId, bookTitle, authors, releaseDate);
+                resultList.add(result);
+            }
+        
+            rs.close();
+            pstmt.close();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        
+        return resultList;
+    }
+    
     // Students
     
     public Student getStudentbyID(String studentId) {
@@ -858,232 +1084,4 @@ public class Database {
         return true;
     }
 
-    public ArrayList<Books> searchBookbyTitle(String title) {
-        ArrayList<Books> resultList = new ArrayList<>();
-    
-        try {
-            String sql = "SELECT b.BookID, p.Title, GROUP_CONCAT(a.AuthorName) as Authors, p.ReleaseDate " +
-                         "FROM Books b " +
-                         "JOIN Publications p ON b.BookID = p.PublicationID " +
-                         "JOIN BookAuthors ba ON b.BookID = ba.BookID " +
-                         "JOIN Authors a ON ba.AuthorID = a.AuthorID " +
-                         "WHERE p.Title LIKE ? " +
-                         "GROUP BY b.BookID, p.Title, p.ReleaseDate";
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, "%" + title + "%");
-    
-            ResultSet rs = pstmt.executeQuery();
-    
-            while (rs.next()) {
-                String bookId = rs.getString(1);
-                String bookTitle = rs.getString(2);
-                ArrayList<String> authors = getBookAuthor(bookId);
-                String releaseDate = rs.getString(4);
-    
-                Books result = new Books(bookId, bookTitle, authors, releaseDate);
-                resultList.add(result);
-            }
-    
-            rs.close();
-            pstmt.close();
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-    
-        return resultList;
-    }
-
-    public ArrayList<Books> searchBookbyCategory(String category) {
-        ArrayList<Books> resultList = new ArrayList<>();
-        
-        try {
-            String sql = "SELECT b.BookID, p.Title, GROUP_CONCAT(a.AuthorName) as Authors, p.ReleaseDate " +
-                         "FROM Books b " +
-                         "JOIN Publications p ON b.BookID = p.PublicationID " +
-                         "JOIN BookAuthors ba ON b.BookID = ba.BookID " +
-                         "JOIN Authors a ON ba.AuthorID = a.AuthorID " +
-                         "WHERE b.Category LIKE ? " + 
-                         "GROUP BY b.BookID, p.Title, p.ReleaseDate";
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, "%" + category + "%");
-    
-            ResultSet rs = pstmt.executeQuery();
-    
-            while (rs.next()) {
-                String bookId = rs.getString(1);
-                String bookTitle = rs.getString(2);
-                ArrayList<String> authors = getBookAuthor(bookId);
-                String releaseDate = rs.getString(4);
-    
-                Books result = new Books(bookId, bookTitle, authors, releaseDate);
-                resultList.add(result);
-            }
-    
-            rs.close();
-            pstmt.close();
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-    
-        return resultList;
-    }
-
-    public ArrayList<Books> searchBookbyAuthor(String authorName) {
-        ArrayList<Books> resultList = new ArrayList<>();
-        
-        try {
-            String sql = "SELECT b.BookID, p.Title, p.ReleaseDate " +
-                         "FROM Books b " +
-                         "JOIN Publications p ON b.BookID = p.PublicationID " +
-                         "JOIN BookAuthors ba ON b.BookID = ba.BookID " +
-                         "JOIN Authors a ON ba.AuthorID = a.AuthorID " +
-                         "WHERE a.AuthorName LIKE ?";
-                         
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, "%" + authorName + "%");
-        
-            ResultSet rs = pstmt.executeQuery();
-        
-            while (rs.next()) {
-                String bookId = rs.getString(1);
-                String bookTitle = rs.getString(2);
-                ArrayList<String> authors = getBookAuthor(bookId);
-                String releaseDate = rs.getString(4);
-    
-                Books result = new Books(bookId, bookTitle, authors, releaseDate);
-                resultList.add(result);
-            }
-        
-            rs.close();
-            pstmt.close();
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-        
-        return resultList;
-    }
-
-    public ArrayList<PrintMedia> searchPrintMediabyTitle(String title) {
-        ArrayList<PrintMedia> resultList = new ArrayList<>();
-    
-        try {
-            String sql = "SELECT p.PublicationID, p.Title, p.ReleaseDate, pm.ReleaseNumber, pm.PrintType " +
-                         "FROM Publications p " +
-                         "JOIN PrintMedia pm ON p.PublicationID = pm.PrintMediaID " +
-                         "WHERE p.Title LIKE ?";
-            
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, "%" + title + "%");
-            
-            ResultSet rs = pstmt.executeQuery();
-            
-            while (rs.next()) {
-                String publicationId = rs.getString(1);
-                String publicationTitle = rs.getString(2);
-                Date releaseDate = rs.getDate(3);
-                int releaseNumber = rs.getInt(4);
-                String printType = rs.getString(5);
-                
-                PrintMedia printMedia = new PrintMedia(publicationId, publicationTitle, releaseDate, releaseNumber, printType);
-                resultList.add(printMedia);
-            }
-            
-            rs.close();
-            pstmt.close();
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-        
-        return resultList;
-    }
-
-    public ArrayList<PrintMedia> searchPrintMediabyPrintType(String type) {
-        ArrayList<PrintMedia> resultList = new ArrayList<>();
-    
-        try {
-            String sql = "SELECT p.PublicationID, p.Title, p.ReleaseDate, pm.ReleaseNumber, pm.PrintType " +
-                         "FROM Publications p " +
-                         "JOIN PrintMedia pm ON p.PublicationID = pm.PrintMediaID " +
-                         "WHERE pm.PrintType LIKE ?";
-            
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, "%" + type + "%");
-            
-            ResultSet rs = pstmt.executeQuery();
-            
-            while (rs.next()) {
-                String publicationId = rs.getString(1);
-                String publicationTitle = rs.getString(2);
-                Date releaseDate = rs.getDate(3);
-                int releaseNumber = rs.getInt(4);
-                String printType = rs.getString(5);
-                
-                PrintMedia printMedia = new PrintMedia(publicationId, publicationTitle, releaseDate, releaseNumber, printType);
-                resultList.add(printMedia);
-            }
-            
-            rs.close();
-            pstmt.close();
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-        
-        return resultList;
-    }
-    
-    ////
-
-    public ArrayList<Books> searchBookbyCategories(List<String> categories) {
-        ArrayList<Books> resultList = new ArrayList<>();
-        
-        try {
-            String sql = "SELECT b.BookID, p.Title, GROUP_CONCAT(a.AuthorName) AS Authors, p.ReleaseDate " +
-                         "FROM Books b " +
-                         "JOIN Publications p ON b.BookID = p.PublicationID " +
-                         "JOIN BookAuthors ba ON b.BookID = ba.BookID " +
-                         "JOIN Authors a ON ba.AuthorID = a.AuthorID " +
-                         "WHERE b.Category IN (";
-            
-            // Create a placeholder for each category
-            StringBuilder categoryPlaceholders = new StringBuilder();
-            for (int i = 0; i < categories.size(); i++) {
-                categoryPlaceholders.append("?");
-                if (i < categories.size() - 1) {
-                    categoryPlaceholders.append(",");
-                }
-            }
-            
-            sql += categoryPlaceholders.toString() + ") " +
-                   "GROUP BY b.BookID, p.Title, p.ReleaseDate";
-            
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            
-            // Set the category values in the prepared statement
-            for (int i = 0; i < categories.size(); i++) {
-                pstmt.setString(i + 1, categories.get(i));
-            }
-            
-            ResultSet rs = pstmt.executeQuery();
-            
-            while (rs.next()) {
-                String bookId = rs.getString("BookID");
-                String bookTitle = rs.getString("Title");
-                ArrayList<String> authors = getBookAuthor(bookId);
-                String releaseDate = rs.getString("ReleaseDate");
-        
-                Books result = new Books(bookId, bookTitle, authors, releaseDate);
-                resultList.add(result);
-            }
-        
-            rs.close();
-            pstmt.close();
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-        
-        return resultList;
-    }
-    
-    
-    
 }
