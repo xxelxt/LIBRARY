@@ -46,8 +46,37 @@ public class Database {
         }
     }
 
+    ArrayList<String> GetAuthorByBookID(String BookID) {
+        ArrayList<String> authors = new ArrayList<>();
+        
+        try {
+            String sql = "SELECT a.AuthorName FROM Authors a " +
+                    "INNER JOIN BookAuthors ba ON a.AuthorID = ba.AuthorID " +
+                    "INNER JOIN Books b ON ba.BookID = b.BookID " +
+                    "WHERE b.BookID = ?";
+            
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, BookID);
+            
+            ResultSet rs = pstmt.executeQuery();
+            
+            while (rs.next()) {
+                String authorName = rs.getString(1);
+                authors.add(authorName);
+            }
+            
+            rs.close();
+            pstmt.close();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        
+        return authors;
+    }
+
     Books GetBookByID(String BookID) {
         Books currentBook = null;
+        
         try {
             String sql = "SELECT p.PublicationID, p.Title, GROUP_CONCAT(a.AuthorName) AS Authors, p.ReleaseDate, p.Country, p.Quantity, b.Category, b.Reissue, pb.PublisherName " +
                     "FROM Publications p " +
@@ -55,20 +84,19 @@ public class Database {
                     "INNER JOIN BookAuthors ba ON b.BookID = ba.BookID " +
                     "INNER JOIN Authors a ON ba.AuthorID = a.AuthorID " +
                     "INNER JOIN Publishers pb ON b.PublisherID = pb.PublisherID " +
-                    "WHERE b.BookID LIKE ? " + 
+                    "WHERE b.BookID = ? " + 
                     "GROUP BY p.PublicationID, p.Title, p.ReleaseDate, p.Country, p.Quantity, b.Category, b.Reissue, pb.PublisherName";
             
             PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, "%" + BookID + "%");
+            pstmt.setString(1, BookID);
             
             ResultSet rs = pstmt.executeQuery();
-    
+            
             while (rs.next()) {
                 String publicationID = rs.getString(1);
                 String title = rs.getString(2);
-                String authorsString = rs.getString(3);
-                ArrayList<String> authors = new ArrayList<>(Arrays.asList(authorsString.split(", ")));
-    
+                ArrayList<String> authors = GetAuthorByBookID(BookID);
+
                 Date releaseDate = rs.getDate(4);
                 String country = rs.getString(5);
                 int quantity = rs.getInt(6);
@@ -76,17 +104,18 @@ public class Database {
                 String category = rs.getString(7);
                 int reissue = rs.getInt(8);
                 String publisher = rs.getString(9);
-    
+                
                 Books newBook = new Books(publicationID, title, authors, releaseDate, country, quantity, category, reissue, publisher);
-    
+                
                 currentBook = newBook;
             }
-    
+            
             rs.close();
             pstmt.close();
         } catch (Exception e) {
             System.out.println(e);
         }
+        
         return currentBook;
     }
 
@@ -136,10 +165,10 @@ public class Database {
             String sql = "SELECT p.Title " +
                     "FROM Publications p " +
                     "INNER JOIN Books b ON p.PublicationID = b.BookID " +
-                    "WHERE b.BookID LIKE ?";
+                    "WHERE b.BookID = ?";
         
             PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, "%" + BookID + "%");
+            pstmt.setString(1, BookID);
             ResultSet rs = pstmt.executeQuery();
         
             while (rs.next()) {
@@ -160,10 +189,10 @@ public class Database {
             String sql = "SELECT p.ReleaseDate " +
                     "FROM Publications p " +
                     "INNER JOIN Books b ON p.PublicationID = b.BookID " +
-                    "WHERE b.BookID LIKE ?";
+                    "WHERE b.BookID = ?";
             
             PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, "%" + BookID + "%");
+            pstmt.setString(1, BookID);
             
             ResultSet rs = pstmt.executeQuery();
     
@@ -185,10 +214,10 @@ public class Database {
             String sql = "SELECT p.Country " +
                     "FROM Publications p " +
                     "INNER JOIN Books b ON p.PublicationID = b.BookID " +
-                    "WHERE b.BookID LIKE ?";
+                    "WHERE b.BookID = ?";
         
             PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, "%" + BookID + "%");
+            pstmt.setString(1, BookID);
             ResultSet rs = pstmt.executeQuery();
         
             while (rs.next()) {
@@ -209,10 +238,10 @@ public class Database {
             String sql = "SELECT p.Quantity " +
                     "FROM Publications p " +
                     "INNER JOIN Books b ON p.PublicationID = b.BookID " +
-                    "WHERE b.BookID LIKE ?";
+                    "WHERE b.BookID = ?";
         
             PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, "%" + BookID + "%");
+            pstmt.setString(1, BookID);
             ResultSet rs = pstmt.executeQuery();
         
             while (rs.next()) {
@@ -233,10 +262,10 @@ public class Database {
             String sql = "SELECT b.Category " +
                     "FROM Publications p " +
                     "INNER JOIN Books b ON p.PublicationID = b.BookID " +
-                    "WHERE b.BookID LIKE ?";
+                    "WHERE b.BookID = ?";
             
             PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, "%" + BookID + "%");
+            pstmt.setString(1, BookID);
             
             ResultSet rs = pstmt.executeQuery();
     
@@ -258,10 +287,10 @@ public class Database {
             String sql = "SELECT b.Reissue " +
                     "FROM Publications p " +
                     "INNER JOIN Books b ON p.PublicationID = b.BookID " +
-                    "WHERE b.BookID LIKE ?";
+                    "WHERE b.BookID = ?";
             
             PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, "%" + BookID + "%");
+            pstmt.setString(1, BookID);
             
             ResultSet rs = pstmt.executeQuery();
     
@@ -284,10 +313,10 @@ public class Database {
                     "FROM Publications p " +
                     "INNER JOIN Books b ON p.PublicationID = b.BookID " +
                     "INNER JOIN Publishers pb ON b.PublisherID = pb.PublisherID " +
-                    "WHERE b.BookID LIKE ?";
+                    "WHERE b.BookID = ?";
             
             PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, "%" + BookID + "%");
+            pstmt.setString(1, BookID);
             
             ResultSet rs = pstmt.executeQuery();
     
