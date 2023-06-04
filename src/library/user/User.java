@@ -1,5 +1,11 @@
 package library.user;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import library.mysql.Database;
+import library.publication.Books;
+
 public class User extends Person {
 	private String Username;
 	private String Password;
@@ -40,4 +46,28 @@ public class User extends Person {
     public void setPassword(String Password) {
         this.Password = Password;
     }
+
+    public ArrayList<Books> searchBookbyTitle(String title) {
+        ArrayList<Books> booksList = new ArrayList<>();
+        Database db = new Database();
+        booksList = db.searchBookbyTitle(title);
+        return booksList;
+    }
+
+    public ArrayList<Books> searchBookbyCategory(String category) {
+        ArrayList<Books> booksList = new ArrayList<>();
+        Database db = new Database();
+        booksList = db.searchBookbyCategory(category);
+        return booksList;
+    }
+
+    ////
+
+    public ArrayList<Books> searchBookByCategories(List<String> categories) {
+        ArrayList<Books> booksList = new ArrayList<>();
+        Database db = new Database();
+        booksList = db.searchBookByCategories(categories);
+        return booksList;
+    }
+    
 }

@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 import library.publication.Publication;
 import library.user.Student;
@@ -250,7 +251,7 @@ public class Database {
         Books currentBook = null;
         
         try {
-            String sql = "SELECT p.PublicationID, p.Title, GROUP_CONCAT(a.AuthorName) AS Authors, p.ReleaseDate, p.Country, p.Quantity, b.Category, b.Reissue, pb.PublisherName " +
+            String sql = "SELECT p.PublicationID, p.Title, GROUP_CONCAT(a.AuthorName) as Authors, p.ReleaseDate, p.Country, p.Quantity, b.Category, b.Reissue, pb.PublisherName " +
                     "FROM Publications p " +
                     "INNER JOIN Books b ON p.PublicationID = b.BookID " +
                     "INNER JOIN BookAuthors ba ON b.BookID = ba.BookID " +
@@ -267,7 +268,7 @@ public class Database {
             while (rs.next()) {
                 String publicationID = rs.getString(1);
                 String title = rs.getString(2);
-                ArrayList<String> authors = getBookAuthor(BookID);
+                ArrayList<String> authors = getBookAuthor(publicationID);
 
                 Date releaseDate = rs.getDate(4);
                 String country = rs.getString(5);
@@ -294,7 +295,7 @@ public class Database {
     public ArrayList<Books> loadAllBooks() {
         ArrayList<Books> bookList = new ArrayList<>();
         try {
-            String sql = "SELECT p.PublicationID, p.Title, GROUP_CONCAT(a.AuthorName) AS Authors, p.ReleaseDate, p.Country, p.Quantity, b.Category, b.Reissue, pb.PublisherName " +
+            String sql = "SELECT p.PublicationID, p.Title, GROUP_CONCAT(a.AuthorName) as Authors, p.ReleaseDate, p.Country, p.Quantity, b.Category, b.Reissue, pb.PublisherName " +
                     "FROM Publications p " +
                     "INNER JOIN Books b ON p.PublicationID = b.BookID " +
                     "INNER JOIN BookAuthors ba ON b.BookID = ba.BookID " +
@@ -308,8 +309,7 @@ public class Database {
             while (rs.next()) {
                 String publicationID = rs.getString(1);
                 String title = rs.getString(2);
-                String authorsString = rs.getString(3);
-                ArrayList<String> authors = new ArrayList<>(Arrays.asList(authorsString.split(", ")));
+                ArrayList<String> authors = getBookAuthor(publicationID);
     
                 Date releaseDate = rs.getDate(4);
                 String country = rs.getString(5);
@@ -857,5 +857,131 @@ public class Database {
         
         return true;
     }
+
+    public ArrayList<Books> searchBookbyTitle(String title) {
+        ArrayList<Books> resultList = new ArrayList<>();
+    
+        try {
+            String sql = "SELECT b.BookID, p.Title, GROUP_CONCAT(a.AuthorName) as Authors, p.ReleaseDate " +
+                         "FROM Books b " +
+                         "JOIN Publications p ON b.BookID = p.PublicationID " +
+                         "JOIN BookAuthors ba ON b.BookID = ba.BookID " +
+                         "JOIN Authors a ON ba.AuthorID = a.AuthorID " +
+                         "WHERE p.Title LIKE ? " +
+                         "GROUP BY b.BookID, p.Title, p.ReleaseDate";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, "%" + title + "%");
+    
+            ResultSet rs = pstmt.executeQuery();
+    
+            while (rs.next()) {
+                String bookId = rs.getString("BookID");
+                String bookTitle = rs.getString("Title");
+                ArrayList<String> authors = getBookAuthor(bookId);
+                String releaseDate = rs.getString("ReleaseDate");
+    
+                Books result = new Books(bookId, bookTitle, authors, releaseDate);
+                resultList.add(result);
+            }
+    
+            rs.close();
+            pstmt.close();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    
+        return resultList;
+    }
+
+    public ArrayList<Books> searchBookbyCategory(String category) {
+        ArrayList<Books> resultList = new ArrayList<>();
+        
+        try {
+            String sql = "SELECT b.BookID, p.Title, GROUP_CONCAT(a.AuthorName) as Authors, p.ReleaseDate " +
+                         "FROM Books b " +
+                         "JOIN Publications p ON b.BookID = p.PublicationID " +
+                         "JOIN BookAuthors ba ON b.BookID = ba.BookID " +
+                         "JOIN Authors a ON ba.AuthorID = a.AuthorID " +
+                         "WHERE b.Category LIKE ? " + 
+                         "GROUP BY b.BookID, p.Title, p.ReleaseDate";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, "%" + category + "%");
+    
+            ResultSet rs = pstmt.executeQuery();
+    
+            while (rs.next()) {
+                String bookId = rs.getString("BookID");
+                String bookTitle = rs.getString("Title");
+                ArrayList<String> authors = getBookAuthor(bookId);
+                String releaseDate = rs.getString("ReleaseDate");
+    
+                Books result = new Books(bookId, bookTitle, authors, releaseDate);
+                resultList.add(result);
+            }
+    
+            rs.close();
+            pstmt.close();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    
+        return resultList;
+    }
+
+    ////
+
+    public ArrayList<Books> searchBookByCategories(List<String> categories) {
+        ArrayList<Books> resultList = new ArrayList<>();
+        
+        try {
+            String sql = "SELECT b.BookID, p.Title, GROUP_CONCAT(a.AuthorName) AS Authors, p.ReleaseDate " +
+                         "FROM Books b " +
+                         "JOIN Publications p ON b.BookID = p.PublicationID " +
+                         "JOIN BookAuthors ba ON b.BookID = ba.BookID " +
+                         "JOIN Authors a ON ba.AuthorID = a.AuthorID " +
+                         "WHERE b.Category IN (";
+            
+            // Create a placeholder for each category
+            StringBuilder categoryPlaceholders = new StringBuilder();
+            for (int i = 0; i < categories.size(); i++) {
+                categoryPlaceholders.append("?");
+                if (i < categories.size() - 1) {
+                    categoryPlaceholders.append(",");
+                }
+            }
+            
+            sql += categoryPlaceholders.toString() + ") " +
+                   "GROUP BY b.BookID, p.Title, p.ReleaseDate";
+            
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            
+            // Set the category values in the prepared statement
+            for (int i = 0; i < categories.size(); i++) {
+                pstmt.setString(i + 1, categories.get(i));
+            }
+            
+            ResultSet rs = pstmt.executeQuery();
+            
+            while (rs.next()) {
+                String bookId = rs.getString("BookID");
+                String bookTitle = rs.getString("Title");
+                ArrayList<String> authors = getBookAuthor(bookId);
+                String releaseDate = rs.getString("ReleaseDate");
+        
+                Books result = new Books(bookId, bookTitle, authors, releaseDate);
+                resultList.add(result);
+            }
+        
+            rs.close();
+            pstmt.close();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        
+        return resultList;
+    }
+    
+    
+    
     
 }
