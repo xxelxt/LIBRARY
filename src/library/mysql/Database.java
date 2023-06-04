@@ -1031,8 +1031,6 @@ public class Database {
         return resultList;
     }
     
-    
-
     ////
 
     public ArrayList<Books> searchBookbyCategories(List<String> categories) {
