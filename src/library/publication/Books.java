@@ -10,11 +10,7 @@ public class Books extends Publication {
 	private int Reissue;
 	private String Publisher;
 
-	public Books() {
-
-	}
-
-	public Books(String PublicationID, String Title, Date ReleaseDate, String Country, int Quantity, ArrayList<String> Authors, String Category, int Reissue, String Publisher) {
+	public Books(String PublicationID, String Title, ArrayList<String> Authors, Date ReleaseDate, String Country, int Quantity, String Category, int Reissue, String Publisher) {
 		super(PublicationID, Title, ReleaseDate, Country, Quantity);
 		this.Authors = Authors;
 		this.Category = Category;
