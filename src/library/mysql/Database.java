@@ -301,7 +301,58 @@ public class Database {
         }
     
         return publisher;
-    }    
+    }
+
+    void updateBookTitle(String bookID, String newTitle) {
+        try {
+            String sql = "UPDATE Publications p " +
+                    "INNER JOIN Books b ON p.PublicationID = b.BookID " +
+                    "SET p.Title = ? " +
+                    "WHERE b.BookID = ?";
+    
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, newTitle);
+            pstmt.setString(2, bookID);
+    
+            pstmt.executeUpdate();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+
+    void updateBookReleaseDate(String bookID, Date newReleaseDate) {
+        try {
+            String sql = "UPDATE Publications p " +
+                    "INNER JOIN Books b ON p.PublicationID = b.BookID " +
+                    "SET p.ReleaseDate = ? " +
+                    "WHERE b.BookID = ?";
+    
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setDate(1, new java.sql.Date(newReleaseDate.getTime()));
+            pstmt.setString(2, bookID);
+    
+            pstmt.executeUpdate();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+
+    void updateBookCountry(String bookID, String newCountry) {
+        try {
+            String sql = "UPDATE Publications p " +
+                    "INNER JOIN Books b ON p.PublicationID = b.BookID " +
+                    "SET p.Country = ? " +
+                    "WHERE b.BookID = ?";
+    
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, newCountry);
+            pstmt.setString(2, bookID);
+    
+            pstmt.executeUpdate();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
 
     void updateBookQuantity(String BookID, int newQuantity) {
         try {
@@ -320,6 +371,35 @@ public class Database {
         }
     }
     
+    void updateBookCategory(String bookID, String newCategory) {
+        try {
+            String sql = "UPDATE Books " +
+                    "SET Category = ? " +
+                    "WHERE BookID = ?";
     
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, newCategory);
+            pstmt.setString(2, bookID);
     
+            pstmt.executeUpdate();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+
+    void updateBookReissue(String bookID, int newReissue) {
+        try {
+            String sql = "UPDATE Books " +
+                    "SET Reissue = ? " +
+                    "WHERE BookID = ?";
+    
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, newReissue);
+            pstmt.setString(2, bookID);
+    
+            pstmt.executeUpdate();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    } 
 }
