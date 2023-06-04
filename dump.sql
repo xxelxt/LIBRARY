@@ -220,6 +220,31 @@ LOCK TABLES `positions` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `printmedia`
+--
+
+DROP TABLE IF EXISTS `printmedia`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `printmedia` (
+  `PrintMediaID` char(20) NOT NULL,
+  `ReleaseNumber` tinyint DEFAULT NULL,
+  `PrintType` varchar(20) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
+  PRIMARY KEY (`PrintMediaID`),
+  CONSTRAINT `printmedia_ibfk_1` FOREIGN KEY (`PrintMediaID`) REFERENCES `publications` (`PublicationID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `printmedia`
+--
+
+LOCK TABLES `printmedia` WRITE;
+/*!40000 ALTER TABLE `printmedia` DISABLE KEYS */;
+/*!40000 ALTER TABLE `printmedia` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `publications`
 --
 
@@ -323,6 +348,7 @@ CREATE TABLE `students` (
   `Phone` char(10) NOT NULL,
   `ClassName` char(10) DEFAULT NULL,
   `Fine` int DEFAULT NULL,
+  `FineStatus` bit(1) NOT NULL,
   PRIMARY KEY (`StudentID`),
   KEY `Username` (`Username`),
   KEY `Name` (`Name`),
@@ -374,4 +400,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-06-03 18:01:25
+-- Dump completed on 2023-06-04 17:03:08

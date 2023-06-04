@@ -48,6 +48,174 @@ public class Database {
         }
     }
 
+    // Publications
+
+    public String getPublicationTitle(String PublicationID) {
+        String title = "";
+        try {
+            String sql = "SELECT p.Title " +
+                    "FROM Publications p " +
+                    "WHERE p.PublicationID = ?";
+        
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, PublicationID);
+            ResultSet rs = pstmt.executeQuery();
+        
+            while (rs.next()) {
+                title = rs.getString(1);
+            }
+        
+            rs.close();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        
+        return title;
+    }
+
+    public Date getPublicationReleaseDate(String PublicationID) {
+        Date releaseDate = null;
+        try {
+            String sql = "SELECT p.ReleaseDate " +
+                    "FROM Publications p " +
+                    "WHERE p.PublicationID = ?";
+            
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, PublicationID);
+            
+            ResultSet rs = pstmt.executeQuery();
+    
+            while (rs.next()) {
+                releaseDate = rs.getDate(1);
+            }
+    
+            rs.close();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    
+        return releaseDate;
+    }
+
+    public String getPublicationCountry(String PublicationID) {
+        String country = "";
+        try {
+            String sql = "SELECT p.Country " +
+                    "FROM Publications p " +
+                    "WHERE p.PublicationID = ?";
+        
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, PublicationID);
+            ResultSet rs = pstmt.executeQuery();
+        
+            while (rs.next()) {
+                country = rs.getString(1);
+            }
+        
+            rs.close();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        
+        return country;
+    }
+
+    public boolean setPublicationTitle(String publicationID, String newTitle) {
+        try {
+            String sql = "UPDATE Publications p " +
+                    "SET p.Title = ? " +
+                    "WHERE p.PublicationID = ?";
+    
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, newTitle);
+            pstmt.setString(2, publicationID);
+    
+            pstmt.executeUpdate();
+        } catch (Exception e) {
+            System.out.println(e);
+            return false;
+        }
+        return true;
+    }
+
+    public boolean setPublicationReleaseDate(String publicationID, Date newReleaseDate) {
+        try {
+            String sql = "UPDATE Publications p " +
+                    "SET p.ReleaseDate = ? " +
+                    "WHERE p.PublicationID = ?";
+    
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setDate(1, new java.sql.Date(newReleaseDate.getTime()));
+            pstmt.setString(2, publicationID);
+    
+            pstmt.executeUpdate();
+        } catch (Exception e) {
+            System.out.println(e);
+            return false;
+        }
+        return true;
+    }
+
+    public boolean setPublicationCountry(String publicationID, String newCountry) {
+        try {
+            String sql = "UPDATE Publications p " +
+                    "SET p.Country = ? " +
+                    "WHERE p.PublicationID = ?";
+    
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, newCountry);
+            pstmt.setString(2, publicationID);
+    
+            pstmt.executeUpdate();
+        } catch (Exception e) {
+            System.out.println(e);
+            return false;
+        }
+        return true;
+    }
+
+    public boolean setPublicationQuantity(String publicationID, int newQuantity) {
+        try {
+            String sql = "UPDATE Publications p " +
+                    "SET p.Quantity = ? " +
+                    "WHERE p.PublicationID = ?";
+            
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, newQuantity);
+            pstmt.setString(2, publicationID);
+            
+            pstmt.executeUpdate();
+        } catch (Exception e) {
+            System.out.println(e);
+            return false;
+        }
+        return true;
+    }
+    
+    
+    public int getPublicationQuantity(String PublicationID) {
+        int quantity = -1;
+        try {
+            String sql = "SELECT p.Quantity " +
+                    "FROM Publications p " +
+                    "WHERE p.Publication = ?";
+        
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, PublicationID);
+            ResultSet rs = pstmt.executeQuery();
+        
+            while (rs.next()) {
+                quantity = rs.getInt(1);
+            }
+        
+            rs.close();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        
+        return quantity;
+    }
+
     // Books
 
     public ArrayList<String> getBookAuthor(String BookID) {
@@ -163,99 +331,6 @@ public class Database {
         return bookList;
     }
     
-    public String getPublicationTitle(String PublicationID) {
-        String title = "";
-        try {
-            String sql = "SELECT p.Title " +
-                    "FROM Publications p " +
-                    "WHERE p.PublicationID = ?";
-        
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, PublicationID);
-            ResultSet rs = pstmt.executeQuery();
-        
-            while (rs.next()) {
-                title = rs.getString(1);
-            }
-        
-            rs.close();
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-        
-        return title;
-    }
-
-    public Date getPublicationReleaseDate(String PublicationID) {
-        Date releaseDate = null;
-        try {
-            String sql = "SELECT p.ReleaseDate " +
-                    "FROM Publications p " +
-                    "WHERE p.PublicationID = ?";
-            
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, PublicationID);
-            
-            ResultSet rs = pstmt.executeQuery();
-    
-            while (rs.next()) {
-                releaseDate = rs.getDate(1);
-            }
-    
-            rs.close();
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-    
-        return releaseDate;
-    }
-
-    public String getPublicationCountry(String PublicationID) {
-        String country = "";
-        try {
-            String sql = "SELECT p.Country " +
-                    "FROM Publications p " +
-                    "WHERE p.PublicationID = ?";
-        
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, PublicationID);
-            ResultSet rs = pstmt.executeQuery();
-        
-            while (rs.next()) {
-                country = rs.getString(1);
-            }
-        
-            rs.close();
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-        
-        return country;
-    }
-    
-    public int getPublicationQuantity(String PublicationID) {
-        int quantity = -1;
-        try {
-            String sql = "SELECT p.Quantity " +
-                    "FROM Publications p " +
-                    "WHERE p.Publication = ?";
-        
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, PublicationID);
-            ResultSet rs = pstmt.executeQuery();
-        
-            while (rs.next()) {
-                quantity = rs.getInt(1);
-            }
-        
-            rs.close();
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-        
-        return quantity;
-    }
-    
     public String getBookCategory(String BookID) {
         String category = "";
         try {
@@ -332,78 +407,6 @@ public class Database {
         return publisher;
     }
 
-    public boolean setPublicationTitle(String publicationID, String newTitle) {
-        try {
-            String sql = "UPDATE Publications p " +
-                    "SET p.Title = ? " +
-                    "WHERE p.PublicationID = ?";
-    
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, newTitle);
-            pstmt.setString(2, publicationID);
-    
-            pstmt.executeUpdate();
-        } catch (Exception e) {
-            System.out.println(e);
-            return false;
-        }
-        return true;
-    }
-
-    public boolean setPublicationReleaseDate(String publicationID, Date newReleaseDate) {
-        try {
-            String sql = "UPDATE Publications p " +
-                    "SET p.ReleaseDate = ? " +
-                    "WHERE p.PublicationID = ?";
-    
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setDate(1, new java.sql.Date(newReleaseDate.getTime()));
-            pstmt.setString(2, publicationID);
-    
-            pstmt.executeUpdate();
-        } catch (Exception e) {
-            System.out.println(e);
-            return false;
-        }
-        return true;
-    }
-
-    public boolean setPublicationCountry(String publicationID, String newCountry) {
-        try {
-            String sql = "UPDATE Publications p " +
-                    "SET p.Country = ? " +
-                    "WHERE p.PublicationID = ?";
-    
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, newCountry);
-            pstmt.setString(2, publicationID);
-    
-            pstmt.executeUpdate();
-        } catch (Exception e) {
-            System.out.println(e);
-            return false;
-        }
-        return true;
-    }
-
-    public boolean setPublicationQuantity(String publicationID, int newQuantity) {
-        try {
-            String sql = "UPDATE Publications p " +
-                    "SET p.Quantity = ? " +
-                    "WHERE p.PublicationID = ?";
-            
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setInt(1, newQuantity);
-            pstmt.setString(2, publicationID);
-            
-            pstmt.executeUpdate();
-        } catch (Exception e) {
-            System.out.println(e);
-            return false;
-        }
-        return true;
-    }
-    
     public boolean setBookCategory(String bookID, String newCategory) {
         try {
             String sql = "UPDATE Books " +
@@ -459,7 +462,7 @@ public class Database {
         return true;
     }
     
-    // PrintMedia
+    // Print medias
 
     public PrintMedia getPrintMediabyID(String printMediaID) {
         PrintMedia currentPrintMedia = null;
@@ -625,7 +628,7 @@ public class Database {
         return true;
     }
 
-    // Student
+    // Students
     
     public Student getStudentbyID(String studentId) {
         Student student = null;
