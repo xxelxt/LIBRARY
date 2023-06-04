@@ -3,6 +3,7 @@ package library.user;
 public class Student extends Info {
 	private String StudentID;
 	private String ClassName;
+	private boolean FineStatus;
 	private double Fine;
 
 	public Student() {
