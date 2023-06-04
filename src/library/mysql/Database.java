@@ -10,6 +10,7 @@ import java.util.Date;
 
 import library.publication.Publication;
 import library.publication.Books;
+import library.publication.PrintMedia;
 
 public class Database {
 
@@ -45,6 +46,8 @@ public class Database {
             System.out.println(e);
         }
     }
+
+    // Books
 
     ArrayList<String> GetAuthorByBookID(String BookID) {
         ArrayList<String> authors = new ArrayList<>();
@@ -120,7 +123,7 @@ public class Database {
     }
 
     ArrayList<Books> loadAllBooks() {
-        ArrayList<Books> currentBooks = new ArrayList<>();
+        ArrayList<Books> bookList = new ArrayList<>();
         try {
             String sql = "SELECT p.PublicationID, p.Title, GROUP_CONCAT(a.AuthorName) AS Authors, p.ReleaseDate, p.Country, p.Quantity, b.Category, b.Reissue, pb.PublisherName " +
                     "FROM Publications p " +
@@ -147,8 +150,8 @@ public class Database {
                 int reissue = rs.getInt(8);
                 String publisher = rs.getString(9);
     
-                Books newBook = new Books(publicationID, title, authors, releaseDate, country, quantity, category, reissue, publisher);
-                currentBooks.add(newBook);
+                Books Book = new Books(publicationID, title, authors, releaseDate, country, quantity, category, reissue, publisher);
+                bookList.add(Book);
             }
     
             rs.close();
@@ -156,7 +159,7 @@ public class Database {
         } catch (Exception e) {
             System.out.println(e);
         }
-        return currentBooks;
+        return bookList;
     }
     
     String GetTitleofBook(String BookID) {
@@ -448,5 +451,350 @@ public class Database {
             System.out.println(e);
         }
     }
+    
+    // PrintMedia
+
+    PrintMedia GetPrintMediaByID(String printMediaID) {
+        PrintMedia currentPrintMedia = null;
+
+        try {
+            String sql = "SELECT p.PublicationID, p.Title, p.ReleaseDate, p.Country, p.Quantity, pm.ReleaseNumber, pm.PrintType " +
+                    "FROM Publications p " +
+                    "INNER JOIN PrintMedia pm ON p.PublicationID = pm.PrintMediaID " +
+                    "WHERE pm.PrintMediaID = ?";
+
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, printMediaID);
+
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                String publicationID = rs.getString(1);
+                String title = rs.getString(2);
+                Date releaseDate = rs.getDate(3);
+                String country = rs.getString(4);
+                int quantity = rs.getInt(5);
+                int releaseNumber = rs.getInt(6);
+                String printType = rs.getString(7);
+
+                PrintMedia newPrintMedia = new PrintMedia(publicationID, title, releaseDate, country, quantity, releaseNumber, printType);
+
+                currentPrintMedia = newPrintMedia;
+            }
+
+            rs.close();
+            pstmt.close();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+
+        return currentPrintMedia;
+    }
+
+    ArrayList<PrintMedia> loadAllPrintMedia() {
+        ArrayList<PrintMedia> printMediaList = new ArrayList<>();
+    
+        try {
+            String sql = "SELECT p.PublicationID, p.Title, p.ReleaseDate, p.Country, p.Quantity, pm.ReleaseNumber, pm.PrintType " +
+                    "FROM Publications p " +
+                    "INNER JOIN PrintMedia pm ON p.PublicationID = pm.PrintMediaID";
+    
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+    
+            ResultSet rs = pstmt.executeQuery();
+    
+            while (rs.next()) {
+                String publicationID = rs.getString(1);
+                String title = rs.getString(2);
+                Date releaseDate = rs.getDate(3);
+                String country = rs.getString(4);
+                int quantity = rs.getInt(5);
+                int releaseNumber = rs.getInt(6);
+                String printType = rs.getString(7);
+    
+                PrintMedia printMedia = new PrintMedia(publicationID, title, releaseDate, country, quantity, releaseNumber, printType);
+    
+                printMediaList.add(printMedia);
+            }
+    
+            rs.close();
+            pstmt.close();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    
+        return printMediaList;
+    }
+    
+    String getPrintMediaTitleByID(String printMediaID) {
+        String printMediaTitle = null;
+    
+        try {
+            String sql = "SELECT p.Title " +
+                    "FROM Publications p " +
+                    "INNER JOIN PrintMedia pm ON p.PublicationID = pm.PublicationID " +
+                    "WHERE pm.PrintMediaID = ?";
+    
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, printMediaID);
+    
+            ResultSet rs = pstmt.executeQuery();
+    
+            if (rs.next()) {
+                printMediaTitle = rs.getString(1);
+            }
+    
+            rs.close();
+            pstmt.close();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    
+        return printMediaTitle;
+    }
+
+    Date getPrintMediaReleaseDateByID(String printMediaID) {
+        Date releaseDate = null;
+    
+        try {
+            String sql = "SELECT p.ReleaseDate " +
+                    "FROM Publications p " +
+                    "INNER JOIN PrintMedia pm ON p.PublicationID = pm.PublicationID " +
+                    "WHERE pm.PrintMediaID = ?";
+    
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, printMediaID);
+    
+            ResultSet rs = pstmt.executeQuery();
+    
+            if (rs.next()) {
+                releaseDate = rs.getDate(1);
+            }
+    
+            rs.close();
+            pstmt.close();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    
+        return releaseDate;
+    }
+
+    String getPrintMediaCountryByID(String printMediaID) {
+        String country = null;
+    
+        try {
+            String sql = "SELECT p.Country " +
+                    "FROM Publications p " +
+                    "INNER JOIN PrintMedia pm ON p.PublicationID = pm.PublicationID " +
+                    "WHERE pm.PrintMediaID = ?";
+    
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, printMediaID);
+    
+            ResultSet rs = pstmt.executeQuery();
+    
+            if (rs.next()) {
+                country = rs.getString(1);
+            }
+    
+            rs.close();
+            pstmt.close();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    
+        return country;
+    }
+
+    int getPrintMediaQuantityByID(String printMediaID) {
+        int quantity = -1;
+    
+        try {
+            String sql = "SELECT p.Quantity " +
+                    "FROM Publications p " +
+                    "INNER JOIN PrintMedia pm ON p.PublicationID = pm.PublicationID " +
+                    "WHERE pm.PrintMediaID = ?";
+    
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, printMediaID);
+    
+            ResultSet rs = pstmt.executeQuery();
+    
+            if (rs.next()) {
+                quantity = rs.getInt(1);
+            }
+    
+            rs.close();
+            pstmt.close();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    
+        return quantity;
+    }
+
+    int getPrintMediaReleaseNumberByID(String printMediaID) {
+        int releaseNumber = -1;
+    
+        try {
+            String sql = "SELECT ReleaseNumber " +
+                    "FROM PrintMedia " +
+                    "WHERE PrintMediaID = ?";
+    
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, printMediaID);
+    
+            ResultSet rs = pstmt.executeQuery();
+    
+            if (rs.next()) {
+                releaseNumber = rs.getInt("ReleaseNumber");
+            }
+    
+            rs.close();
+            pstmt.close();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    
+        return releaseNumber;
+    }
+    
+    String getPrintMediaTypeByID(String printMediaID) {
+        String printType = null;
+    
+        try {
+            String sql = "SELECT PrintType " +
+                    "FROM PrintMedia " +
+                    "WHERE PrintMediaID = ?";
+    
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, printMediaID);
+    
+            ResultSet rs = pstmt.executeQuery();
+    
+            if (rs.next()) {
+                printType = rs.getString("PrintType");
+            }
+    
+            rs.close();
+            pstmt.close();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    
+        return printType;
+    }   
+
+    void updatePrintMediaTitle(String printMediaID, String newTitle) {
+        try {
+            String sql = "UPDATE Publications p " +
+                    "INNER JOIN PrintMedia pm ON p.PublicationID = pm.PrintMediaID " +
+                    "SET p.Title = ? " +
+                    "WHERE pm.PrintMediaID = ?";
+    
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, newTitle);
+            pstmt.setString(2, printMediaID);
+    
+            pstmt.executeUpdate();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+
+    void updatePrintMediaReleaseDate(String printMediaID, Date newReleaseDate) {
+        try {
+            String sql = "UPDATE Publications p " +
+                    "INNER JOIN PrintMedia pm ON p.PublicationID = pm.PrintMediaID " +
+                    "SET p.ReleaseDate = ? " +
+                    "WHERE pm.PrintMediaID = ?";
+    
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setDate(1, new java.sql.Date(newReleaseDate.getTime()));
+            pstmt.setString(2, printMediaID);
+    
+            pstmt.executeUpdate();
+            
+            pstmt.close();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+
+    void updatePrintMediaCountry(String printMediaID, String newCountry) {
+        try {
+            String sql = "UPDATE Publications p " +
+                    "INNER JOIN PrintMedia pm ON p.PublicationID = pm.PrintMediaID " +
+                    "SET p.Country = ? " +
+                    "WHERE pm.PrintMediaID = ?";
+    
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, newCountry);
+            pstmt.setString(2, printMediaID);
+    
+            pstmt.executeUpdate();
+            
+            pstmt.close();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+    
+    void updatePrintMediaQuantity(String printMediaID, int newQuantity) {
+        try {
+            String sql = "UPDATE Publications p " +
+                    "INNER JOIN PrintMedia pm ON p.PublicationID = pm.PrintMediaID " +
+                    "SET p.Quantity = ? " +
+                    "WHERE pm.PrintMediaID = ?";
+    
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, newQuantity);
+            pstmt.setString(2, printMediaID);
+    
+            pstmt.executeUpdate();
+            
+            pstmt.close();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+
+    void updatePrintMediaReleaseNumber(String printMediaID, int newReleaseNumber) {
+        try {
+            String sql = "UPDATE PrintMedia " +
+                    "SET ReleaseNumber = ? " +
+                    "WHERE PrintMediaID = ?";
+    
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, newReleaseNumber);
+            pstmt.setString(2, printMediaID);
+    
+            pstmt.executeUpdate();
+            
+            pstmt.close();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+
+    void updatePrintMediaType(String printMediaID, String newPrintType) {
+        try {
+            String sql = "UPDATE PrintMedia " +
+                    "SET PrintType = ? " +
+                    "WHERE PrintMediaID = ?";
+    
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, newPrintType);
+            pstmt.setString(2, printMediaID);
+    
+            pstmt.executeUpdate();
+            
+            pstmt.close();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+    
     
 }
