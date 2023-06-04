@@ -1,10 +1,20 @@
 package library.user;
 
-public class Users {
+public class User extends Person {
 	private String Username;
 	private String Password;
 
-    public Users(String Username, String Password) {
+    public User() {
+
+    }
+
+    public User(String Username, String Password) {
+        this.Username = Username;
+        this.Password = Password;
+    }
+
+    public User(String Name, String Gender, String Username, String Password) {
+        super(Name, Gender);
         this.Username = Username;
         this.Password = Password;
     }
@@ -24,5 +34,4 @@ public class Users {
     public void setPassword(String Password) {
         this.Password = Password;
     }
-	
 }

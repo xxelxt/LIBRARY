@@ -5,6 +5,8 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
+import library.publication.Books;
+
 public class Database {
 
 	private static String URL = "jdbc:mysql://localhost/library";
@@ -42,4 +44,30 @@ public class Database {
             System.out.println(e);
         }
 	}
+
+	Books GetBookbyID(int BookID) {
+
+        Books CurrentBook = new Books();
+        try {
+            ResultSet rs = stmt.executeQuery("select * from Books where book_id='" + book_id + "'");
+            while (rs.next()) {
+                int quantity;
+                String title, author, subject;
+                book_id = rs.getInt(1);
+                title = rs.getString(2);
+                author = rs.getString(3);
+                subject = rs.getString(4);
+                quantity = rs.getInt(5);
+                Books NewBook = new Books(book_id, title, author, subject, quantity);
+                CurrentBook = NewBook;
+
+            }
+
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+
+        return CurrentBook;
+
+    }
 }

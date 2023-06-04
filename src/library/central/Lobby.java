@@ -5,15 +5,10 @@ import java.util.ArrayList;
 import library.publication.Books;
 import library.publication.PrintMedia;
 import library.user.Librarian;
-import library.user.Manager;
-import library.user.Users;
+import library.user.Clerk;
+import library.user.User;
 
 public class Lobby {
-    public static ArrayList<Users> UsersList;
-    public static ArrayList<Books> BooksList;
-    public static ArrayList<PrintMedia> PrintMediaList;
-    public static ArrayList<Librarian> LibrarianList;
-    public static ArrayList<Manager> ManagerList;
-    public static ArrayList<Borrow> BorrowList;
+    
 
 }

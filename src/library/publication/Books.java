@@ -1,28 +1,33 @@
 package library.publication;
 
 import java.sql.Date;
+import java.util.ArrayList;
 
 public class Books extends Publication {
-	
-	private String Author;
+
+	private ArrayList<String> Authors;
 	private String Category;
 	private int Reissue;
 	private String Publisher;
 
-	public Books(String PublicationID, String Title, Date ReleaseDate, String Country, int Quantity, String Author, String Category, int Reissue, String Publisher) {
+	public Books() {
+
+	}
+
+	public Books(String PublicationID, String Title, Date ReleaseDate, String Country, int Quantity, ArrayList<String> authors, String Category, int Reissue, String Publisher) {
 		super(PublicationID, Title, ReleaseDate, Country, Quantity);
-		this.Author = Author;
+		this.Authors = Authors;
 		this.Category = Category;
 		this.Reissue = Reissue;
 		this.Publisher = Publisher;
 	}
 
-	public String getAuthor() {
-		return this.Author;
+	public ArrayList<String> getAuthors() {
+		return this.Authors;
 	}
 
-	public void setAuthor(String Author) {
-		this.Author = Author;
+	public void setAuthors(ArrayList<String> authors) {
+		this.Authors = authors;
 	}
 
 	public String getCategory() {

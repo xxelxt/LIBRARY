@@ -10,6 +10,10 @@ public abstract class Publication {
 	private String Country;
 	private int Quantity;
 
+	public Publication() {
+		
+	}
+
 	public Publication(String PublicationID, String Title, Date ReleaseDate, String Country, int Quantity) {
 		this.PublicationID = PublicationID;
 		this.Title = Title;
@@ -57,11 +61,4 @@ public abstract class Publication {
 	public void setQuantity(int Quantity) {
 		this.Quantity = Quantity;
 	}
-	
-	public boolean checkAvailable(String PublicationID) {
-        Database db = new Database();
-        int Available = db.GetQuantityofBook(this.PublicationID);
-        if (Available > 0) return true;
-			else return false;
-    }
 }
