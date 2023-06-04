@@ -1,7 +1,8 @@
 package library.publication;
 
-import library.mysql.Database;
 import java.util.Date;
+
+import library.mysql.Database;
 
 public abstract class Publication {
 	private String PublicationID;
@@ -61,4 +62,25 @@ public abstract class Publication {
 	public void setQuantity(int Quantity) {
 		this.Quantity = Quantity;
 	}
+	
+	public boolean CheckAvailable(String PublicationID) {
+        Database db = new Database();
+        int available = db.getPublicationQuantity(PublicationID);
+        if (available <= 0) return false;
+			else return true;
+    }
+
+	public void Decrease() {
+        if (Quantity > 0) {
+            this.Quantity = this.Quantity - 1;
+            Database db = new Database();
+            db.setPublicationQuantity(PublicationID, this.Quantity);
+        }
+    }
+
+    public void Increase() {
+        this.Quantity = this.Quantity - 1;
+        Database db = new Database();
+        db.setPublicationQuantity(PublicationID, this.Quantity);
+    }
 }

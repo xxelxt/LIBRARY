@@ -50,7 +50,7 @@ public class Database {
 
     // Books
 
-    ArrayList<String> getBookAuthor(String BookID) {
+    public ArrayList<String> getBookAuthor(String BookID) {
         ArrayList<String> authors = new ArrayList<>();
         
         try {
@@ -78,7 +78,7 @@ public class Database {
         return authors;
     }
 
-    Books getBookbyID(String BookID) {
+    public Books getBookbyID(String BookID) {
         Books currentBook = null;
         
         try {
@@ -123,7 +123,7 @@ public class Database {
         return currentBook;
     }
 
-    ArrayList<Books> loadAllBooks() {
+    public ArrayList<Books> loadAllBooks() {
         ArrayList<Books> bookList = new ArrayList<>();
         try {
             String sql = "SELECT p.PublicationID, p.Title, GROUP_CONCAT(a.AuthorName) AS Authors, p.ReleaseDate, p.Country, p.Quantity, b.Category, b.Reissue, pb.PublisherName " +
@@ -163,16 +163,15 @@ public class Database {
         return bookList;
     }
     
-    String getBookTitle(String BookID) {
+    public String getPublicationTitle(String PublicationID) {
         String title = "";
         try {
             String sql = "SELECT p.Title " +
                     "FROM Publications p " +
-                    "INNER JOIN Books b ON p.PublicationID = b.BookID " +
-                    "WHERE b.BookID = ?";
+                    "WHERE p.PublicationID = ?";
         
             PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, BookID);
+            pstmt.setString(1, PublicationID);
             ResultSet rs = pstmt.executeQuery();
         
             while (rs.next()) {
@@ -187,16 +186,15 @@ public class Database {
         return title;
     }
 
-    Date getBookReleaseDate(String BookID) {
+    public Date getPublicationReleaseDate(String PublicationID) {
         Date releaseDate = null;
         try {
             String sql = "SELECT p.ReleaseDate " +
                     "FROM Publications p " +
-                    "INNER JOIN Books b ON p.PublicationID = b.BookID " +
-                    "WHERE b.BookID = ?";
+                    "WHERE p.PublicationID = ?";
             
             PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, BookID);
+            pstmt.setString(1, PublicationID);
             
             ResultSet rs = pstmt.executeQuery();
     
@@ -212,16 +210,15 @@ public class Database {
         return releaseDate;
     }
 
-    String getBookCountry(String BookID) {
+    public String getPublicationCountry(String PublicationID) {
         String country = "";
         try {
             String sql = "SELECT p.Country " +
                     "FROM Publications p " +
-                    "INNER JOIN Books b ON p.PublicationID = b.BookID " +
-                    "WHERE b.BookID = ?";
+                    "WHERE p.PublicationID = ?";
         
             PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, BookID);
+            pstmt.setString(1, PublicationID);
             ResultSet rs = pstmt.executeQuery();
         
             while (rs.next()) {
@@ -236,16 +233,15 @@ public class Database {
         return country;
     }
     
-    int getBookQuantity(String BookID) {
+    public int getPublicationQuantity(String PublicationID) {
         int quantity = -1;
         try {
             String sql = "SELECT p.Quantity " +
                     "FROM Publications p " +
-                    "INNER JOIN Books b ON p.PublicationID = b.BookID " +
-                    "WHERE b.BookID = ?";
+                    "WHERE p.Publication = ?";
         
             PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, BookID);
+            pstmt.setString(1, PublicationID);
             ResultSet rs = pstmt.executeQuery();
         
             while (rs.next()) {
@@ -260,7 +256,7 @@ public class Database {
         return quantity;
     }
     
-    String getBookCategory(String BookID) {
+    public String getBookCategory(String BookID) {
         String category = "";
         try {
             String sql = "SELECT b.Category " +
@@ -285,7 +281,7 @@ public class Database {
         return category;
     }
 
-    int getBookReissue(String BookID) {
+    public int getBookReissue(String BookID) {
         int reissue = -1;
         try {
             String sql = "SELECT b.Reissue " +
@@ -310,7 +306,7 @@ public class Database {
         return reissue;
     }
     
-    String getBookPublisher(String BookID) {
+    public String getBookPublisher(String BookID) {
         String publisher = "";
         try {
             String sql = "SELECT pb.PublisherName " +
@@ -336,16 +332,15 @@ public class Database {
         return publisher;
     }
 
-    boolean setBookTitle(String bookID, String newTitle) {
+    public boolean setPublicationTitle(String publicationID, String newTitle) {
         try {
             String sql = "UPDATE Publications p " +
-                    "INNER JOIN Books b ON p.PublicationID = b.BookID " +
                     "SET p.Title = ? " +
-                    "WHERE b.BookID = ?";
+                    "WHERE p.PublicationID = ?";
     
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, newTitle);
-            pstmt.setString(2, bookID);
+            pstmt.setString(2, publicationID);
     
             pstmt.executeUpdate();
         } catch (Exception e) {
@@ -355,16 +350,15 @@ public class Database {
         return true;
     }
 
-    boolean setBookReleaseDate(String bookID, Date newReleaseDate) {
+    public boolean setPublicationReleaseDate(String publicationID, Date newReleaseDate) {
         try {
             String sql = "UPDATE Publications p " +
-                    "INNER JOIN Books b ON p.PublicationID = b.BookID " +
                     "SET p.ReleaseDate = ? " +
-                    "WHERE b.BookID = ?";
+                    "WHERE p.PublicationID = ?";
     
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setDate(1, new java.sql.Date(newReleaseDate.getTime()));
-            pstmt.setString(2, bookID);
+            pstmt.setString(2, publicationID);
     
             pstmt.executeUpdate();
         } catch (Exception e) {
@@ -374,16 +368,15 @@ public class Database {
         return true;
     }
 
-    boolean setBookCountry(String bookID, String newCountry) {
+    public boolean setPublicationCountry(String publicationID, String newCountry) {
         try {
             String sql = "UPDATE Publications p " +
-                    "INNER JOIN Books b ON p.PublicationID = b.BookID " +
                     "SET p.Country = ? " +
-                    "WHERE b.BookID = ?";
+                    "WHERE p.PublicationID = ?";
     
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, newCountry);
-            pstmt.setString(2, bookID);
+            pstmt.setString(2, publicationID);
     
             pstmt.executeUpdate();
         } catch (Exception e) {
@@ -393,16 +386,15 @@ public class Database {
         return true;
     }
 
-    boolean setBookQuantity(String BookID, int newQuantity) {
+    public boolean setPublicationQuantity(String publicationID, int newQuantity) {
         try {
             String sql = "UPDATE Publications p " +
-                    "INNER JOIN Books b ON p.PublicationID = b.BookID " +
                     "SET p.Quantity = ? " +
-                    "WHERE b.BookID = ?";
+                    "WHERE p.PublicationID = ?";
             
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1, newQuantity);
-            pstmt.setString(2, BookID);
+            pstmt.setString(2, publicationID);
             
             pstmt.executeUpdate();
         } catch (Exception e) {
@@ -412,7 +404,7 @@ public class Database {
         return true;
     }
     
-    boolean setBookCategory(String bookID, String newCategory) {
+    public boolean setBookCategory(String bookID, String newCategory) {
         try {
             String sql = "UPDATE Books " +
                     "SET Category = ? " +
@@ -430,7 +422,7 @@ public class Database {
         return true;
     }
 
-    boolean setBookReissue(String bookID, int newReissue) {
+    public boolean setBookReissue(String bookID, int newReissue) {
         try {
             String sql = "UPDATE Books " +
                     "SET Reissue = ? " +
@@ -448,7 +440,7 @@ public class Database {
         return true;
     }
 
-    boolean setBookPublisher(String bookID, String publisherName) {
+    public boolean setBookPublisher(String bookID, String publisherName) {
         try {
             String sql = "UPDATE Books b " +
                          "INNER JOIN Publishers pb ON b.PublisherID = pb.PublisherID " +
@@ -469,7 +461,7 @@ public class Database {
     
     // PrintMedia
 
-    PrintMedia getPrintMediabyID(String printMediaID) {
+    public PrintMedia getPrintMediabyID(String printMediaID) {
         PrintMedia currentPrintMedia = null;
 
         try {
@@ -506,7 +498,7 @@ public class Database {
         return currentPrintMedia;
     }
 
-    ArrayList<PrintMedia> loadAllPrintMedias() {
+    public ArrayList<PrintMedia> loadAllPrintMedias() {
         ArrayList<PrintMedia> printMediaList = new ArrayList<>();
     
         try {
@@ -541,116 +533,8 @@ public class Database {
     
         return printMediaList;
     }
-    
-    String getPrintMediaTitle(String printMediaID) {
-        String printMediaTitle = null;
-    
-        try {
-            String sql = "SELECT p.Title " +
-                    "FROM Publications p " +
-                    "INNER JOIN PrintMedia pm ON p.PublicationID = pm.PublicationID " +
-                    "WHERE pm.PrintMediaID = ?";
-    
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, printMediaID);
-    
-            ResultSet rs = pstmt.executeQuery();
-    
-            if (rs.next()) {
-                printMediaTitle = rs.getString(1);
-            }
-    
-            rs.close();
-            pstmt.close();
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-    
-        return printMediaTitle;
-    }
 
-    Date getPrintMediaReleaseDate(String printMediaID) {
-        Date releaseDate = null;
-    
-        try {
-            String sql = "SELECT p.ReleaseDate " +
-                    "FROM Publications p " +
-                    "INNER JOIN PrintMedia pm ON p.PublicationID = pm.PublicationID " +
-                    "WHERE pm.PrintMediaID = ?";
-    
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, printMediaID);
-    
-            ResultSet rs = pstmt.executeQuery();
-    
-            if (rs.next()) {
-                releaseDate = rs.getDate(1);
-            }
-    
-            rs.close();
-            pstmt.close();
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-    
-        return releaseDate;
-    }
-
-    String getPrintMediaCountry(String printMediaID) {
-        String country = null;
-    
-        try {
-            String sql = "SELECT p.Country " +
-                    "FROM Publications p " +
-                    "INNER JOIN PrintMedia pm ON p.PublicationID = pm.PublicationID " +
-                    "WHERE pm.PrintMediaID = ?";
-    
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, printMediaID);
-    
-            ResultSet rs = pstmt.executeQuery();
-    
-            if (rs.next()) {
-                country = rs.getString(1);
-            }
-    
-            rs.close();
-            pstmt.close();
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-    
-        return country;
-    }
-
-    int getPrintMediaQuantity(String printMediaID) {
-        int quantity = -1;
-    
-        try {
-            String sql = "SELECT p.Quantity " +
-                    "FROM Publications p " +
-                    "INNER JOIN PrintMedia pm ON p.PublicationID = pm.PublicationID " +
-                    "WHERE pm.PrintMediaID = ?";
-    
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, printMediaID);
-    
-            ResultSet rs = pstmt.executeQuery();
-    
-            if (rs.next()) {
-                quantity = rs.getInt(1);
-            }
-    
-            rs.close();
-            pstmt.close();
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-    
-        return quantity;
-    }
-
-    int getPrintMediaReleaseNumber(String printMediaID) {
+    public int getPrintMediaReleaseNumber(String printMediaID) {
         int releaseNumber = -1;
     
         try {
@@ -676,7 +560,7 @@ public class Database {
         return releaseNumber;
     }
     
-    String getPrintMediaPrintType(String printMediaID) {
+    public String getPrintMediaPrintType(String printMediaID) {
         String printType = null;
     
         try {
@@ -700,91 +584,9 @@ public class Database {
         }
     
         return printType;
-    }   
-
-    boolean setPrintMediaTitle(String printMediaID, String newTitle) {
-        try {
-            String sql = "UPDATE Publications p " +
-                    "INNER JOIN PrintMedia pm ON p.PublicationID = pm.PrintMediaID " +
-                    "SET p.Title = ? " +
-                    "WHERE pm.PrintMediaID = ?";
-    
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, newTitle);
-            pstmt.setString(2, printMediaID);
-    
-            pstmt.executeUpdate();
-        } catch (Exception e) {
-            System.out.println(e);
-            return false;
-        }
-        return true;
     }
 
-    boolean setPrintMediaReleaseDate(String printMediaID, Date newReleaseDate) {
-        try {
-            String sql = "UPDATE Publications p " +
-                    "INNER JOIN PrintMedia pm ON p.PublicationID = pm.PrintMediaID " +
-                    "SET p.ReleaseDate = ? " +
-                    "WHERE pm.PrintMediaID = ?";
-    
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setDate(1, new java.sql.Date(newReleaseDate.getTime()));
-            pstmt.setString(2, printMediaID);
-    
-            pstmt.executeUpdate();
-            
-            pstmt.close();
-        } catch (Exception e) {
-            System.out.println(e);
-            return false;
-        }
-        return true;
-    }
-
-    boolean setPrintMediaCountry(String printMediaID, String newCountry) {
-        try {
-            String sql = "UPDATE Publications p " +
-                    "INNER JOIN PrintMedia pm ON p.PublicationID = pm.PrintMediaID " +
-                    "SET p.Country = ? " +
-                    "WHERE pm.PrintMediaID = ?";
-    
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, newCountry);
-            pstmt.setString(2, printMediaID);
-    
-            pstmt.executeUpdate();
-            
-            pstmt.close();
-        } catch (Exception e) {
-            System.out.println(e);
-            return false;
-        }
-        return true;
-    }
-    
-    boolean setPrintMediaQuantity(String printMediaID, int newQuantity) {
-        try {
-            String sql = "UPDATE Publications p " +
-                    "INNER JOIN PrintMedia pm ON p.PublicationID = pm.PrintMediaID " +
-                    "SET p.Quantity = ? " +
-                    "WHERE pm.PrintMediaID = ?";
-    
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setInt(1, newQuantity);
-            pstmt.setString(2, printMediaID);
-    
-            pstmt.executeUpdate();
-            
-            pstmt.close();
-        } catch (Exception e) {
-            System.out.println(e);
-            return false;
-        }
-        return true;
-    }
-
-    boolean setPrintMediaReleaseNumber(String printMediaID, int newReleaseNumber) {
+    public boolean setPrintMediaReleaseNumber(String printMediaID, int newReleaseNumber) {
         try {
             String sql = "UPDATE PrintMedia " +
                     "SET ReleaseNumber = ? " +
@@ -803,7 +605,7 @@ public class Database {
         return true;
     }
 
-    boolean setPrintMediaType(String printMediaID, String newPrintType) {
+    public boolean setPrintMediaType(String printMediaID, String newPrintType) {
         try {
             String sql = "UPDATE PrintMedia " +
                     "SET PrintType = ? " +
@@ -825,11 +627,11 @@ public class Database {
 
     // Student
     
-    Student getStudentbyID(String studentId) {
+    public Student getStudentbyID(String studentId) {
         Student student = null;
     
         try {
-            String sql = "SELECT StudentID, Name, Gender, Address, Email, Phone, ClassName, Fine " +
+            String sql = "SELECT StudentID, Name, Gender, Address, Email, Phone, ClassName, Fine, FineStatus " +
                          "FROM Students " +
                          "WHERE StudentID = ?";
     
@@ -849,8 +651,9 @@ public class Database {
 
                 String className = rs.getString(7);
                 double fine = rs.getInt(8);
-
-                Student newStudent = new Student(id, name, gender, address, email, phone, className, fine);
+                boolean finestatus = rs.getBoolean(9);
+    
+                Student newStudent = new Student(id, name, gender, address, email, phone, className, fine, finestatus);
     
                 student = newStudent;
             }
@@ -864,27 +667,30 @@ public class Database {
         return student;
     }
     
-    ArrayList<Student> loadAllStudents() {
+    public ArrayList<Student> loadAllStudents() {
         ArrayList<Student> students = new ArrayList<>();
     
         try {
-            String sql = "SELECT StudentID, Name, Gender, Address, Email, Phone, ClassName, Fine " +
+            String sql = "SELECT StudentID, Name, Gender, Address, Email, Phone, ClassName, Fine, FineStatus " +
                          "FROM Students";
     
             PreparedStatement pstmt = conn.prepareStatement(sql);
             ResultSet rs = pstmt.executeQuery();
     
             while (rs.next()) {
-                String id = rs.getString("StudentID");
-                String name = rs.getString("Name");
-                boolean gender = rs.getBoolean("Gender");
-                String address = rs.getString("Address");
-                String email = rs.getString("Email");
-                String phone = rs.getString("Phone");
-                String className = rs.getString("ClassName");
-                double fine = rs.getDouble("Fine");
+                String id = rs.getString(1);
+                String name = rs.getString(2);
+                boolean gender = rs.getBoolean(3);
+
+                String address = rs.getString(4);
+                String email = rs.getString(5);
+                String phone = rs.getString(6);
+
+                String className = rs.getString(7);
+                double fine = rs.getDouble(8);
+                boolean finestatus = rs.getBoolean(9);
     
-                Student student = new Student(id, name, gender, address, email, phone, className, fine);
+                Student student = new Student(id, name, gender, address, email, phone, className, fine, finestatus);
                 students.add(student);
             }
     
@@ -897,7 +703,7 @@ public class Database {
         return students;
     }
 
-    boolean setStudentName(String studentId, String newName) {
+    public boolean setStudentName(String studentId, String newName) {
         try {
             String sql = "UPDATE Students SET Name = ? WHERE StudentID = ?";
             
@@ -916,7 +722,7 @@ public class Database {
         return true;
     }
     
-    boolean setStudentGender(String studentId, boolean newGender) {
+    public boolean setStudentGender(String studentId, boolean newGender) {
         try {
             String sql = "UPDATE Students SET Gender = ? WHERE StudentID = ?";
             
@@ -935,7 +741,7 @@ public class Database {
         return true;
     }    
     
-    boolean setStudentAddress(String studentId, String newAddress) {
+    public boolean setStudentAddress(String studentId, String newAddress) {
         try {
             String sql = "UPDATE Students SET Address = ? WHERE StudentID = ?";
             
@@ -954,7 +760,7 @@ public class Database {
         return true;
     }
     
-    boolean setStudentEmail(String studentId, String newEmail) {
+    public boolean setStudentEmail(String studentId, String newEmail) {
         try {
             String sql = "UPDATE Students SET Email = ? WHERE StudentID = ?";
             
@@ -973,7 +779,7 @@ public class Database {
         return true;
     }
 
-    boolean setStudentPhone(String studentId, String newPhone) {
+    public boolean setStudentPhone(String studentId, String newPhone) {
         try {
             String sql = "UPDATE Students SET Phone = ? WHERE StudentID = ?";
             
@@ -992,7 +798,7 @@ public class Database {
         return true;
     }
     
-    boolean setStudentClass(String studentId, String newClass) {
+    public boolean setStudentClass(String studentId, String newClass) {
         try {
             String sql = "UPDATE Students SET ClassName = ? WHERE StudentID = ?";
             
@@ -1011,7 +817,7 @@ public class Database {
         return true;
     }
 
-    boolean setStudentFine(String studentId, double newFine) {
+    public boolean setStudentFine(String studentId, double newFine) {
         try {
             String sql = "UPDATE Students SET Fine = ? WHERE StudentID = ?";
             
@@ -1030,7 +836,7 @@ public class Database {
         return true;
     }
     
-    boolean setStudentFineStatus(String studentId, boolean fineStatus) {
+    public boolean setStudentFineStatus(String studentId, boolean fineStatus) {
         try {
             String sql = "UPDATE Students SET FineStatus = ? WHERE StudentID = ?";
             
@@ -1048,6 +854,5 @@ public class Database {
         
         return true;
     }
-    
     
 }

@@ -24,5 +24,13 @@ public class PrintMedia extends Publication {
 	public void setReleaseNumber(int ReleaseNumber) {
 		this.ReleaseNumber = ReleaseNumber;
 	}
+
+	public String getPrintType() {
+		return this.PrintType;
+	}
+
+	public void setPrintType(String PrintType) {
+		this.PrintType = PrintType;
+	}
 	
 }
