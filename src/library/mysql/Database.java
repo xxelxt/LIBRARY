@@ -928,6 +928,41 @@ public class Database {
         return resultList;
     }
 
+    public ArrayList<Books> searchBookbyAuthor(String authorName) {
+        ArrayList<Books> resultList = new ArrayList<>();
+        
+        try {
+            String sql = "SELECT b.BookID, p.Title, p.ReleaseDate " +
+                         "FROM Books b " +
+                         "JOIN Publications p ON b.BookID = p.PublicationID " +
+                         "JOIN BookAuthors ba ON b.BookID = ba.BookID " +
+                         "JOIN Authors a ON ba.AuthorID = a.AuthorID " +
+                         "WHERE a.AuthorName LIKE ?";
+                         
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, "%" + authorName + "%");
+        
+            ResultSet rs = pstmt.executeQuery();
+        
+            while (rs.next()) {
+                String bookId = rs.getString("BookID");
+                String bookTitle = rs.getString("Title");
+                ArrayList<String> authors = getBookAuthor(bookId);
+                String releaseDate = rs.getString("ReleaseDate");
+    
+                Books result = new Books(bookId, bookTitle, authors, releaseDate);
+                resultList.add(result);
+            }
+        
+            rs.close();
+            pstmt.close();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        
+        return resultList;
+    }
+
     ////
 
     public ArrayList<Books> searchBookByCategories(List<String> categories) {
@@ -980,7 +1015,6 @@ public class Database {
         
         return resultList;
     }
-    
     
     
     

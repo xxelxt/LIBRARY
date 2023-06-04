@@ -25,6 +25,11 @@ public class Books extends Publication {
 		this.Publisher = Publisher;
 	}
 
+	public Books(String PublicationID, String Title, ArrayList<String> Authors, Date ReleaseDate) {
+		super(PublicationID, Title, ReleaseDate);
+		this.Authors = Authors;
+	}
+
     public ArrayList<String> getAuthors() {
 		return this.Authors;
 	}

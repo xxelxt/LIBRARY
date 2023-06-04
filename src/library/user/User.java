@@ -61,6 +61,13 @@ public class User extends Person {
         return booksList;
     }
 
+    public ArrayList<Books> searchBookbyAuthor(String author) {
+        ArrayList<Books> booksList = new ArrayList<>();
+        Database db = new Database();
+        booksList = db.searchBookbyAuthor(author);
+        return booksList;
+    }
+
     ////
 
     public ArrayList<Books> searchBookByCategories(List<String> categories) {

@@ -27,6 +27,12 @@ public abstract class Publication {
 		this.Quantity = Quantity;
 	}
 
+	public Publication(String PublicationID, String Title, Date ReleaseDate) {
+		this.PublicationID = PublicationID;
+		this.Title = Title;
+		this.ReleaseDate = ReleaseDate;
+	}
+
 	public String getPublicationID() {
 		return this.PublicationID;
 	}
