@@ -6,13 +6,11 @@ public class Librarian extends Clerk {
         super();
     }
 
-    public Librarian(String Name, boolean Gender, String Username, String Password, String Address, String Email, String Phone,
-                     String StaffID) {
-        super(Name, Gender, Username, Password, Address, Email, Phone, StaffID);
+    public Librarian(String StaffID, String Name, boolean Gender, String Username, String Password, String Address, String Email, String Phone, String Position) {
+        super(StaffID, Name, Gender, Username, Password, Address, Email, Phone, Position);
     }
 
-    public Librarian(String Name, boolean Gender, String Address, String Email, String Phone,
-                     String StaffID) {
-        super(Name, Gender, Address, Email, Phone, StaffID);
+    public Librarian(String StaffID, String Name, boolean Gender, String Address, String Email, String Phone, String Position) {
+        super(StaffID, Name, Gender, Address, Email, Phone, Position);
     }
 }

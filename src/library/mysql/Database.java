@@ -10,6 +10,8 @@ import java.util.Date;
 import java.util.List;
 
 import library.publication.Publication;
+import library.user.Clerk;
+import library.user.Librarian;
 import library.user.Student;
 import library.publication.Books;
 import library.publication.PrintMedia;
@@ -1084,4 +1086,71 @@ public class Database {
         return true;
     }
 
+    // Librarians
+
+    public ArrayList<Librarian> loadAllLibrarians() {
+        ArrayList<Librarian> librarians = new ArrayList<>();
+
+        try {
+            String sql = "SELECT StaffID, Name, Gender, Address, Email, Phone, Position FROM Staff WHERE Position = N'Thủ thư'";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                String staffId = rs.getString(1);
+                String name = rs.getString(2);
+                
+                boolean gender = rs.getBoolean(3);
+                String address = rs.getString(4);
+                
+                String email = rs.getString(5);
+                String phone = rs.getString(6);
+                String position = rs.getString(7);
+
+                Librarian librarian = new Librarian(staffId, name, gender, address, email, phone, position);
+                librarians.add(librarian);
+            }
+
+            rs.close();
+            pstmt.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return librarians;
+    }
+
+    // Clerks
+
+    public ArrayList<Clerk> loadAllClerks() {
+        ArrayList<Clerk> clerks = new ArrayList<>();
+
+        try {
+            String sql = "SELECT StaffID, Name, Gender, Address, Email, Phone, Position FROM Staff WHERE Position = N'Nhân viên'";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                String staffId = rs.getString(1);
+                String name = rs.getString(2);
+                
+                boolean gender = rs.getBoolean(3);
+                String address = rs.getString(4);
+                
+                String email = rs.getString(5);
+                String phone = rs.getString(6);
+                String position = rs.getString(7);
+
+                Clerk clerk = new Clerk(staffId, name, gender, address, email, phone, position);
+                clerks.add(clerk);
+            }
+
+            rs.close();
+            pstmt.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return clerks;
+    }
 }
