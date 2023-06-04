@@ -4,7 +4,7 @@ import java.util.Date;
 
 import library.mysql.Database;
 
-public abstract class Publication {
+public class Publication {
 	private String PublicationID;
 	private String Title;
 	private Date ReleaseDate;

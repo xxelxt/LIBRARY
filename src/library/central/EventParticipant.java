@@ -9,7 +9,15 @@ public class EventParticipant extends Event {
     private String Position;
     
     public EventParticipant() {
+        super();
+        this.Participant = null;
+        this.Position = " ";
+    }
 
+    public EventParticipant(User Participant, String Position) {
+        super();
+        this.Participant = Participant;
+        this.Position = Position;
     }
 
     public EventParticipant(String EventID, String EventName, Date StartDate, Date EndDate, String Status) {

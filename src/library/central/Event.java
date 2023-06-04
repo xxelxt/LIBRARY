@@ -10,7 +10,11 @@ public class Event {
     private String Status;
 
     public Event() {
-
+        this.EventID = " ";
+        this.EventName = " ";
+        this.StartDate = null;
+        this.EndDate = null;
+        this.Status = " ";
     }
 
     public Event(String EventID, String EventName, Date StartDate, Date EndDate, String Status) {

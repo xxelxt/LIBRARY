@@ -15,7 +15,7 @@ public class Student extends Info {
 	}
 
 	public Student(String StudentID, String Name, boolean Gender, String Username, String Password, String Address, String Email, String Phone,
-				   String ClassName, boolean FineStatus, double Fine) {
+				   String ClassName, double Fine, boolean FineStatus) {
 		super(Name, Gender, Username, Password, Address, Email, Phone);
 		this.StudentID = StudentID;
 		this.ClassName = ClassName;
@@ -24,12 +24,17 @@ public class Student extends Info {
 	}
 
 	public Student(String StudentID, String Name, boolean Gender, String Address, String Email, String Phone,
-				   String ClassName, boolean FineStatus, double Fine) {
+				   String ClassName, double Fine, boolean FineStatus) {
 		super(Name, Gender, Address, Email, Phone);
 		this.StudentID = StudentID;
 		this.ClassName = ClassName;
 		this.Fine = Fine;
 		this.FineStatus = FineStatus;
+	}
+
+	public Student(String StudentID, String Name) {
+		setName(Name);
+		this.StudentID = StudentID;
 	}
 
 	public String getStudentID() {
