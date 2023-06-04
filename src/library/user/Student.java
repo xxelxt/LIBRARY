@@ -9,9 +9,17 @@ public class Student extends Info {
 
 	}
 
-	public Student(String Name, String Gender, String Username, String Password, String Address, String Email, String Phone,
-				   String StudentID, String ClassName, double Fine) {
+	public Student(String StudentID, String Name, boolean Gender, String Username, String Password, String Address, String Email, String Phone,
+				   String ClassName, double Fine) {
 		super(Name, Gender, Username, Password, Address, Email, Phone);
+		this.StudentID = StudentID;
+		this.ClassName = ClassName;
+		this.Fine = Fine;
+	}
+
+	public Student(String StudentID, String Name, boolean Gender, String Address, String Email, String Phone,
+				   String ClassName, double Fine) {
+		super(Name, Gender, Address, Email, Phone);
 		this.StudentID = StudentID;
 		this.ClassName = ClassName;
 		this.Fine = Fine;

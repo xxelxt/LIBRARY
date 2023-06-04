@@ -9,8 +9,15 @@ public class Info extends User {
 
     }
 
-    public Info(String Name, String Gender, String Username, String Password, String Address, String Email, String Phone) {
+    public Info(String Name, boolean Gender, String Username, String Password, String Address, String Email, String Phone) {
         super(Name, Gender, Username, Password);
+        this.Address = Address;
+        this.Email = Email;
+        this.Phone = Phone;
+    }
+
+    public Info(String Name, boolean Gender, String Address, String Email, String Phone) {
+        super(Name, Gender);
         this.Address = Address;
         this.Email = Email;
         this.Phone = Phone;

@@ -13,7 +13,11 @@ public class User extends Person {
         this.Password = Password;
     }
 
-    public User(String Name, String Gender, String Username, String Password) {
+    public User(String Name, boolean Gender) {
+        super(Name, Gender);
+    }
+
+    public User(String Name, boolean Gender, String Username, String Password) {
         super(Name, Gender);
         this.Username = Username;
         this.Password = Password;

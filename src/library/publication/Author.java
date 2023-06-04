@@ -9,7 +9,7 @@ public class Author extends Person {
     }
 
 
-    public Author(String Name, String Gender) {
+    public Author(String Name, boolean Gender) {
         super(Name, Gender);
     }
 }

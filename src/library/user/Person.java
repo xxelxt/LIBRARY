@@ -2,13 +2,13 @@ package library.user;
 
 public abstract class Person {
 	private String Name;
-	private String Gender;
+	private boolean Gender;
 	
 	public Person() {
 
 	} 
 
-	public Person(String Name, String Gender) {
+	public Person(String Name, boolean Gender) {
 		this.Name = Name;
 		this.Gender = Gender;
 	}
@@ -21,11 +21,11 @@ public abstract class Person {
 		this.Name = Name;
 	}
 
-	public String getGender() {
+	public boolean getGender() {
 		return this.Gender;
 	}
 
-	public void setGender(String Gender) {
+	public void setGender(boolean Gender) {
 		this.Gender = Gender;
 	}
 }

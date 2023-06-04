@@ -7,7 +7,7 @@ public class Clerk extends Info {
 
     }
     
-    public Clerk(String Name, String Gender, String Username, String Password, String Address, String Email, String Phone,
+    public Clerk(String Name, boolean Gender, String Username, String Password, String Address, String Email, String Phone,
                  String StaffID) {
         super(Name, Gender, Username, Password, Address, Email, Phone);
         this.StaffID = StaffID;
