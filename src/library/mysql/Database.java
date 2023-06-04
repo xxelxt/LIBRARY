@@ -1223,7 +1223,7 @@ public class Database {
 
                 Student borrower = new Student(studentID, studentName);
                 Publication pub = new Publication(publicationID, publicationTitle);
-                Borrow currentBorrow = new Borrow(borrowID, startDate, dueDate, returnedDate, borrower, pub, fineStatus, returnedStatus);
+                Borrow currentBorrow = new Borrow(borrowID, startDate, dueDate, returnedDate, borrower, pub, borrowQuantity, fineStatus, returnedStatus);
                 borrowList.add(currentBorrow);
             }
 

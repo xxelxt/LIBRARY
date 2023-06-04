@@ -12,6 +12,7 @@ public class Borrow {
 	private Date ReturnedDate;
 	private Student Borrower;
 	private Publication BorrowedPub;
+	private int BorrowQuantity;
 	private boolean FineStatus;
 	private boolean ReturnedStatus;
 	
@@ -22,17 +23,19 @@ public class Borrow {
 		this.ReturnedDate = null;
 		this.Borrower = null;
 		this.BorrowedPub = null;
+		this.BorrowQuantity = -1;
 		this.FineStatus = false;
 		this.ReturnedStatus = false;
 	}
 
-	public Borrow(String BorrowID, Date StartDate, Date DueDate, Date ReturnedDate, Student Borrower, Publication BorrowedPub, boolean FineStatus, boolean ReturnedStatus) {
+	public Borrow(String BorrowID, Date StartDate, Date DueDate, Date ReturnedDate, Student Borrower, Publication BorrowedPub, int BorrowQuantity, boolean FineStatus, boolean ReturnedStatus) {
 		this.BorrowID = BorrowID;
 		this.StartDate = StartDate;
 		this.DueDate = DueDate;
 		this.ReturnedDate = ReturnedDate;
 		this.Borrower = Borrower;
 		this.BorrowedPub = BorrowedPub;
+		this.BorrowQuantity = BorrowQuantity;
 		this.FineStatus = FineStatus;
 		this.ReturnedStatus = ReturnedStatus;
 	}	
@@ -85,16 +88,20 @@ public class Borrow {
 		this.BorrowedPub = BorrowedPub;
 	}
 
+	public int getBorrowQuantity() {
+		return this.BorrowQuantity;
+	}
+
+	public void setBorrowQuantity(int BorrowQuantity) {
+		this.BorrowQuantity = BorrowQuantity;
+	}
+
 	public boolean getFineStatus() {
 		return this.FineStatus;
 	}
 
 	public void setFineStatus(boolean FineStatus) {
 		this.FineStatus = FineStatus;
-	}
-
-	public boolean isReturnedStatus() {
-		return this.ReturnedStatus;
 	}
 
 	public boolean getReturnedStatus() {
@@ -111,6 +118,7 @@ public class Borrow {
 		this.ReturnedDate = Update.ReturnedDate;
 		this.Borrower = Update.Borrower;
 		this.BorrowedPub = Update.BorrowedPub;
+		this.BorrowQuantity = Update.BorrowQuantity;
 		this.FineStatus = Update.FineStatus;
 		this.ReturnedStatus = Update.ReturnedStatus;
     }
