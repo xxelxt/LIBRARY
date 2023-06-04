@@ -13,6 +13,7 @@ import library.publication.Publication;
 import library.user.Clerk;
 import library.user.Librarian;
 import library.user.Student;
+import library.central.Borrow;
 import library.publication.Books;
 import library.publication.PrintMedia;
 
@@ -1192,11 +1193,46 @@ public class Database {
         return true;
     }
 
+    public ArrayList<Borrow> loadBorrowList() {
+        ArrayList<Borrow> borrowList = new ArrayList<>();
 
+        try {
+            String sql = "SELECT b.BorrowID, s.StudentID, s.Name, b.StartDate, b.DueDate, b.ReturnedDate, p.PublicationID, p.Title, b.BorrowQuantity, b.FineStatus, b.ReturnedStatus " +
+                    "FROM Borrow b " +
+                    "JOIN Students s ON b.StudentID = s.StudentID " +
+                    "JOIN Publications p ON b.PublicationID = p.PublicationID";
 
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            ResultSet rs = pstmt.executeQuery();
 
+            while (rs.next()) {
+                String borrowID = rs.getString(1);
+                String studentID = rs.getString(2);
+                String studentName = rs.getString(3);
 
+                Date startDate = rs.getDate(4);
+                Date dueDate = rs.getDate(5);
+                Date returnedDate = rs.getDate(6);
 
+                String publicationID = rs.getString(7);
+                String publicationTitle = rs.getString(8);
+                int borrowQuantity = rs.getInt(9);
 
+                boolean fineStatus = rs.getBoolean(10);
+                String returnedStatus = rs.getString(11);
 
+                Student borrower = new Student(studentID, studentName);
+                Publication pub = new Publication(publicationID, publicationTitle);
+                Borrow currentBorrow = new Borrow(borrowID, startDate, dueDate, returnedDate, borrower, pub, fineStatus, returnedStatus);
+                borrowList.add(currentBorrow);
+            }
+
+            rs.close();
+            pstmt.close();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+
+        return borrowList;
+    }
 }

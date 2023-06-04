@@ -33,6 +33,11 @@ public abstract class Publication {
 		this.ReleaseDate = ReleaseDate;
 	}
 
+	public Publication(String PublicationID, String Title) {
+		this.PublicationID = PublicationID;
+		this.Title = Title;
+	}
+
 	public String getPublicationID() {
 		return this.PublicationID;
 	}

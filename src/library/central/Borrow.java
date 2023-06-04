@@ -3,14 +3,14 @@ package library.central;
 import java.util.Date;
 
 import library.publication.Publication;
-import library.user.User;
+import library.user.Student;
 
 public class Borrow {
-	private int BorrowID;
+	private String BorrowID;
 	private Date StartDate;
 	private Date DueDate;
 	private Date ReturnedDate;
-	private User Borrower;
+	private Student Borrower;
 	private Publication BorrowedPub;
 	private String FineStatus;
 	private boolean ReturnedStatus;
@@ -19,7 +19,7 @@ public class Borrow {
 
 	}
 
-	public Borrow(int BorrowID, Date StartDate, Date DueDate, Date ReturnedDate, User Borrower, Publication BorrowedPub, String FineStatus, boolean ReturnedStatus) {
+	public Borrow(String BorrowID, Date StartDate, Date DueDate, Date ReturnedDate, Student Borrower, Publication BorrowedPub, String FineStatus, boolean ReturnedStatus) {
 		this.BorrowID = BorrowID;
 		this.StartDate = StartDate;
 		this.DueDate = DueDate;
@@ -30,11 +30,11 @@ public class Borrow {
 		this.ReturnedStatus = ReturnedStatus;
 	}	
 
-	public int getBorrowID() {
+	public String getBorrowID() {
 		return this.BorrowID;
 	}
 
-	public void setBorrowID(int BorrowID) {
+	public void setBorrowID(String BorrowID) {
 		this.BorrowID = BorrowID;
 	}
 
@@ -62,11 +62,11 @@ public class Borrow {
 		this.ReturnedDate = ReturnedDate;
 	}
 
-	public User getBorrower() {
+	public Student getBorrower() {
 		return this.Borrower;
 	}
 
-	public void setBorrower(User Borrower) {
+	public void setBorrower(Student Borrower) {
 		this.Borrower = Borrower;
 	}
 
