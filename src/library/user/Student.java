@@ -15,7 +15,7 @@ public class Student extends Info {
 	}
 
 	public Student(String StudentID, String Name, boolean Gender, String Username, String Password, String Address, String Email, String Phone,
-				   String ClassName, double Fine, boolean FineStatus) {
+				   String ClassName, boolean FineStatus, double Fine) {
 		super(Name, Gender, Username, Password, Address, Email, Phone);
 		this.StudentID = StudentID;
 		this.ClassName = ClassName;
@@ -24,7 +24,7 @@ public class Student extends Info {
 	}
 
 	public Student(String StudentID, String Name, boolean Gender, String Address, String Email, String Phone,
-				   String ClassName, double Fine, boolean FineStatus) {
+				   String ClassName, boolean FineStatus, double Fine) {
 		super(Name, Gender, Address, Email, Phone);
 		this.StudentID = StudentID;
 		this.ClassName = ClassName;

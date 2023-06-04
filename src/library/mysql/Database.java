@@ -1153,4 +1153,50 @@ public class Database {
 
         return clerks;
     }
+
+    // Borrow
+
+    boolean addStudent(String Username, String Password, String StudentID, String Name, boolean Gender, 
+                       String Address, String Email, String Phone, String ClassName, double Fine, boolean FineStatus) {
+        try {
+            String usersSql = "INSERT INTO Users (Username, Password) VALUES (?, ?)";
+            PreparedStatement users_pstmt = conn.prepareStatement(usersSql);
+            users_pstmt.setString(1, Username);
+            users_pstmt.setString(2, Password);
+            users_pstmt.executeUpdate();
+            users_pstmt.close();
+
+            String studentSql = "INSERT INTO Students VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            PreparedStatement student_pstmt = conn.prepareStatement(studentSql);
+
+            student_pstmt.setString(1, StudentID);
+            student_pstmt.setString(2, Username);
+            student_pstmt.setString(3, Name);
+
+            student_pstmt.setBoolean(4, Gender);
+            student_pstmt.setString(5, Address);
+            student_pstmt.setString(6, Email);
+            student_pstmt.setString(7, Phone);
+
+            student_pstmt.setString(8, ClassName);
+            student_pstmt.setDouble(9, Fine);
+            student_pstmt.setBoolean(10, FineStatus);
+
+            student_pstmt.executeUpdate();
+            student_pstmt.close();
+
+        } catch (Exception e) {
+            System.out.println(e);
+            return false;
+        }
+        return true;
+    }
+
+
+
+
+
+
+
+
 }
