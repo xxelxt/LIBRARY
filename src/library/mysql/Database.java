@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 
+import library.publication.Publication;
 import library.publication.Books;
 
 public class Database {
@@ -47,7 +48,7 @@ public class Database {
         }
     }
 
-    Books GetBookByID(int bookID) {
+    Books GetBookByID(String BookID) {
         Books currentBook = null;
         try {
             ResultSet rs = stmt.executeQuery(
@@ -57,14 +58,14 @@ public class Database {
                             "INNER JOIN BookAuthors ba ON b.BookID = ba.BookID " +
                             "INNER JOIN Authors a ON ba.AuthorID = a.AuthorID " +
                             "INNER JOIN Publishers pb ON b.PublisherID = pb.PublisherID " +
-                            "WHERE b.BookID = " + bookID + " " +
+                            "WHERE b.BookID = " + BookID + " " +
                             "GROUP BY p.PublicationID, p.Title, p.ReleaseDate, p.Country, p.Quantity, b.Category, b.Reissue, pb.PublisherName");
 
             while (rs.next()) {
                 String publicationID = rs.getString("PublicationID");
                 String title = rs.getString("Title");
                 String authorsString = rs.getString("Authors");
-                ArrayList<String> authors = new ArrayList<>(Arrays.asList(authorsString.split(",")));
+                ArrayList<String> authors = new ArrayList<>(Arrays.asList(authorsString.split(", ")));
                 Date releaseDate = rs.getDate("ReleaseDate");
                 String country = rs.getString("Country");
                 int quantity = rs.getInt("Quantity");
@@ -72,7 +73,9 @@ public class Database {
                 int reissue = rs.getInt("Reissue");
                 String publisher = rs.getString("PublisherName");
 
-                currentBook = new Books(publicationID, title, releaseDate, country, quantity, authors, category, reissue, publisher);
+                Books newBook = new Books(publicationID, title, releaseDate, country, quantity, authors, category, reissue, publisher);
+
+                currentBook = newBook;
             }
 
             rs.close();
@@ -82,4 +85,6 @@ public class Database {
 
         return currentBook;
     }
+
+    
 }
