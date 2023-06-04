@@ -12,14 +12,21 @@ public class Borrow {
 	private Date ReturnedDate;
 	private Student Borrower;
 	private Publication BorrowedPub;
-	private String FineStatus;
+	private boolean FineStatus;
 	private boolean ReturnedStatus;
 	
 	public Borrow() {
-
+		this.BorrowID = " ";
+		this.StartDate = null;
+		this.DueDate = null;
+		this.ReturnedDate = null;
+		this.Borrower = null;
+		this.BorrowedPub = null;
+		this.FineStatus = false;
+		this.ReturnedStatus = false;
 	}
 
-	public Borrow(String BorrowID, Date StartDate, Date DueDate, Date ReturnedDate, Student Borrower, Publication BorrowedPub, String FineStatus, boolean ReturnedStatus) {
+	public Borrow(String BorrowID, Date StartDate, Date DueDate, Date ReturnedDate, Student Borrower, Publication BorrowedPub, boolean FineStatus, boolean ReturnedStatus) {
 		this.BorrowID = BorrowID;
 		this.StartDate = StartDate;
 		this.DueDate = DueDate;
@@ -78,11 +85,11 @@ public class Borrow {
 		this.BorrowedPub = BorrowedPub;
 	}
 
-	public String getFineStatus() {
+	public boolean getFineStatus() {
 		return this.FineStatus;
 	}
 
-	public void setFineStatus(String FineStatus) {
+	public void setFineStatus(boolean FineStatus) {
 		this.FineStatus = FineStatus;
 	}
 

@@ -1219,7 +1219,7 @@ public class Database {
                 int borrowQuantity = rs.getInt(9);
 
                 boolean fineStatus = rs.getBoolean(10);
-                String returnedStatus = rs.getString(11);
+                boolean returnedStatus = rs.getBoolean(11);
 
                 Student borrower = new Student(studentID, studentName);
                 Publication pub = new Publication(publicationID, publicationTitle);
