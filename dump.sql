@@ -310,15 +310,13 @@ CREATE TABLE `staff` (
   `Address` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
   `Email` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
   `Phone` char(10) NOT NULL,
-  `PositionID` tinyint NOT NULL,
+  `Position` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
   PRIMARY KEY (`StaffID`),
   KEY `Username` (`Username`),
   KEY `Name` (`Name`),
   KEY `Email` (`Email`),
   KEY `Phone` (`Phone`),
-  KEY `PositionID` (`PositionID`),
-  CONSTRAINT `staff_ibfk_1` FOREIGN KEY (`Username`) REFERENCES `users` (`Username`),
-  CONSTRAINT `staff_ibfk_2` FOREIGN KEY (`PositionID`) REFERENCES `positions` (`PositionID`)
+  CONSTRAINT `staff_ibfk_1` FOREIGN KEY (`Username`) REFERENCES `users` (`Username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -400,4 +398,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-06-04 17:03:08
+-- Dump completed on 2023-06-04 19:07:21
