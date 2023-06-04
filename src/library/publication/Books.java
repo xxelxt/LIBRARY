@@ -14,7 +14,7 @@ public class Books extends Publication {
 
 	}
 
-	public Books(String PublicationID, String Title, Date ReleaseDate, String Country, int Quantity, ArrayList<String> authors, String Category, int Reissue, String Publisher) {
+	public Books(String PublicationID, String Title, Date ReleaseDate, String Country, int Quantity, ArrayList<String> Authors, String Category, int Reissue, String Publisher) {
 		super(PublicationID, Title, ReleaseDate, Country, Quantity);
 		this.Authors = Authors;
 		this.Category = Category;
@@ -22,7 +22,7 @@ public class Books extends Publication {
 		this.Publisher = Publisher;
 	}
 
-	public ArrayList<String> getAuthors() {
+    public ArrayList<String> getAuthors() {
 		return this.Authors;
 	}
 
