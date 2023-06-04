@@ -401,5 +401,23 @@ public class Database {
         } catch (Exception e) {
             System.out.println(e);
         }
-    } 
+    }
+
+    void updateBookPublisher(String bookID, String publisherName) {
+        try {
+            String sql = "UPDATE Books b " +
+                         "INNER JOIN Publishers pb ON b.PublisherID = pb.PublisherID " +
+                         "SET b.PublisherID = pb.PublisherID " +
+                         "WHERE b.BookID = ? AND pb.PublisherName = ?";
+    
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, bookID);
+            pstmt.setString(2, publisherName);
+    
+            pstmt.executeUpdate();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+    
 }
