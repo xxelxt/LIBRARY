@@ -7,7 +7,11 @@ public class Student extends Info {
 	private double Fine;
 
 	public Student() {
-
+		super();
+		this.StudentID = " ";
+		this.ClassName = " ";
+		this.FineStatus = false;
+		this.Fine = -1.0;
 	}
 
 	public Student(String StudentID, String Name, boolean Gender, String Username, String Password, String Address, String Email, String Phone,

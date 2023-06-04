@@ -8,7 +8,9 @@ public class PrintMedia extends Publication {
 	private String PrintType;
 
 	public PrintMedia() {
-		
+		super();
+		this.ReleaseNumber = -1;
+		this.PrintType = " ";
 	}
 
 	public PrintMedia(String PublicationID, String Title, Date ReleaseDate, String Country, int Quantity, int ReleaseNumber, String PrintType) {

@@ -12,7 +12,11 @@ public abstract class Publication {
 	private int Quantity;
 
 	public Publication() {
-		
+		this.PublicationID = " ";
+		this.Title = " ";
+		this.ReleaseDate = null;
+		this.Country = " ";
+		this.Quantity = -1;
 	}
 
 	public Publication(String PublicationID, String Title, Date ReleaseDate, String Country, int Quantity) {

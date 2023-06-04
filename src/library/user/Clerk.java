@@ -4,12 +4,19 @@ public class Clerk extends Info {
     private String StaffID;
 
     public Clerk() {
-
+        super();
+        this.StaffID = " ";
     }
     
     public Clerk(String Name, boolean Gender, String Username, String Password, String Address, String Email, String Phone,
                  String StaffID) {
         super(Name, Gender, Username, Password, Address, Email, Phone);
+        this.StaffID = StaffID;
+    }
+
+    public Clerk(String Name, boolean Gender, String Address, String Email, String Phone,
+                 String StaffID) {
+        super(Name, Gender, Address, Email, Phone);
         this.StaffID = StaffID;
     }
 

@@ -6,7 +6,10 @@ public class Info extends User {
     private String Phone;
 
     public Info() {
-
+        super();
+        this.Address = " ";
+        this.Email = " ";
+        this.Phone = " ";
     }
 
     public Info(String Name, boolean Gender, String Username, String Password, String Address, String Email, String Phone) {

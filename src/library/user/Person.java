@@ -5,7 +5,8 @@ public abstract class Person {
 	private boolean Gender;
 	
 	public Person() {
-
+		this.Name = " ";
+		this.Gender = false; // Đặt mặc định là nữ
 	} 
 
 	public Person(String Name, boolean Gender) {

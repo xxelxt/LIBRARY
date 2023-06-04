@@ -5,7 +5,9 @@ public class User extends Person {
 	private String Password;
 
     public User() {
-
+        super();
+        this.Username = " ";
+        this.Password = " ";
     }
 
     public User(String Username, String Password) {
