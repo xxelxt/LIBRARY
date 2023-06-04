@@ -5,6 +5,7 @@ import java.util.List;
 
 import library.mysql.Database;
 import library.publication.Books;
+import library.publication.PrintMedia;
 
 public class User extends Person {
 	private String Username;
@@ -68,12 +69,26 @@ public class User extends Person {
         return booksList;
     }
 
+    public ArrayList<PrintMedia> searchPrintMediabyTitle(String title) {
+        ArrayList<PrintMedia> printMediaList = new ArrayList<>();
+        Database db = new Database();
+        printMediaList = db.searchPrintMediabyTitle(title);
+        return printMediaList;
+    }
+
+    public ArrayList<PrintMedia> searchPrintMediabyPrintType(String type) {
+        ArrayList<PrintMedia> printMediaList = new ArrayList<>();
+        Database db = new Database();
+        printMediaList = db.searchPrintMediabyPrintType(type);
+        return printMediaList;
+    }
+
     ////
 
     public ArrayList<Books> searchBookByCategories(List<String> categories) {
         ArrayList<Books> booksList = new ArrayList<>();
         Database db = new Database();
-        booksList = db.searchBookByCategories(categories);
+        booksList = db.searchBookbyCategories(categories);
         return booksList;
     }
     

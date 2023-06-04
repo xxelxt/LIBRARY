@@ -18,6 +18,12 @@ public class PrintMedia extends Publication {
 		this.ReleaseNumber = ReleaseNumber;
 		this.PrintType = PrintType;
 	}
+
+	public PrintMedia(String PublicationID, String Title, Date ReleaseDate, int ReleaseNumber, String PrintType) {
+		super(PublicationID, Title, ReleaseDate);
+		this.ReleaseNumber = ReleaseNumber;
+		this.PrintType = PrintType;
+	}
 	
 	public int getReleaseNumber() {
 		return this.ReleaseNumber;
