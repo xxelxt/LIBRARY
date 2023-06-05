@@ -1710,6 +1710,8 @@ public class Database {
         return exists;
     }
 
+    // Add & delete Publications
+
     public boolean isPublicationBorrowed(String publicationID) {
         boolean borrowed = false;
         
