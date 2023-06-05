@@ -1735,4 +1735,6 @@ public class Database {
         return borrowed;
     }
 
+    public boolean addPublisher()
+
 }
