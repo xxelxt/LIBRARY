@@ -1735,6 +1735,62 @@ public class Database {
         return borrowed;
     }
 
-    public boolean addPublisher()
+    boolean addPublisher(String publisherID, String publisherName) {
+        try {
+            String sql = "INSERT INTO Publishers (PublisherID, PublisherName) VALUES (?, ?)";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
 
+            pstmt.setString(1, publisherID);
+            pstmt.setString(2, publisherName);
+
+            pstmt.executeUpdate();
+            pstmt.close();
+        } catch (Exception e) {
+            System.out.println(e);
+            return false;
+        }
+        return true;
+    }
+    
+    boolean addPublication(String publicationID, String title, Date releaseDate, String country, int quantity) {
+        try {
+            String sql = "INSERT INTO Publications (PublicationID, Title, ReleaseDate, Country, Quantity) VALUES (?, ?, ?, ?, ?)";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+
+            pstmt.setString(1, publicationID);
+            pstmt.setString(2, title);
+            pstmt.setDate(3, new java.sql.Date(releaseDate.getTime()));
+            pstmt.setString(4, country);
+            pstmt.setInt(5, quantity);
+
+            pstmt.executeUpdate();
+            pstmt.close();
+        } catch (Exception e) {
+            System.out.println(e);
+            return false;
+        }
+        return true;
+    }
+    
+    boolean addPrintMedia(String publicationID, String title, Date releaseDate, String country, int quantity, int ReleaseNumber, String printType) {
+        boolean success = addPublication(publicationID, title, releaseDate, country, quantity);
+
+        if (success) {
+            try {
+                String sql = "INSERT INTO PrintMedia (PublicationID, ReleaseNumber, PrintType) VALUES (?, ?, ?)";
+                PreparedStatement pstmt = conn.prepareStatement(sql);
+                pstmt.setString(1, publicationID);
+                pstmt.setInt(2, ReleaseNumber);
+                pstmt.setString(3, printType);
+
+                pstmt.executeUpdate();
+                pstmt.close();
+            } catch (Exception e) {
+                System.out.println(e);
+                return false;
+            }
+        }
+        return true;
+    }
+    
 }
