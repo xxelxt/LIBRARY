@@ -838,10 +838,8 @@ public class Database {
         
         return resultList;
     }
-    
-    ////
 
-    public ArrayList<Books> searchBookbyCategories(List<String> categories) {
+    /* public ArrayList<Books> searchBookbyCategories(List<String> categories) {
         ArrayList<Books> resultList = new ArrayList<>();
         
         try {
@@ -890,7 +888,7 @@ public class Database {
         }
         
         return resultList;
-    }
+    } */
     
     // Students
     
@@ -1792,5 +1790,55 @@ public class Database {
         }
         return true;
     }
+
+    boolean addBook(String publicationID, String title, Date releaseDate, String country, int quantity, String category, boolean reissue, String publisherID, String authorID, String authorName, boolean authorGender) {
+        boolean success = addPublication(publicationID, title, releaseDate, country, quantity);
+        if (success) {
+            try {
+                // Check if the author exists in the Authors table
+                String checkAuthorSql = "SELECT * FROM Authors WHERE AuthorID = ?";
+                PreparedStatement checkAuthorStmt = conn.prepareStatement(checkAuthorSql);
+                checkAuthorStmt.setString(1, authorID);
+                ResultSet checkAuthorResult = checkAuthorStmt.executeQuery();
+                
+                if (!checkAuthorResult.next()) {
+                    // If the author does not exist, insert the author into the Authors table
+                    String insertAuthorSql = "INSERT INTO Authors (AuthorID, AuthorName, AuthorGender) VALUES (?, ?, ?)";
+                    PreparedStatement insertAuthorStmt = conn.prepareStatement(insertAuthorSql);
+                    insertAuthorStmt.setString(1, authorID);
+                    insertAuthorStmt.setString(2, authorName);
+                    insertAuthorStmt.setBoolean(3, authorGender);
+                    insertAuthorStmt.executeUpdate();
+                    insertAuthorStmt.close();
+                }
+                
+                checkAuthorResult.close();
+                checkAuthorStmt.close();
+                
+                // Insert the book into the Books table
+                String insertBookSql = "INSERT INTO Books (BookID, Category, Reissue, PublisherID) VALUES (?, ?, ?, ?)";
+                PreparedStatement insertBookStmt = conn.prepareStatement(insertBookSql);
+                insertBookStmt.setString(1, publicationID);
+                insertBookStmt.setString(2, category);
+                insertBookStmt.setBoolean(3, reissue);
+                insertBookStmt.setString(4, publisherID);
+                insertBookStmt.executeUpdate();
+                insertBookStmt.close();
+                
+                // Insert the book author into the BookAuthors table
+                String insertBookAuthorSql = "INSERT INTO BookAuthors (BookID, AuthorID) VALUES (?, ?)";
+                PreparedStatement insertBookAuthorStmt = conn.prepareStatement(insertBookAuthorSql);
+                insertBookAuthorStmt.setString(1, publicationID);
+                insertBookAuthorStmt.setString(2, authorID);
+                insertBookAuthorStmt.executeUpdate();
+                insertBookAuthorStmt.close();
+            } catch (Exception e) {
+                System.out.println(e);
+                return false;
+            }
+        }
+        return success;
+    }
+    
     
 }

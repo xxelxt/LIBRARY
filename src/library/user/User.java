@@ -83,13 +83,11 @@ public class User extends Person {
         return printMediaList;
     }
 
-    ////
-
-    public ArrayList<Books> searchBookByCategories(List<String> categories) {
+    /* public ArrayList<Books> searchBookByCategories(List<String> categories) {
         ArrayList<Books> booksList = new ArrayList<>();
         Database db = new Database();
         booksList = db.searchBookbyCategories(categories);
         return booksList;
-    }
+    } */
     
 }
