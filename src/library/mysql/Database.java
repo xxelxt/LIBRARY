@@ -1791,31 +1791,63 @@ public class Database {
         return true;
     }
 
-    boolean addBook(String publicationID, String title, Date releaseDate, String country, int quantity, String category, boolean reissue, String publisherID, String authorID, String authorName, boolean authorGender) {
+    public boolean addAuthor(String authorID, String authorName, boolean authorGender) {
+        try {
+            String sql = "INSERT INTO Authors (AuthorID, AuthorName, AuthorGender) VALUES (?, ?, ?)";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, authorID);
+            pstmt.setString(2, authorName);
+            pstmt.setBoolean(3, authorGender);
+            pstmt.executeUpdate();
+            pstmt.close();
+        } catch (Exception e) {
+            System.out.println(e);
+            return false;
+        }
+        return true;
+    }    
+
+    boolean addBook(String publicationID, String title, Date releaseDate, String country, int quantity, String category, boolean reissue, String publisherID, String publisherName, String authorID, String authorName, boolean authorGender) {
         boolean success = addPublication(publicationID, title, releaseDate, country, quantity);
+
         if (success) {
             try {
-                // Check if the author exists in the Authors table
+                // Kiểm tra xem đã có NXB trong CSDL chưa
+                String checkPublisherSql = "SELECT * FROM Publishers WHERE PublisherID = ?";
+                PreparedStatement checkPublisherStmt = conn.prepareStatement(checkPublisherSql);
+                checkPublisherStmt.setString(1, publisherID);
+                ResultSet checkPublisherResult = checkPublisherStmt.executeQuery();
+                
+                if (!checkPublisherResult.next()) {
+                    // Nếu không có thì thêm NXB mới vào trước
+                    boolean addPublisherResult = addPublisher(publisherID, publisherName);
+                    if (!addPublisherResult) {
+                        // Hết danh sách
+                        checkPublisherResult.close();
+                        checkPublisherStmt.close();
+                        return false;
+                    }
+                }
+                
+                checkPublisherResult.close();
+                checkPublisherStmt.close();
+                
+                // Kiểm tra xem đã có tác giả trong CSDL chưa
                 String checkAuthorSql = "SELECT * FROM Authors WHERE AuthorID = ?";
                 PreparedStatement checkAuthorStmt = conn.prepareStatement(checkAuthorSql);
                 checkAuthorStmt.setString(1, authorID);
                 ResultSet checkAuthorResult = checkAuthorStmt.executeQuery();
                 
                 if (!checkAuthorResult.next()) {
-                    // If the author does not exist, insert the author into the Authors table
-                    String insertAuthorSql = "INSERT INTO Authors (AuthorID, AuthorName, AuthorGender) VALUES (?, ?, ?)";
-                    PreparedStatement insertAuthorStmt = conn.prepareStatement(insertAuthorSql);
-                    insertAuthorStmt.setString(1, authorID);
-                    insertAuthorStmt.setString(2, authorName);
-                    insertAuthorStmt.setBoolean(3, authorGender);
-                    insertAuthorStmt.executeUpdate();
-                    insertAuthorStmt.close();
+                    // Nếu không có thì thêm tác giả mới vào trước
+                    boolean addAuthorResult = addAuthor(authorID, authorName, authorGender);
+                    if (!addAuthorResult) {
+                        checkAuthorResult.close();
+                        checkAuthorStmt.close();
+                    }
                 }
                 
-                checkAuthorResult.close();
-                checkAuthorStmt.close();
-                
-                // Insert the book into the Books table
+                // Thêm sách
                 String insertBookSql = "INSERT INTO Books (BookID, Category, Reissue, PublisherID) VALUES (?, ?, ?, ?)";
                 PreparedStatement insertBookStmt = conn.prepareStatement(insertBookSql);
                 insertBookStmt.setString(1, publicationID);
@@ -1825,20 +1857,20 @@ public class Database {
                 insertBookStmt.executeUpdate();
                 insertBookStmt.close();
                 
-                // Insert the book author into the BookAuthors table
+                // Thêm tác giả của sách
                 String insertBookAuthorSql = "INSERT INTO BookAuthors (BookID, AuthorID) VALUES (?, ?)";
                 PreparedStatement insertBookAuthorStmt = conn.prepareStatement(insertBookAuthorSql);
                 insertBookAuthorStmt.setString(1, publicationID);
                 insertBookAuthorStmt.setString(2, authorID);
                 insertBookAuthorStmt.executeUpdate();
                 insertBookAuthorStmt.close();
+
             } catch (Exception e) {
                 System.out.println(e);
                 return false;
             }
         }
-        return success;
+        return true;
     }
-    
     
 }
