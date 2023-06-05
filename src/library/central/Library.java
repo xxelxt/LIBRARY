@@ -70,4 +70,30 @@ public class Library {
             System.out.println();
         }
     }
+
+    boolean isStudentPresent(String StudentID) {
+        for (int i = 0; i < StudentList.size(); i++) {
+            Student S = StudentList.get(i);
+            if (S.getStudentID() == StudentID) return true;
+        }
+        return false;
+    }
+
+    boolean isClerkPresent(String ClerkID) {
+        for (int i = 0; i < ClerkList.size(); i++) {
+            Clerk C = ClerkList.get(i);
+            if (C.getStaffID() == ClerkID) return true;
+        }
+        return false;
+    }
+
+    boolean isLibrarianPresent(String LibrarianID) {
+        for (int i = 0; i < LibrarianList.size(); i++) {
+            Librarian L = LibrarianList.get(i);
+            if (L.getStaffID() == LibrarianID) return true;
+        }
+        return false;
+    }
+
+
 }
