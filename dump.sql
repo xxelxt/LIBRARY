@@ -118,10 +118,10 @@ CREATE TABLE `borrow` (
   `StartDate` date NOT NULL,
   `DueDate` date NOT NULL,
   `ReturnedDate` date DEFAULT NULL,
-  `FineStatus` bit(1) NOT NULL,
   `PublicationID` char(20) DEFAULT NULL,
   `BorrowQuantity` smallint NOT NULL,
-  `ReturnedStatus` varchar(20) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
+  `FineStatus` bit(1) NOT NULL,
+  `ReturnedStatus` bit(1) NOT NULL,
   PRIMARY KEY (`BorrowID`),
   KEY `PublicationID` (`PublicationID`),
   KEY `StudentID` (`StudentID`),
@@ -398,4 +398,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-06-04 19:07:21
+-- Dump completed on 2023-06-05 20:33:03
