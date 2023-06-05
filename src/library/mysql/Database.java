@@ -1872,5 +1872,75 @@ public class Database {
         }
         return true;
     }
+
+    public boolean deletePublication(String publicationID) {
+        try {
+            String deletePublicationSql = "DELETE FROM Publications WHERE PublicationID = ?";
+            PreparedStatement deletePublicationStmt = conn.prepareStatement(deletePublicationSql);
+            deletePublicationStmt.setString(1, publicationID);
+
+            int rowsAffected = deletePublicationStmt.executeUpdate();
+            deletePublicationStmt.close();
+
+            if (rowsAffected == 0) {
+                System.out.println("No publication found with the provided ID.");
+                return false;
+            }
+
+        } catch (Exception e) {
+            System.out.println(e);
+            return false;
+        }
+        return true;
+    }
+    
+    public boolean deletePrintMedia(String publicationID) {
+        boolean success = deletePublication(publicationID);
+    
+        if (success) {
+            try {
+                String deletePrintMediaSql = "DELETE FROM PrintMedia WHERE PublicationID = ?";
+                PreparedStatement deletePrintMediaStmt = conn.prepareStatement(deletePrintMediaSql);
+                deletePrintMediaStmt.setString(1, publicationID);
+                deletePrintMediaStmt.executeUpdate();
+                deletePrintMediaStmt.close();
+    
+                return true;
+    
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+        }
+    
+        return false;
+    }
+    
+    public boolean deleteBook(String publicationID) {
+        boolean success = deletePublication(publicationID);
+    
+        if (success) {
+            try {
+                String deleteBookSql = "DELETE FROM Books WHERE BookID = ?";
+                PreparedStatement deleteBookStmt = conn.prepareStatement(deleteBookSql);
+                deleteBookStmt.setString(1, publicationID);
+                deleteBookStmt.executeUpdate();
+                deleteBookStmt.close();
+    
+                String deleteBookAuthorsSql = "DELETE FROM BookAuthors WHERE BookID = ?";
+                PreparedStatement deleteBookAuthorsStmt = conn.prepareStatement(deleteBookAuthorsSql);
+                deleteBookAuthorsStmt.setString(1, publicationID);
+                deleteBookAuthorsStmt.executeUpdate();
+                deleteBookAuthorsStmt.close();
+    
+                return true;
+    
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+        }
+    
+        return false;
+    }
+    
     
 }
