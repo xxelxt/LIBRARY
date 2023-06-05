@@ -1236,5 +1236,199 @@ public class Database {
         return borrowList;
     }
 
+    public ArrayList<Borrow> loadBorrowListbyID(String student_ID) {
+        ArrayList<Borrow> borrowList = new ArrayList<>();
+
+        try {
+            String sql = "SELECT b.BorrowID, s.StudentID, s.Name, b.StartDate, b.DueDate, b.ReturnedDate, p.PublicationID, p.Title, b.BorrowQuantity, b.FineStatus, b.ReturnedStatus " +
+                    "FROM Borrow b " +
+                    "JOIN Students s ON b.StudentID = s.StudentID " +
+                    "JOIN Publications p ON b.PublicationID = p.PublicationID " +
+                    "WHERE s.StudentID = " + student_ID + "'";
+
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                String borrowID = rs.getString(1);
+                String studentID = rs.getString(2);
+                String studentName = rs.getString(3);
+
+                Date startDate = rs.getDate(4);
+                Date dueDate = rs.getDate(5);
+                Date returnedDate = rs.getDate(6);
+
+                String publicationID = rs.getString(7);
+                String publicationTitle = rs.getString(8);
+                int borrowQuantity = rs.getInt(9);
+
+                boolean fineStatus = rs.getBoolean(10);
+                boolean returnedStatus = rs.getBoolean(11);
+
+                Student borrower = new Student(studentID, studentName);
+                Publication pub = new Publication(publicationID, publicationTitle);
+                Borrow currentBorrow = new Borrow(borrowID, startDate, dueDate, returnedDate, borrower, pub, borrowQuantity, fineStatus, returnedStatus);
+                borrowList.add(currentBorrow);
+            }
+
+            rs.close();
+            pstmt.close();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+
+        return borrowList;
+    }
+
+    boolean addNewBorrow(Borrow update) {
+        try {
+            String borrowID = update.getBorrowID();
+            java.util.Date StartDate = update.getStartDate();
+            Date DueDate = update.getDueDate();
+            Date ReturnedDate = update.getReturnedDate();
+
+            String studentId = update.getBorrower().getStudentID();
+            String publicationID = update.getBorrowedPub().getPublicationID();
+            int borrowQuantity = update.getBorrowQuantity();
+
+            boolean fineStatus = update.getFineStatus();
+            boolean returnedStatus = update.getReturnedStatus();
+            
+            String sql = "INSERT INTO Borrow (BorrowID, StudentID, StartDate, DueDate, ReturnedDate, PublicationID, BorrowQuantity, FineStatus, ReturnedStatus) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?. ?)";
+
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, borrowID);
+            pstmt.setDate(2, (java.sql.Date) StartDate);
+            pstmt.setDate(3, (java.sql.Date) DueDate);
+            pstmt.setDate(4, (java.sql.Date) ReturnedDate);
+
+            pstmt.setString(5, studentId);
+            pstmt.setString(6, publicationID);
+            pstmt.setInt(7, borrowQuantity);
+
+            pstmt.setBoolean(8, fineStatus);
+            pstmt.setBoolean(9, returnedStatus);
+
+            pstmt.executeUpdate();
+            pstmt.close();
+
+        } catch (Exception e) {
+            System.out.println(e);
+            return false;
+        }
+        return true;
+    }
+
+    public String getBorrowedPublicationbyID(String borrowID) {
+        String publicationID = " ";
+        try {
+            String sql = "SELECT PublicationID FROM Borrow WHERE BorrowID = ?";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, borrowID);
+
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                publicationID = rs.getString(1);
+            }
+            rs.close();
+            pstmt.close();
+
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+
+        return publicationID;
+    }
+    
+    public boolean getBorrowedFineStatusbyID(String borrowID) {
+        boolean finestt = false;
+        try {
+            String sql = "SELECT FineStatus FROM Borrow WHERE BorrowID = ?";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, borrowID);
+
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                finestt = rs.getBoolean(1);
+            }
+            rs.close();
+            pstmt.close();
+
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+
+        return finestt;
+    }
+
+    public boolean getBorrowedReturnedStatusbyID(String borrowID) {
+        boolean returnedstt = false;
+        try {
+            String sql = "SELECT ReturnedStatus FROM Borrow WHERE BorrowID = ?";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, borrowID);
+
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                returnedstt = rs.getBoolean(1);
+            }
+            rs.close();
+            pstmt.close();
+
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+
+        return returnedstt;
+    }
+
+    public int getBorrowedQuantitybyID(String borrowID) {
+        int quantity = -1;
+        try {
+            String sql = "SELECT ReturnedStatus FROM Borrow WHERE BorrowID = ?";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, borrowID);
+
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                quantity = rs.getInt(1);
+            }
+            rs.close();
+            pstmt.close();
+
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+
+        return quantity;
+    }
+
+    public Date getBorrowStartDateByID(String borrowID) {
+        Date startDate = null;
+        try {
+            String sql = "SELECT StartDate FROM Borrow WHERE BorrowID = ?";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, borrowID);
+    
+            ResultSet rs = pstmt.executeQuery();
+    
+            while (rs.next()) {
+                startDate = rs.getDate(1);
+            }
+    
+            rs.close();
+            pstmt.close();
+    
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    
+        return startDate;
+    }
     
 }
