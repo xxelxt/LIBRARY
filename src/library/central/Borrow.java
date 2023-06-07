@@ -1,6 +1,6 @@
 package library.central;
 
-import java.util.Date;
+import java.sql.Date;
 
 import library.publication.Publication;
 import library.user.Student;

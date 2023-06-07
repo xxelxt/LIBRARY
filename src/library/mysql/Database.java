@@ -4,9 +4,9 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 import library.publication.Publication;
@@ -184,7 +184,7 @@ public class Database {
                     "WHERE p.PublicationID = ?";
     
             PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setDate(1, new java.sql.Date(newReleaseDate.getTime()));
+            pstmt.setDate(1, new Date(newReleaseDate.getTime()));
             pstmt.setString(2, publicationID);
     
             pstmt.executeUpdate();
@@ -686,7 +686,7 @@ public class Database {
                 String bookId = rs.getString(1);
                 String bookTitle = rs.getString(2);
                 ArrayList<String> authors = getBookAuthor(bookId);
-                String releaseDate = rs.getString(4);
+                Date releaseDate = rs.getDate(4);
     
                 Books result = new Books(bookId, bookTitle, authors, releaseDate);
                 resultList.add(result);
@@ -721,7 +721,7 @@ public class Database {
                 String bookId = rs.getString(1);
                 String bookTitle = rs.getString(2);
                 ArrayList<String> authors = getBookAuthor(bookId);
-                String releaseDate = rs.getString(4);
+                Date releaseDate = rs.getDate(4);
     
                 Books result = new Books(bookId, bookTitle, authors, releaseDate);
                 resultList.add(result);
@@ -1334,9 +1334,9 @@ public class Database {
             pstmt.setString(1, borrowID);
             pstmt.setString(2, studentID);
 
-            pstmt.setDate(3, new java.sql.Date(startDate.getTime()));
-            pstmt.setDate(4, new java.sql.Date(dueDate.getTime()));
-            pstmt.setDate(5, new java.sql.Date(returnedDate != null ? returnedDate.getTime() : 0));
+            pstmt.setDate(3, new Date(startDate.getTime()));
+            pstmt.setDate(4, new Date(dueDate.getTime()));
+            pstmt.setDate(5, new Date(returnedDate != null ? returnedDate.getTime() : 0));
 
             pstmt.setString(6, publicationID);
             pstmt.setInt(7, borrowQuantity);
@@ -1566,9 +1566,9 @@ public class Database {
             pstmt.setString(1, borrowID);
             pstmt.setString(2, newBorrow.getBorrower().getStudentID());
 
-            pstmt.setDate(3, new java.sql.Date(newBorrow.getStartDate().getTime()));
-            pstmt.setDate(4, new java.sql.Date(newBorrow.getDueDate().getTime()));
-            pstmt.setDate(5, new java.sql.Date(newBorrow.getReturnedDate().getTime()));
+            pstmt.setDate(3, new Date(newBorrow.getStartDate().getTime()));
+            pstmt.setDate(4, new Date(newBorrow.getDueDate().getTime()));
+            pstmt.setDate(5, new Date(newBorrow.getReturnedDate().getTime()));
 
             pstmt.setString(6, newBorrow.getBorrowedPub().getPublicationID());
             pstmt.setInt(7, newBorrow.getBorrowQuantity());
@@ -1607,7 +1607,7 @@ public class Database {
             String sql = "UPDATE Borrow SET ReturnedDate = ? WHERE BorrowID = ?";
     
             PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setDate(1, new java.sql.Date(returnedDate.getTime()));
+            pstmt.setDate(1, new .Date(returnedDate.getTime()));
             pstmt.setString(2, borrowID);
     
             pstmt.executeUpdate();
@@ -1759,7 +1759,7 @@ public class Database {
 
             pstmt.setString(1, publicationID);
             pstmt.setString(2, title);
-            pstmt.setDate(3, new java.sql.Date(releaseDate.getTime()));
+            pstmt.setDate(3, new Date(releaseDate.getTime()));
             pstmt.setString(4, country);
             pstmt.setInt(5, quantity);
 
