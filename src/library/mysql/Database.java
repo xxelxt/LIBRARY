@@ -756,7 +756,7 @@ public class Database {
                 String bookId = rs.getString(1);
                 String bookTitle = rs.getString(2);
                 ArrayList<String> authors = getBookAuthor(bookId);
-                String releaseDate = rs.getString(4);
+                Date releaseDate = rs.getDate(4);
     
                 Books result = new Books(bookId, bookTitle, authors, releaseDate);
                 resultList.add(result);
@@ -1607,7 +1607,7 @@ public class Database {
             String sql = "UPDATE Borrow SET ReturnedDate = ? WHERE BorrowID = ?";
     
             PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setDate(1, new .Date(returnedDate.getTime()));
+            pstmt.setDate(1, new Date(returnedDate.getTime()));
             pstmt.setString(2, borrowID);
     
             pstmt.executeUpdate();
@@ -1944,5 +1944,25 @@ public class Database {
         return false;
     }
     
-    
+    public String getPasswordfromUsername(String username) {
+        String password = " ";
+        try {
+            String sql = "SELECT Password FROM Users WHERE Username = ?";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, username);
+
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                password = rs.getString(1);
+            }
+            rs.close();
+            pstmt.close();
+
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+
+        return password;
+    }
 }
