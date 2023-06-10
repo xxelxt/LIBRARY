@@ -60,7 +60,7 @@ public class Database {
         try {
             String sql = "SELECT * " +
                     "FROM Publications " +
-                    "WHERE PublicationID = ? ";
+                    "WHERE PublicationID = ?";
             
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, PublicationID);
@@ -68,12 +68,12 @@ public class Database {
             ResultSet rs = pstmt.executeQuery();
             
             while (rs.next()) {
-                String publicationID = rs.getString(1);
+                String publicationID = rs.getString("PublicationID");
                 String title = rs.getString(2);
 
-                Date releaseDate = rs.getDate(4);
-                String country = rs.getString(5);
-                int quantity = rs.getInt(6);
+                Date releaseDate = rs.getDate(3);
+                String country = rs.getString(4);
+                int quantity = rs.getInt(5);
                 
                 Publication newPub = new Publication(publicationID, title, releaseDate, country, quantity);
                 
@@ -1965,4 +1965,24 @@ public class Database {
 
         return password;
     }
+
+    public boolean setPasswordfromUsername(String username, String password) {
+        try {
+            String sql = "UPDATE Users " +
+                    "SET Password = ? " +
+                    "WHERE Username = ?";
+    
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, password);
+            pstmt.setString(2, username);
+    
+            pstmt.executeUpdate();
+        } catch (Exception e) {
+            System.out.println(e);
+            return false;
+        }
+        return true;
+    }
+
+    
 }
