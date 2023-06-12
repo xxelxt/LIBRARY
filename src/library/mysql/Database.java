@@ -68,14 +68,14 @@ public class Database {
             ResultSet rs = pstmt.executeQuery();
             
             while (rs.next()) {
-                String publicationID = rs.getString("PublicationID");
+                Integer publicationID = rs.getInt("PublicationID");
                 String title = rs.getString(2);
 
                 Date releaseDate = rs.getDate(3);
                 String country = rs.getString(4);
                 int quantity = rs.getInt(5);
                 
-                Publication newPub = new Publication(title, releaseDate, country, quantity);
+                Publication newPub = new Publication(publicationID, title, releaseDate, country, quantity);
                 
                 currentPub = newPub;
             }
@@ -257,7 +257,7 @@ public class Database {
 
     // Books
 
-    public ArrayList<String> getBookAuthor(String BookID) {
+    public ArrayList<String> getBookAuthor(Integer BookID) {
         ArrayList<String> authors = new ArrayList<>();
         
         try {
@@ -267,7 +267,7 @@ public class Database {
                     "WHERE b.BookID = ?";
             
             PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, BookID);
+            pstmt.setInt(1, BookID);
             
             ResultSet rs = pstmt.executeQuery();
             
@@ -304,7 +304,7 @@ public class Database {
             ResultSet rs = pstmt.executeQuery();
             
             while (rs.next()) {
-                String publicationID = rs.getString(1);
+                Integer publicationID = rs.getInt(1);
                 String title = rs.getString(2);
                 ArrayList<String> authors = getBookAuthor(publicationID);
 
@@ -316,7 +316,7 @@ public class Database {
                 int reissue = rs.getInt(8);
                 String publisher = rs.getString(9);
                 
-                Books newBook = new Books(title, authors, releaseDate, country, quantity, category, reissue, publisher);
+                Books newBook = new Books(publicationID, title, authors, releaseDate, country, quantity, category, reissue, publisher);
                 
                 currentBook = newBook;
             }
@@ -373,7 +373,7 @@ public class Database {
             ResultSet rs = pstmt.executeQuery();
     
             while (rs.next()) {
-                String publicationID = rs.getString(1);
+                Integer publicationID = rs.getInt(1);
                 String title = rs.getString(2);
                 ArrayList<String> authors = getBookAuthor(publicationID);
     
@@ -385,6 +385,7 @@ public class Database {
                 int reissue = rs.getInt(8);
                 String publisher = rs.getString(9);
     
+                Books Book = new Books(publicationID, title, authors, releaseDate, country, quantity, category, reissue, publisher);
                 bookList.add(Book);
             }
     
@@ -544,7 +545,7 @@ public class Database {
             ResultSet rs = pstmt.executeQuery();
 
             while (rs.next()) {
-                String publicationID = rs.getString(1);
+                Integer publicationID = rs.getInt(1);
                 String title = rs.getString(2);
                 Date releaseDate = rs.getDate(3);
                 String country = rs.getString(4);
@@ -579,7 +580,7 @@ public class Database {
             ResultSet rs = pstmt.executeQuery();
     
             while (rs.next()) {
-                String publicationID = rs.getString(1);
+                Integer publicationID = rs.getInt(1);
                 String title = rs.getString(2);
                 Date releaseDate = rs.getDate(3);
 
@@ -710,7 +711,7 @@ public class Database {
             ResultSet rs = pstmt.executeQuery();
     
             while (rs.next()) {
-                String bookId = rs.getString(1);
+                Integer bookId = rs.getInt(1);
                 String bookTitle = rs.getString(2);
                 ArrayList<String> authors = getBookAuthor(bookId);
                 Date releaseDate = rs.getDate(4);
@@ -745,7 +746,7 @@ public class Database {
             ResultSet rs = pstmt.executeQuery();
     
             while (rs.next()) {
-                String bookId = rs.getString(1);
+                Integer bookId = rs.getInt(1);
                 String bookTitle = rs.getString(2);
                 ArrayList<String> authors = getBookAuthor(bookId);
                 Date releaseDate = rs.getDate(4);
@@ -780,7 +781,7 @@ public class Database {
             ResultSet rs = pstmt.executeQuery();
         
             while (rs.next()) {
-                String bookId = rs.getString(1);
+                Integer bookId = rs.getInt(1);
                 String bookTitle = rs.getString(2);
                 ArrayList<String> authors = getBookAuthor(bookId);
                 Date releaseDate = rs.getDate(4);
