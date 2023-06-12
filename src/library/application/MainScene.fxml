@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="library.application.MainSceneController">
    <top>
       <MenuBar BorderPane.alignment="CENTER">
         <menus>
@@ -60,22 +60,22 @@
                <children>
                   <HBox alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="484.0" spacing="10.0" VBox.vgrow="NEVER">
                      <children>
-                        <Button mnemonicParsing="false" text="Button" />
+                        <Button mnemonicParsing="false" onAction="#btnAddBook" text="Thêm sách" />
                         <TextField alignment="CENTER" prefHeight="14.0" prefWidth="276.0" />
                         <ComboBox prefHeight="22.0" prefWidth="65.0" />
-                        <Button mnemonicParsing="false" text="Button" />
+                        <Button mnemonicParsing="false" text="Tìm kiếm icon" />
                      </children>
                      <opaqueInsets>
                         <Insets />
                      </opaqueInsets>
                   </HBox>
-                  <TableView prefHeight="515.0" prefWidth="1109.0">
+                  <TableView fx:id="booksTableView" prefHeight="515.0" prefWidth="1109.0">
                     <columns>
-                      <TableColumn prefWidth="40.0" text="ID" />
-                      <TableColumn text="Tên sách" />
+                      <TableColumn fx:id="colID" prefWidth="40.0" text="ID" />
+                      <TableColumn fx:id="colName" text="Tên sách" />
                         <TableColumn text="Tác giả" />
-                        <TableColumn text="Quốc gia" />
-                        <TableColumn text="Thể loại" />
+                        <TableColumn fx:id="colCountry" text="Quốc gia" />
+                        <TableColumn fx:id="colCategory" text="Thể loại" />
                         <TableColumn prefWidth="100.0" text="Nhà xuất bản" />
                         <TableColumn prefWidth="106.39994812011719" text="Ngày xuất bản" />
                         <TableColumn text="Tái bản" />
