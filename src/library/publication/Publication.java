@@ -5,21 +5,21 @@ import java.util.Date;
 import library.mysql.Database;
 
 public class Publication {
-	private String PublicationID;
+	private Integer PublicationID;
 	private String Title;
 	private Date ReleaseDate;
 	private String Country;
 	private int Quantity;
 
 	public Publication() {
-		this.PublicationID = " ";
+		this.PublicationID = 0;
 		this.Title = " ";
 		this.ReleaseDate = null;
 		this.Country = " ";
 		this.Quantity = -1;
 	}
 
-	public Publication(String PublicationID, String Title, Date ReleaseDate, String Country, int Quantity) {
+	public Publication(Integer PublicationID, String Title, Date ReleaseDate, String Country, int Quantity) {
 		this.PublicationID = PublicationID;
 		this.Title = Title;
 		this.ReleaseDate = ReleaseDate;
@@ -27,23 +27,17 @@ public class Publication {
 		this.Quantity = Quantity;
 	}
 
-	public Publication(String PublicationID, String Title, Date ReleaseDate) {
-		this.PublicationID = PublicationID;
+	public Publication(String Title, Date ReleaseDate) {
 		this.Title = Title;
 		this.ReleaseDate = ReleaseDate;
 	}
 
-	public Publication(String PublicationID, String Title) {
-		this.PublicationID = PublicationID;
+	public Publication(String Title) {
 		this.Title = Title;
 	}
 
-	public String getPublicationID() {
+	public Integer getPublicationID() {
 		return this.PublicationID;
-	}
-
-	public void setPublicationID(String PublicationID) {
-		this.PublicationID = PublicationID;
 	}
 
 	public String getTitle() {

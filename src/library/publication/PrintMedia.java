@@ -13,14 +13,14 @@ public class PrintMedia extends Publication {
 		this.PrintType = " ";
 	}
 
-	public PrintMedia(String PublicationID, String Title, Date ReleaseDate, String Country, int Quantity, int ReleaseNumber, String PrintType) {
-		super(PublicationID, Title, ReleaseDate, Country, Quantity);
+	public PrintMedia(Integer MediaID, String PublicationID, String Title, Date ReleaseDate, String Country, int Quantity, int ReleaseNumber, String PrintType) {
+		super(MediaID, Title, ReleaseDate, Country, Quantity);
 		this.ReleaseNumber = ReleaseNumber;
 		this.PrintType = PrintType;
 	}
 
 	public PrintMedia(String PublicationID, String Title, Date ReleaseDate, int ReleaseNumber, String PrintType) {
-		super(PublicationID, Title, ReleaseDate);
+		super(Title, ReleaseDate);
 		this.ReleaseNumber = ReleaseNumber;
 		this.PrintType = PrintType;
 	}

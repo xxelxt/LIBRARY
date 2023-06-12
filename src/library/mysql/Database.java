@@ -75,7 +75,7 @@ public class Database {
                 String country = rs.getString(4);
                 int quantity = rs.getInt(5);
                 
-                Publication newPub = new Publication(publicationID, title, releaseDate, country, quantity);
+                Publication newPub = new Publication(title, releaseDate, country, quantity);
                 
                 currentPub = newPub;
             }
@@ -213,7 +213,7 @@ public class Database {
         return true;
     }
 
-    public boolean setPublicationQuantity(String publicationID, int newQuantity) {
+    public boolean setPublicationQuantity(Integer publicationID, int newQuantity) {
         try {
             String sql = "UPDATE Publications p " +
                     "SET p.Quantity = ? " +
@@ -221,7 +221,7 @@ public class Database {
             
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1, newQuantity);
-            pstmt.setString(2, publicationID);
+            pstmt.setInt(2, publicationID);
             
             pstmt.executeUpdate();
         } catch (Exception e) {
@@ -316,7 +316,7 @@ public class Database {
                 int reissue = rs.getInt(8);
                 String publisher = rs.getString(9);
                 
-                Books newBook = new Books(publicationID, title, authors, releaseDate, country, quantity, category, reissue, publisher);
+                Books newBook = new Books(title, authors, releaseDate, country, quantity, category, reissue, publisher);
                 
                 currentBook = newBook;
             }
@@ -330,6 +330,34 @@ public class Database {
         return currentBook;
     }
 
+    public ArrayList<Publication> loadAllPublication() {
+        ArrayList<Publication> arrList = new ArrayList<>();
+        try {
+            String sql = "SELECT * FROM Publications";
+            
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            ResultSet rs = pstmt.executeQuery();
+    
+            while (rs.next()) {
+                Integer publicationID = rs.getInt(1);
+                String title = rs.getString(2);
+                Date releaseDate = rs.getDate(4);
+                String country = rs.getString(5);
+                
+                int quantity = rs.getInt(6);
+    
+    
+                arrList.add(new Publication(publicationID, title, releaseDate, country, quantity));
+            }
+    
+            rs.close();
+            pstmt.close();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return arrList;
+    }
+    
     public ArrayList<Books> loadAllBooks() {
         ArrayList<Books> bookList = new ArrayList<>();
         try {
@@ -357,7 +385,6 @@ public class Database {
                 int reissue = rs.getInt(8);
                 String publisher = rs.getString(9);
     
-                Books Book = new Books(publicationID, title, authors, releaseDate, country, quantity, category, reissue, publisher);
                 bookList.add(Book);
             }
     
@@ -688,7 +715,7 @@ public class Database {
                 ArrayList<String> authors = getBookAuthor(bookId);
                 Date releaseDate = rs.getDate(4);
     
-                Books result = new Books(bookId, bookTitle, authors, releaseDate);
+                Books result = new Books(bookTitle, authors, releaseDate);
                 resultList.add(result);
             }
     
@@ -723,7 +750,7 @@ public class Database {
                 ArrayList<String> authors = getBookAuthor(bookId);
                 Date releaseDate = rs.getDate(4);
     
-                Books result = new Books(bookId, bookTitle, authors, releaseDate);
+                Books result = new Books(bookTitle, authors, releaseDate);
                 resultList.add(result);
             }
     
@@ -758,7 +785,7 @@ public class Database {
                 ArrayList<String> authors = getBookAuthor(bookId);
                 Date releaseDate = rs.getDate(4);
     
-                Books result = new Books(bookId, bookTitle, authors, releaseDate);
+                Books result = new Books(bookTitle, authors, releaseDate);
                 resultList.add(result);
             }
         
@@ -1255,7 +1282,7 @@ public class Database {
                 boolean returnedStatus = rs.getBoolean(11);
 
                 Student borrower = new Student(studentID, studentName);
-                Publication pub = new Publication(publicationID, publicationTitle);
+                Publication pub = new Publication(publicationTitle);
                 Borrow currentBorrow = new Borrow(borrowID, startDate, dueDate, returnedDate, borrower, pub, borrowQuantity, fineStatus, returnedStatus);
                 borrowList.add(currentBorrow);
             }
@@ -1299,7 +1326,7 @@ public class Database {
                 boolean returnedStatus = rs.getBoolean(11);
 
                 Student borrower = new Student(studentID, studentName);
-                Publication pub = new Publication(publicationID, publicationTitle);
+                Publication pub = new Publication(publicationTitle);
                 Borrow currentBorrow = new Borrow(borrowID, startDate, dueDate, returnedDate, borrower, pub, borrowQuantity, fineStatus, returnedStatus);
                 borrowList.add(currentBorrow);
             }
@@ -1315,30 +1342,28 @@ public class Database {
 
     public boolean addNewBorrow(Borrow update) {
         try {
-            String borrowID = update.getBorrowID();
             Date startDate = update.getStartDate();
             Date dueDate = update.getDueDate();
             Date returnedDate = update.getReturnedDate();
     
             String studentID = update.getBorrower().getStudentID();
-            String publicationID = update.getBorrowedPub().getPublicationID();
+            Integer publicationID = update.getBorrowedPub().getPublicationID();
             int borrowQuantity = update.getBorrowQuantity();
     
             boolean fineStatus = update.getFineStatus();
             boolean returnedStatus = update.getReturnedStatus();
     
-            String sql = "INSERT INTO Borrow (BorrowID, StudentID, StartDate, DueDate, ReturnedDate, PublicationID, BorrowQuantity, FineStatus, ReturnedStatus) " +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO Borrow (StudentID, StartDate, DueDate, ReturnedDate, PublicationID, BorrowQuantity, FineStatus, ReturnedStatus) " +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
     
             PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, borrowID);
-            pstmt.setString(2, studentID);
+            pstmt.setString(1, studentID);
 
             pstmt.setDate(3, new Date(startDate.getTime()));
             pstmt.setDate(4, new Date(dueDate.getTime()));
             pstmt.setDate(5, new Date(returnedDate != null ? returnedDate.getTime() : 0));
 
-            pstmt.setString(6, publicationID);
+            pstmt.setInt(6, publicationID);
             pstmt.setInt(7, borrowQuantity);
             pstmt.setBoolean(8, fineStatus);
             pstmt.setBoolean(9, returnedStatus);
@@ -1570,7 +1595,7 @@ public class Database {
             pstmt.setDate(4, new Date(newBorrow.getDueDate().getTime()));
             pstmt.setDate(5, new Date(newBorrow.getReturnedDate().getTime()));
 
-            pstmt.setString(6, newBorrow.getBorrowedPub().getPublicationID());
+            pstmt.setInt(6, newBorrow.getBorrowedPub().getPublicationID());
             pstmt.setInt(7, newBorrow.getBorrowQuantity());
             pstmt.setBoolean(8, newBorrow.getFineStatus());
             pstmt.setBoolean(9, newBorrow.getReturnedStatus());
@@ -1670,13 +1695,13 @@ public class Database {
         return true;
     }
 
-    public boolean setBorrowReturnedStatus(String borrowID, boolean returnedStatus) {
+    public boolean setBorrowReturnedStatus(Integer borrowID, boolean returnedStatus) {
         try {
             String sql = "UPDATE Borrow SET ReturnedStatus = ? WHERE BorrowID = ?";
     
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setBoolean(1, returnedStatus);
-            pstmt.setString(2, borrowID);
+            pstmt.setInt(2, borrowID);
     
             pstmt.executeUpdate();
             pstmt.close();
@@ -1712,13 +1737,13 @@ public class Database {
 
     // Add & delete Publications
 
-    public boolean isPublicationBorrowed(String publicationID) {
+    public boolean isPublicationBorrowed(Integer publicationID) {
         boolean borrowed = false;
         
         try {
             String sql = "SELECT COUNT(*) FROM Borrow WHERE PublicationID = ? AND ReturnedStatus = false";
             PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, publicationID);
+            pstmt.setInt(1, publicationID);
             
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
@@ -1735,13 +1760,12 @@ public class Database {
         return borrowed;
     }
 
-    boolean addPublisher(String publisherID, String publisherName) {
+    boolean addPublisher(String publisherName) {
         try {
-            String sql = "INSERT INTO Publishers (PublisherID, PublisherName) VALUES (?, ?)";
+            String sql = "INSERT INTO Publishers (PublisherName) VALUES (?, ?)";
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
-            pstmt.setString(1, publisherID);
-            pstmt.setString(2, publisherName);
+            pstmt.setString(1, publisherName);
 
             pstmt.executeUpdate();
             pstmt.close();
@@ -1752,16 +1776,15 @@ public class Database {
         return true;
     }
     
-    boolean addPublication(String publicationID, String title, Date releaseDate, String country, int quantity) {
+    boolean addPublication(String title, Date releaseDate, String country, int quantity) {
         try {
-            String sql = "INSERT INTO Publications (PublicationID, Title, ReleaseDate, Country, Quantity) VALUES (?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO Publications (Title, ReleaseDate, Country, Quantity) VALUES (?, ?, ?, ?)";
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
-            pstmt.setString(1, publicationID);
-            pstmt.setString(2, title);
-            pstmt.setDate(3, new Date(releaseDate.getTime()));
-            pstmt.setString(4, country);
-            pstmt.setInt(5, quantity);
+            pstmt.setString(1, title);
+            pstmt.setDate(2, new Date(releaseDate.getTime()));
+            pstmt.setString(3, country);
+            pstmt.setInt(4, quantity);
 
             pstmt.executeUpdate();
             pstmt.close();
@@ -1772,16 +1795,15 @@ public class Database {
         return true;
     }
     
-    boolean addPrintMedia(String publicationID, String title, Date releaseDate, String country, int quantity, int ReleaseNumber, String printType) {
-        boolean success = addPublication(publicationID, title, releaseDate, country, quantity);
+    boolean addPrintMedia(String title, Date releaseDate, String country, int quantity, int ReleaseNumber, String printType) {
+        boolean success = addPublication(title, releaseDate, country, quantity);
 
         if (success) {
             try {
-                String sql = "INSERT INTO PrintMedia (PublicationID, ReleaseNumber, PrintType) VALUES (?, ?, ?)";
+                String sql = "INSERT INTO PrintMedia (ReleaseNumber, PrintType) VALUES (?, ?, ?)";
                 PreparedStatement pstmt = conn.prepareStatement(sql);
-                pstmt.setString(1, publicationID);
-                pstmt.setInt(2, ReleaseNumber);
-                pstmt.setString(3, printType);
+                pstmt.setInt(1, ReleaseNumber);
+                pstmt.setString(2, printType);
 
                 pstmt.executeUpdate();
                 pstmt.close();
@@ -1809,20 +1831,22 @@ public class Database {
         return true;
     }    
 
-    boolean addBook(String publicationID, String title, Date releaseDate, String country, int quantity, String category, boolean reissue, String publisherID, String publisherName, String authorID, String authorName, boolean authorGender) {
-        boolean success = addPublication(publicationID, title, releaseDate, country, quantity);
+    boolean addBook(String title, Date releaseDate, String country, int quantity, String category, boolean reissue, 
+    		String publisherName, String authorID, String authorName, 
+    		boolean authorGender) {
+        boolean success = addPublication(title, releaseDate, country, quantity);
 
         if (success) {
             try {
                 // Kiểm tra xem đã có NXB trong CSDL chưa
-                String checkPublisherSql = "SELECT * FROM Publishers WHERE PublisherID = ?";
+                String checkPublisherSql = "SELECT * FROM Publishers WHERE PublisherName = ?";
                 PreparedStatement checkPublisherStmt = conn.prepareStatement(checkPublisherSql);
-                checkPublisherStmt.setString(1, publisherID);
+                checkPublisherStmt.setString(1, publisherName);
                 ResultSet checkPublisherResult = checkPublisherStmt.executeQuery();
                 
                 if (!checkPublisherResult.next()) {
                     // Nếu không có thì thêm NXB mới vào trước
-                    boolean addPublisherResult = addPublisher(publisherID, publisherName);
+                    boolean addPublisherResult = addPublisher(publisherName);
                     if (!addPublisherResult) {
                         // Hết danh sách
                         checkPublisherResult.close();
@@ -1849,23 +1873,23 @@ public class Database {
                     }
                 }
                 
-                // Thêm sách
-                String insertBookSql = "INSERT INTO Books (BookID, Category, Reissue, PublisherID) VALUES (?, ?, ?, ?)";
-                PreparedStatement insertBookStmt = conn.prepareStatement(insertBookSql);
-                insertBookStmt.setString(1, publicationID);
-                insertBookStmt.setString(2, category);
-                insertBookStmt.setBoolean(3, reissue);
-                insertBookStmt.setString(4, publisherID);
-                insertBookStmt.executeUpdate();
-                insertBookStmt.close();
-                
-                // Thêm tác giả của sách
-                String insertBookAuthorSql = "INSERT INTO BookAuthors (BookID, AuthorID) VALUES (?, ?)";
-                PreparedStatement insertBookAuthorStmt = conn.prepareStatement(insertBookAuthorSql);
-                insertBookAuthorStmt.setString(1, publicationID);
-                insertBookAuthorStmt.setString(2, authorID);
-                insertBookAuthorStmt.executeUpdate();
-                insertBookAuthorStmt.close();
+//                // Thêm sách
+//                String insertBookSql = "INSERT INTO Books (BookID, Category, Reissue, PublisherID) VALUES (?, ?, ?, ?)";
+//                PreparedStatement insertBookStmt = conn.prepareStatement(insertBookSql);
+//                insertBookStmt.setString(1, publicationID);
+//                insertBookStmt.setString(2, category);
+//                insertBookStmt.setBoolean(3, reissue);
+//                insertBookStmt.setString(4, publisherID);
+//                insertBookStmt.executeUpdate();
+//                insertBookStmt.close();
+//                
+//                // Thêm tác giả của sách
+//                String insertBookAuthorSql = "INSERT INTO BookAuthors (BookID, AuthorID) VALUES (?, ?)";
+//                PreparedStatement insertBookAuthorStmt = conn.prepareStatement(insertBookAuthorSql);
+//                insertBookAuthorStmt.setString(1, publicationID);
+//                insertBookAuthorStmt.setString(2, authorID);
+//                insertBookAuthorStmt.executeUpdate();
+//                insertBookAuthorStmt.close();
 
             } catch (Exception e) {
                 System.out.println(e);

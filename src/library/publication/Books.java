@@ -17,16 +17,16 @@ public class Books extends Publication {
 		this.Publisher = " ";
 	}
 
-	public Books(String PublicationID, String Title, ArrayList<String> Authors, Date ReleaseDate, String Country, int Quantity, String Category, int Reissue, String Publisher) {
-		super(PublicationID, Title, ReleaseDate, Country, Quantity);
+	public Books(Integer BookID, String Title, ArrayList<String> Authors, Date ReleaseDate, String Country, int Quantity, String Category, int Reissue, String Publisher) {
+		super(BookID, Title, ReleaseDate, Country, Quantity);
 		this.Authors = Authors;
 		this.Category = Category;
 		this.Reissue = Reissue;
 		this.Publisher = Publisher;
 	}
 
-	public Books(String PublicationID, String Title, ArrayList<String> Authors, Date ReleaseDate) {
-		super(PublicationID, Title, ReleaseDate);
+	public Books(String Title, ArrayList<String> Authors, Date ReleaseDate) {
+		super(Title, ReleaseDate);
 		this.Authors = Authors;
 	}
 

@@ -13,7 +13,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import library.mysql.Database;
-import library.publication.Books;
+import library.publication.Publication;
 
 public class MainSceneController implements Initializable {
 
@@ -24,26 +24,26 @@ public class MainSceneController implements Initializable {
     private URL location;
 
     @FXML
-    private TableView<Books> booksTableView;
+    private TableView<Publication> PublicationTableView;
 
     @FXML
-    private TableColumn<Books, String> colCategory;
+    private TableColumn<Publication, String> colCategory;
 
     @FXML
-    private TableColumn<Books, String> colCountry;
+    private TableColumn<Publication, String> colCountry;
 
     @FXML
-    private TableColumn<Books, String> colID;
+    private TableColumn<Publication, Integer> colID;
 
     @FXML
-    private TableColumn<Books, String> colName;
+    private TableColumn<Publication, String> colTitle;
     
     @FXML
     void btnAddBook(ActionEvent event) {
 
     }
 
-    private ObservableList<Books> data;
+    private ObservableList<Publication> data;
     private Database mainDb;
 
 //    // Add a new row dynamically
@@ -61,18 +61,18 @@ public class MainSceneController implements Initializable {
         System.out.println("Controller initialized");
         // Add a default row
 		mainDb = new Database();
-		List<Books> allBooks = mainDb.loadAllBooks();
+		List<Publication> allPublication = mainDb.loadAllPublication();
         
-        for (Books book: allBooks){
+        for (Publication book: allPublication){
             data.add(book);
         }
 
         // Bind the ObservableList to the TableView
-        booksTableView.setItems(data);
+        PublicationTableView.setItems(data);
 
         // Bind the columns to the corresponding properties in MyDataModel
-        colID.setCellValueFactory(new PropertyValueFactory<Books ,String>("publicationID"));
-        colName.setCellValueFactory(new PropertyValueFactory<Books ,String>("title"));	
+        colID.setCellValueFactory(new PropertyValueFactory<Publication, Integer>("publicationID"));
+        colTitle.setCellValueFactory(new PropertyValueFactory<Publication, String>("title"));	
 	}
 
 }
