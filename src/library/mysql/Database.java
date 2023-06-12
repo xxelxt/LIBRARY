@@ -341,10 +341,10 @@ public class Database {
             while (rs.next()) {
                 Integer publicationID = rs.getInt(1);
                 String title = rs.getString(2);
-                Date releaseDate = rs.getDate(4);
-                String country = rs.getString(5);
+                Date releaseDate = rs.getDate(3);
+                String country = rs.getString(4);
                 
-                int quantity = rs.getInt(6);
+                int quantity = rs.getInt(5);
     
     
                 arrList.add(new Publication(publicationID, title, releaseDate, country, quantity));

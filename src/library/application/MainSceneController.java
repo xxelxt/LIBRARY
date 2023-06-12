@@ -1,6 +1,7 @@
 package library.application;
 
 import java.net.URL;
+import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -31,7 +32,13 @@ public class MainSceneController implements Initializable {
 
     @FXML
     private TableColumn<Publication, String> colCountry;
+    
+    @FXML
+    private TableColumn<Publication, Date> colPublicationDate;
 
+    @FXML
+    private TableColumn<Publication, Integer> colQuantity;
+    
     @FXML
     private TableColumn<Publication, Integer> colID;
 
@@ -72,7 +79,10 @@ public class MainSceneController implements Initializable {
 
         // Bind the columns to the corresponding properties in MyDataModel
         colID.setCellValueFactory(new PropertyValueFactory<Publication, Integer>("publicationID"));
-        colTitle.setCellValueFactory(new PropertyValueFactory<Publication, String>("title"));	
+        colTitle.setCellValueFactory(new PropertyValueFactory<Publication, String>("title"));
+        colPublicationDate.setCellValueFactory(new PropertyValueFactory<Publication, Date>("releaseDate"));
+        colCountry.setCellValueFactory(new PropertyValueFactory<Publication, String>("country"));
+        colQuantity.setCellValueFactory(new PropertyValueFactory<Publication, Integer>("quantity"));
 	}
 
 }
