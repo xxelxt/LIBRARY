@@ -29,9 +29,15 @@ public class Books extends Publication {
 		super(Title, ReleaseDate);
 		this.Authors = Authors;
 	}
-
-    public ArrayList<String> getAuthors() {
-		return this.Authors;
+	
+	public String getAuthors() {
+		String buffer = "";
+		
+		for (String auth: Authors) {
+			buffer += auth + ", ";
+		}
+		
+		return buffer;
 	}
 
 	public void setAuthors(ArrayList<String> authors) {

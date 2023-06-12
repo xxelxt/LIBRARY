@@ -60,8 +60,9 @@
                <children>
                   <HBox alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="484.0" spacing="10.0" VBox.vgrow="NEVER">
                      <children>
+                        <Button mnemonicParsing="false" onAction="#btnDeleteBook" text="Xoá sách đang chọn" />
                         <Button mnemonicParsing="false" onAction="#btnAddBook" text="Thêm sách" />
-                        <TextField alignment="CENTER" prefHeight="14.0" prefWidth="276.0" />
+                        <TextField prefHeight="26.0" prefWidth="380.0" />
                         <ComboBox prefHeight="22.0" prefWidth="65.0" />
                         <Button mnemonicParsing="false" text="Tìm kiếm icon" />
                      </children>
@@ -73,14 +74,13 @@
                     <columns>
                       <TableColumn fx:id="colID" prefWidth="40.0" text="ID" />
                       <TableColumn fx:id="colTitle" text="Tên sách" />
-                        <TableColumn text="Tác giả" />
+                        <TableColumn fx:id="colAuthors" text="Tác giả" />
                         <TableColumn fx:id="colCountry" text="Quốc gia" />
                         <TableColumn fx:id="colCategory" text="Thể loại" />
-                        <TableColumn prefWidth="100.0" text="Nhà xuất bản" />
+                        <TableColumn fx:id="colPublisher" prefWidth="100.0" text="Nhà xuất bản" />
                         <TableColumn fx:id="colPublicationDate" prefWidth="106.39994812011719" text="Ngày xuất bản" />
-                        <TableColumn text="Tái bản" />
-                        <TableColumn fx:id="colQuantity" prefWidth="70.4000244140625" text="Số lượng" />
-                        <TableColumn prefWidth="91.199951171875" />
+                        <TableColumn fx:id="colReissue" text="Tái bản" />
+                        <TableColumn fx:id="colQuantity" prefWidth="132.7999267578125" text="Số lượng" />
                     </columns>
                      <VBox.margin>
                         <Insets bottom="20.0" left="20.0" right="20.0" />

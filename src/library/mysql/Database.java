@@ -1777,7 +1777,7 @@ public class Database {
         return true;
     }
     
-    boolean addPublication(String title, Date releaseDate, String country, int quantity) {
+    public boolean addPublication(String title, Date releaseDate, String country, int quantity) {
         try {
             String sql = "INSERT INTO Publications (Title, ReleaseDate, Country, Quantity) VALUES (?, ?, ?, ?)";
             PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -1900,11 +1900,11 @@ public class Database {
         return true;
     }
 
-    public boolean deletePublication(String publicationID) {
+    public boolean deletePublication(Integer publicationID) {
         try {
             String deletePublicationSql = "DELETE FROM Publications WHERE PublicationID = ?";
             PreparedStatement deletePublicationStmt = conn.prepareStatement(deletePublicationSql);
-            deletePublicationStmt.setString(1, publicationID);
+            deletePublicationStmt.setInt(1, publicationID);
 
             int rowsAffected = deletePublicationStmt.executeUpdate();
             deletePublicationStmt.close();
@@ -1921,14 +1921,14 @@ public class Database {
         return true;
     }
     
-    public boolean deletePrintMedia(String publicationID) {
+    public boolean deletePrintMedia(Integer publicationID) {
         boolean success = deletePublication(publicationID);
     
         if (success) {
             try {
                 String deletePrintMediaSql = "DELETE FROM PrintMedia WHERE PublicationID = ?";
                 PreparedStatement deletePrintMediaStmt = conn.prepareStatement(deletePrintMediaSql);
-                deletePrintMediaStmt.setString(1, publicationID);
+                deletePrintMediaStmt.setInt(1, publicationID);
                 deletePrintMediaStmt.executeUpdate();
                 deletePrintMediaStmt.close();
     
@@ -1942,20 +1942,20 @@ public class Database {
         return false;
     }
     
-    public boolean deleteBook(String publicationID) {
+    public boolean deleteBook(Integer publicationID) {
         boolean success = deletePublication(publicationID);
     
         if (success) {
             try {
                 String deleteBookSql = "DELETE FROM Books WHERE BookID = ?";
                 PreparedStatement deleteBookStmt = conn.prepareStatement(deleteBookSql);
-                deleteBookStmt.setString(1, publicationID);
+                deleteBookStmt.setInt(1, publicationID);
                 deleteBookStmt.executeUpdate();
                 deleteBookStmt.close();
     
                 String deleteBookAuthorsSql = "DELETE FROM BookAuthors WHERE BookID = ?";
                 PreparedStatement deleteBookAuthorsStmt = conn.prepareStatement(deleteBookAuthorsSql);
-                deleteBookAuthorsStmt.setString(1, publicationID);
+                deleteBookAuthorsStmt.setInt(1, publicationID);
                 deleteBookAuthorsStmt.executeUpdate();
                 deleteBookAuthorsStmt.close();
     
