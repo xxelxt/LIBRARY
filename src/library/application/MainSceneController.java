@@ -24,7 +24,7 @@ public class MainSceneController implements Initializable {
     private URL location;
 
     @FXML
-    private TableView<Publication> PublicationTableView;
+    private TableView<Publication> pubTableView;
 
     @FXML
     private TableColumn<Publication, String> colCategory;
@@ -63,12 +63,12 @@ public class MainSceneController implements Initializable {
 		mainDb = new Database();
 		List<Publication> allPublication = mainDb.loadAllPublication();
         
-        for (Publication book: allPublication){
-            data.add(book);
+        for (Publication pub: allPublication){
+            data.add(pub);
         }
 
         // Bind the ObservableList to the TableView
-        PublicationTableView.setItems(data);
+        pubTableView.setItems(data);
 
         // Bind the columns to the corresponding properties in MyDataModel
         colID.setCellValueFactory(new PropertyValueFactory<Publication, Integer>("publicationID"));

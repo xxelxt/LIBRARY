@@ -69,10 +69,10 @@
                         <Insets />
                      </opaqueInsets>
                   </HBox>
-                  <TableView fx:id="booksTableView" prefHeight="515.0" prefWidth="1109.0">
+                  <TableView fx:id="pubTableView" prefHeight="515.0" prefWidth="1109.0">
                     <columns>
                       <TableColumn fx:id="colID" prefWidth="40.0" text="ID" />
-                      <TableColumn fx:id="colName" text="Tên sách" />
+                      <TableColumn fx:id="colTitle" text="Tên sách" />
                         <TableColumn text="Tác giả" />
                         <TableColumn fx:id="colCountry" text="Quốc gia" />
                         <TableColumn fx:id="colCategory" text="Thể loại" />
