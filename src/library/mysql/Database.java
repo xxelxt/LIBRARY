@@ -1860,14 +1860,14 @@ public class Database {
                 checkPublisherStmt.close();
                 
                 // Kiểm tra xem đã có tác giả trong CSDL chưa
-                String checkAuthorSql = "SELECT * FROM Authors WHERE AuthorID = ?";
+                String checkAuthorSql = "SELECT * FROM Authors WHERE AuthorName = ?";
                 PreparedStatement checkAuthorStmt = conn.prepareStatement(checkAuthorSql);
-                checkAuthorStmt.setString(1, authorID);
+                checkAuthorStmt.setString(1, authorName);
                 ResultSet checkAuthorResult = checkAuthorStmt.executeQuery();
                 
                 if (!checkAuthorResult.next()) {
                     // Nếu không có thì thêm tác giả mới vào trước
-                    boolean addAuthorResult = addAuthor(authorID, authorName, authorGender);
+                    boolean addAuthorResult = addAuthor(authorName, authorGender);
                     if (!addAuthorResult) {
                         checkAuthorResult.close();
                         checkAuthorStmt.close();
