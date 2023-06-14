@@ -11,18 +11,18 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="466.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="library.application.staff.add.AddBookController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="library.application.staff.add.AddBookController">
    <children>
-      <VBox alignment="TOP_CENTER" layoutX="122.0" layoutY="62.0" prefHeight="400.0" prefWidth="600.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <VBox alignment="TOP_CENTER" layoutX="122.0" layoutY="62.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <HBox prefHeight="48.0" prefWidth="600.0">
+            <HBox alignment="CENTER" prefHeight="48.0" prefWidth="600.0">
                <children>
                   <Label text="Thêm sách">
                      <font>
                         <Font name="System Bold" size="32.0" />
                      </font>
                      <padding>
-                        <Insets left="29.0" top="10.0" />
+                        <Insets left="29.0" />
                      </padding>
                   </Label>
                </children>

@@ -12,7 +12,7 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="library.application.staff.publication.BookSceneController">
    <children>
-      <VBox fx:id="content1" layoutX="107.0" layoutY="47.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <VBox fx:id="paneMain" layoutX="107.0" layoutY="47.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <HBox alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="484.0" spacing="10.0" VBox.vgrow="NEVER">
                <children>
@@ -49,6 +49,12 @@
             </TableView>
          </children>
       </VBox>
+      <AnchorPane fx:id="paneAdd" prefHeight="200.0" prefWidth="200.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <fx:include source="../add/AddBook.fxml" />
+            <Button mnemonicParsing="false" onAction="#btnReturn" text="Quay lại" />
+         </children>
+      </AnchorPane>
    </children>
    <padding>
       <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />

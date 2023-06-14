@@ -18,6 +18,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import library.application.staff.add.AddBookController;
 import library.mysql.Database;
@@ -81,7 +82,10 @@ public class BookSceneController implements Initializable {
     private TableColumn<Books, Integer> colReissue;
     
     @FXML
-    private VBox content1;
+    private VBox paneMain;
+    
+    @FXML
+    private AnchorPane paneAdd;
     
     private ObservableList<Books> data;
     private Database mainDb;
@@ -107,10 +111,15 @@ public class BookSceneController implements Initializable {
     
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-
+		// Already set mainDb
+		
+		if (mainDb == null) {
+			System.out.println("Can't initialize because mainDb is not loaded");
+			return;
+		}
+		
         System.out.println("Controller initialized");
         // Add a default row
-		mainDb = new Database();
 		refresh();
         
         // Bind the ObservableList to the TableView
@@ -133,13 +142,14 @@ public class BookSceneController implements Initializable {
 	
     @FXML
     void btnAddBook(ActionEvent event) {
-		try {
-	        FXMLLoader loader = new FXMLLoader(getClass().getResource("../add/AddBook.fxml"));
-	        Parent root = loader.load();
-	        content1.getChildren().setAll(root);
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
+    	paneMain.setVisible(false);
+    	paneAdd.setVisible(true);
+    }
+    
+    @FXML
+    void btnReturn(ActionEvent event) {
+    	paneMain.setVisible(true);
+    	paneAdd.setVisible(false);
     }
     
     @FXML
