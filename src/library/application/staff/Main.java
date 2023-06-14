@@ -23,7 +23,7 @@ public class Main extends Application {
 	        primaryStage.setScene(scene);
 	        primaryStage.show();
 	        
-			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+			scene.getStylesheets().add(getClass().getResource("cupertino-light.css").toExternalForm());
 			primaryStage.setScene(scene);
 			
 			primaryStage.show();
