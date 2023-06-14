@@ -47,6 +47,12 @@ public class AddBookController {
     public void setMainController(BookSceneController control) {
     	this.mainController = control;
     }
+    
+    void btnAddBook(ActionEvent event) {
+    	//mainDb.addBook();
+    	mainController.refresh();
+    	mainController.scrollToLast();
+    }
 
     @FXML
     void initialize() {
