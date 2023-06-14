@@ -1,4 +1,4 @@
-package library.application.staff;
+package library.application.staff.publication;
 
 import java.net.URL;
 import java.sql.Date;

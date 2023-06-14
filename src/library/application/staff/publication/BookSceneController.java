@@ -1,4 +1,4 @@
-package library.application.staff;
+package library.application.staff.publication;
 
 import java.net.URL;
 import java.sql.Date;
@@ -18,6 +18,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.VBox;
 import library.application.staff.add.AddBookController;
 import library.mysql.Database;
 import library.publication.Books;
@@ -79,6 +80,8 @@ public class BookSceneController implements Initializable {
     @FXML
     private TableColumn<Books, Integer> colReissue;
     
+    @FXML
+    private VBox content1;
     
     private ObservableList<Books> data;
     private Database mainDb;
@@ -131,17 +134,9 @@ public class BookSceneController implements Initializable {
     @FXML
     void btnAddBook(ActionEvent event) {
 		try {
-	        FXMLLoader loader = new FXMLLoader(getClass().getResource("add/AddBook.fxml"));
+	        FXMLLoader loader = new FXMLLoader(getClass().getResource("../add/AddBook.fxml"));
 	        Parent root = loader.load();
-	        AddBookController bookcontroller = (AddBookController) loader.getController();
-	        bookcontroller.setDB(mainDb);
-	        bookcontroller.setMainController(this);
-	        
-	        Stage secondStage = new Stage();
-	        secondStage.setTitle("Second Window");
-	        
-	        secondStage.setScene(new Scene(root));
-	        secondStage.show();
+	        content1.getChildren().setAll(root);
 		} catch(Exception e) {
 			e.printStackTrace();
 		}

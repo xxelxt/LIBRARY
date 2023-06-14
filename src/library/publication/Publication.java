@@ -71,7 +71,7 @@ public class Publication {
 	public void setQuantity(int Quantity) {
 		this.Quantity = Quantity;
 	}
-	
+
 	public boolean CheckAvailable(String PublicationID) {
         Database db = new Database();
         int available = db.getPublicationQuantity(PublicationID);

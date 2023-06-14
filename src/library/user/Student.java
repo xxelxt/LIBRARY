@@ -44,7 +44,7 @@ public class Student extends Info {
 	public void setStudentID(String StudentID) {
 		this.StudentID = StudentID;
 	}
-	
+
 	public String getClassName() {
 		return this.ClassName;
 	}
@@ -68,5 +68,5 @@ public class Student extends Info {
 	public void setFineStatus(boolean FineStatus) {
 		this.FineStatus = FineStatus;
 	}
-	
+
 }

@@ -3,7 +3,7 @@ package library.publication;
 import java.util.Date;
 
 public class PrintMedia extends Publication {
-	
+
 	private int ReleaseNumber;
 	private String PrintType;
 
@@ -24,7 +24,7 @@ public class PrintMedia extends Publication {
 		this.ReleaseNumber = ReleaseNumber;
 		this.PrintType = PrintType;
 	}
-	
+
 	public int getReleaseNumber() {
 		return this.ReleaseNumber;
 	}
@@ -40,5 +40,5 @@ public class PrintMedia extends Publication {
 	public void setPrintType(String PrintType) {
 		this.PrintType = PrintType;
 	}
-	
+
 }

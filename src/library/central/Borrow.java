@@ -15,7 +15,7 @@ public class Borrow {
 	private int BorrowQuantity;
 	private boolean FineStatus;
 	private boolean ReturnedStatus;
-	
+
 	public Borrow() {
 		this.BorrowID = " ";
 		this.StartDate = null;
@@ -38,7 +38,7 @@ public class Borrow {
 		this.BorrowQuantity = BorrowQuantity;
 		this.FineStatus = FineStatus;
 		this.ReturnedStatus = ReturnedStatus;
-	}	
+	}
 
 	public String getBorrowID() {
 		return this.BorrowID;
@@ -122,5 +122,5 @@ public class Borrow {
 		this.FineStatus = Update.FineStatus;
 		this.ReturnedStatus = Update.ReturnedStatus;
     }
-	
+
 }

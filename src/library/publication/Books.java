@@ -29,14 +29,14 @@ public class Books extends Publication {
 		super(Title, ReleaseDate);
 		this.Authors = Authors;
 	}
-	
+
 	public String getAuthors() {
 		String buffer = "";
-		
+
 		for (String auth: Authors) {
 			buffer += auth + ", ";
 		}
-		
+
 		return buffer;
 	}
 

@@ -1,4 +1,4 @@
-package library.application.staff;
+package library.application.staff.student;
 
 import java.net.URL;
 import java.util.ResourceBundle;

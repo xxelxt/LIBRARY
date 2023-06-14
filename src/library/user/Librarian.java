@@ -1,7 +1,7 @@
 package library.user;
 
 public class Librarian extends Clerk {
-    
+
     public Librarian() {
         super();
     }

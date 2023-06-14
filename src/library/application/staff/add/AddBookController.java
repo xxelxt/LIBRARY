@@ -9,7 +9,7 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TextField;
-import library.application.staff.BookSceneController;
+import library.application.staff.publication.BookSceneController;
 import library.mysql.Database;
 
 public class AddBookController {
@@ -40,19 +40,6 @@ public class AddBookController {
 
     @FXML
     private TextField fieldTitle;
-    
-    @FXML
-    
-    private BookSceneController mainController;
-    public void setMainController(BookSceneController control) {
-    	this.mainController = control;
-    }
-    
-    void btnAddBook(ActionEvent event) {
-    	//mainDb.addBook();
-    	mainController.refresh();
-    	mainController.scrollToLast();
-    }
 
     @FXML
     void initialize() {

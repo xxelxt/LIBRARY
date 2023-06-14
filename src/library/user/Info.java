@@ -49,5 +49,5 @@ public class Info extends User {
     public void setPhone(String Phone) {
         this.Phone = Phone;
     }
-    
+
 }

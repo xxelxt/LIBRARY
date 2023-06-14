@@ -1,7 +1,6 @@
 package library.user;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import library.mysql.Database;
 import library.publication.Books;
@@ -89,5 +88,5 @@ public class User extends Person {
         booksList = db.searchBookbyCategories(categories);
         return booksList;
     } */
-    
+
 }

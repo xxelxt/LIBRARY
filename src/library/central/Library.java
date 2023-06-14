@@ -20,10 +20,10 @@ public class Library {
     public static ArrayList<Clerk> ClerkList;
     public static ArrayList<Borrow> BorrowList;
     public static ArrayList<Event> EventList;
-    
+
     public Library() {
         Database db = new Database();
-        
+
     //  UsersList = db.loadAllUsers();
         StudentList = db.loadAllStudents();
         BooksList = db.loadAllBooks();
@@ -34,62 +34,47 @@ public class Library {
         BorrowList = db.loadBorrowList();
     //  EventList = db.loadEventList();
 
-        for (int i = 0; i < StudentList.size(); i++) {
-            Student S = StudentList.get(i);
-
+        for (Student S : StudentList) {
             System.out.println();
         }
 
-        for (int i = 0; i < BooksList.size(); i++) {
-            Books B = BooksList.get(i);
-
+        for (Books B : BooksList) {
             System.out.println();
         }
 
-        for (int i = 0; i < PrintMediaList.size(); i++) {
-            PrintMedia PM = PrintMediaList.get(i);
-
+        for (PrintMedia PM : PrintMediaList) {
             System.out.println();
         }
 
-        for (int i = 0; i < LibrarianList.size(); i++) {
-            Librarian L = LibrarianList.get(i);
-
+        for (Librarian L : LibrarianList) {
             System.out.println();
         }
 
-        for (int i = 0; i < ClerkList.size(); i++) {
-            Clerk C = ClerkList.get(i);
-
+        for (Clerk C : ClerkList) {
             System.out.println();
         }
 
-        for (int i = 0; i < BorrowList.size(); i++) {
-            Borrow B = BorrowList.get(i);
-
+        for (Borrow B : BorrowList) {
             System.out.println();
         }
     }
 
     boolean isStudentPresent(String StudentID) {
-        for (int i = 0; i < StudentList.size(); i++) {
-            Student S = StudentList.get(i);
+        for (Student S : StudentList) {
             if (S.getStudentID() == StudentID) return true;
         }
         return false;
     }
 
     boolean isClerkPresent(String ClerkID) {
-        for (int i = 0; i < ClerkList.size(); i++) {
-            Clerk C = ClerkList.get(i);
+        for (Clerk C : ClerkList) {
             if (C.getStaffID() == ClerkID) return true;
         }
         return false;
     }
 
     boolean isLibrarianPresent(String LibrarianID) {
-        for (int i = 0; i < LibrarianList.size(); i++) {
-            Librarian L = LibrarianList.get(i);
+        for (Librarian L : LibrarianList) {
             if (L.getStaffID() == LibrarianID) return true;
         }
         return false;
