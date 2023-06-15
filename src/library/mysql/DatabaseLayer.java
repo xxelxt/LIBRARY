@@ -1569,27 +1569,6 @@ public class DatabaseLayer {
         return true;
     }
 
-    public boolean deletePublication(Integer publicationID) {
-        try {
-            String deletePublicationSql = "DELETE FROM Publications WHERE PublicationID = ?";
-            PreparedStatement deletePublicationStmt = conn.prepareStatement(deletePublicationSql);
-            deletePublicationStmt.setInt(1, publicationID);
-
-            int rowsAffected = deletePublicationStmt.executeUpdate();
-            deletePublicationStmt.close();
-
-            if (rowsAffected == 0) {
-                System.out.println("No publication found with the provided ID.");
-                return false;
-            }
-
-        } catch (Exception e) {
-            System.out.println(e);
-            return false;
-        }
-        return true;
-    }
-
     public boolean deletePrintMedia(Integer publicationID) {
         boolean success = deletePublication(publicationID);
 
@@ -1611,32 +1590,7 @@ public class DatabaseLayer {
         return false;
     }
 
-    public boolean deleteBook(Integer publicationID) {
-        boolean success = deletePublication(publicationID);
 
-        if (success) {
-            try {
-                String deleteBookSql = "DELETE FROM Books WHERE BookID = ?";
-                PreparedStatement deleteBookStmt = conn.prepareStatement(deleteBookSql);
-                deleteBookStmt.setInt(1, publicationID);
-                deleteBookStmt.executeUpdate();
-                deleteBookStmt.close();
-
-                String deleteBookAuthorsSql = "DELETE FROM BookAuthors WHERE BookID = ?";
-                PreparedStatement deleteBookAuthorsStmt = conn.prepareStatement(deleteBookAuthorsSql);
-                deleteBookAuthorsStmt.setInt(1, publicationID);
-                deleteBookAuthorsStmt.executeUpdate();
-                deleteBookAuthorsStmt.close();
-
-                return true;
-
-            } catch (Exception e) {
-                System.out.println(e);
-            }
-        }
-
-        return false;
-    }
 
     public String getPasswordfromUsername(String username) {
         String password = " ";

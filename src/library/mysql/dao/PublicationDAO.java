@@ -35,4 +35,25 @@ public class PublicationDAO {
         
         return newpubID;
     }
+    
+    public boolean deletePublication(Integer publicationID) {
+        try {
+            String deletePublicationSql = "DELETE FROM Publications WHERE PublicationID = ?";
+            PreparedStatement stmt = DatabaseLayer.prepareStatement(deletePublicationSql);
+            stmt.setInt(1, publicationID);
+
+            int rowsAffected = stmt.executeUpdate();
+            stmt.close();
+
+            if (rowsAffected == 0) {
+                System.out.println("No publication found with the provided ID.");
+                return false;
+            }
+
+        } catch (Exception e) {
+            System.out.println(e);
+            return false;
+        }
+        return true;
+    }
 }

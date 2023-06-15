@@ -103,6 +103,11 @@ public class BookDAO {
         }
         return true;
     }
+    
+    public boolean deleteBook(Integer publicationID) {
+        return publicationDAO.deletePublication(publicationID);
+        // FOREIGN KEY (`BookID`) REFERENCES `publications` (`PublicationID`) ON DELETE CASCADE
+    }
 	
 	/* UNTESTED REGION */
 	/* UNTESTED REGION */

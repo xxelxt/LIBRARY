@@ -155,7 +155,7 @@ public class BookSceneController implements Initializable {
     	Publication selectedRow = booksTableView.getSelectionModel().getSelectedItem();
     	
     	if (selectedRow != null) {
-//	    	bookDAO.deleteBook(selectedRow.getPublicationID());
+	    	bookDAO.deleteBook(selectedRow.getPublicationID());
 	    	this.refresh();
 	    	
 	        if (selectedIndex >= 0 && selectedIndex < data.size()) {
