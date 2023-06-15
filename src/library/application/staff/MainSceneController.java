@@ -38,16 +38,11 @@ public class MainSceneController implements Initializable {
 
     @FXML
     private Tab tab2;
-    
-    private ObservableList<Publication> data;
-    private Database mainDb;
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-        System.out.println("Controller initialized");
+        System.out.println("MainScene initialized");
         // Add a default row
-		mainDb = new Database();
-
 	}
 
 }

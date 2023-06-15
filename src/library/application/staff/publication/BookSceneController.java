@@ -22,8 +22,11 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import library.application.staff.add.AddBookController;
 import library.mysql.Database;
+import library.mysql.dao.AuthorDAO;
+import library.mysql.dao.BookDAO;
 import library.publication.Books;
 import library.publication.Publication;
+
 
 public class BookSceneController implements Initializable {
 
@@ -88,13 +91,13 @@ public class BookSceneController implements Initializable {
     private AnchorPane paneAdd;
     
     private ObservableList<Books> data;
-    private Database mainDb;
-
     
+    private BookDAO bookDAO = new BookDAO();
+
     public void refresh() {
         data = FXCollections.observableArrayList();
 
-        List<Books> allBooks = mainDb.loadAllBooks();
+        List<Books> allBooks = bookDAO.loadAllBooks();
 		System.out.println(allBooks);
 		
 	    for (Books book: allBooks){
@@ -111,13 +114,6 @@ public class BookSceneController implements Initializable {
     
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		// Already set mainDb
-		
-		if (mainDb == null) {
-			System.out.println("Can't initialize because mainDb is not loaded");
-			return;
-		}
-		
         System.out.println("Controller initialized");
         // Add a default row
 		refresh();
@@ -150,6 +146,7 @@ public class BookSceneController implements Initializable {
     void btnReturn(ActionEvent event) {
     	paneMain.setVisible(true);
     	paneAdd.setVisible(false);
+    	this.refresh();
     }
     
     @FXML
@@ -158,7 +155,7 @@ public class BookSceneController implements Initializable {
     	Publication selectedRow = booksTableView.getSelectionModel().getSelectedItem();
     	
     	if (selectedRow != null) {
-	    	mainDb.deletePublication(selectedRow.getPublicationID());
+//	    	bookDAO.deleteBook(selectedRow.getPublicationID());
 	    	this.refresh();
 	    	
 	        if (selectedIndex >= 0 && selectedIndex < data.size()) {
