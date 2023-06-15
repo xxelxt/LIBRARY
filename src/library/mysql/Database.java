@@ -19,7 +19,7 @@ public class Database {
 
     private static String URL = "jdbc:mysql://localhost/library";
     private static String USER_NAME = "root";
-    private static String PASSWORD = "q12Q!@";
+    private static String PASSWORD = "b0rderless";
 
     private Connection conn;
 
