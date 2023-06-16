@@ -10,6 +10,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -17,6 +18,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import library.mysql.dao.PrintMediaDAO;
+import library.publication.Books;
 import library.publication.PrintMedia;
 import library.publication.Publication;
 
@@ -27,6 +29,12 @@ public class PrintMediaSceneController implements Initializable {
 
     @FXML
     private URL location;
+    
+    @FXML
+    private TableView<Books> booksTableView;
+    
+    @FXML
+    private ComboBox<String> comboBox;
 
     @FXML
     private TableView<PrintMedia> pmTableView;
@@ -63,6 +71,8 @@ public class PrintMediaSceneController implements Initializable {
     
     private ObservableList<PrintMedia> data;
     
+    private ObservableList<String> items = FXCollections.observableArrayList("ID", "Tên ẩn phẩm", "Loại ấn phẩm", "Quốc gia");
+    
     private PrintMediaDAO pmDAO = new PrintMediaDAO();
 
     public void refresh() {
@@ -91,6 +101,11 @@ public class PrintMediaSceneController implements Initializable {
         
         // Bind the ObservableList to the TableView
         pmTableView.setItems(data);
+        
+        fieldSearch.setPromptText("Thông tin tìm kiếm");
+        
+        comboBox.setPromptText("Thuộc tính tìm kiếm");
+        comboBox.setItems(items);
 
         // Bind the columns to the corresponding properties in MyDataModel
         colID.setCellValueFactory(new PropertyValueFactory<PrintMedia, Integer>("publicationID"));
@@ -110,7 +125,6 @@ public class PrintMediaSceneController implements Initializable {
     	paneMain.setVisible(false);
     	paneAdd.setVisible(true);
     }
-
 
     @FXML
     void btnDeletePrintMedia(ActionEvent event) {

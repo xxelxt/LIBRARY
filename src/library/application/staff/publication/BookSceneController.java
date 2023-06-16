@@ -10,8 +10,10 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
@@ -30,6 +32,12 @@ public class BookSceneController implements Initializable {
 
     @FXML
     private TableView<Books> booksTableView;
+    
+    @FXML
+    private ComboBox<String> comboBox;
+    
+    @FXML
+    private TextField fieldSearch;
 
     @FXML
     private TableColumn<Books, String> colCategory;
@@ -66,6 +74,8 @@ public class BookSceneController implements Initializable {
     
     private ObservableList<Books> data;
     
+    private ObservableList<String> items = FXCollections.observableArrayList("ID", "Tên sách", "Tác giả", "Quốc gia");
+    
     private BookDAO bookDAO = new BookDAO();
 
     public void refresh() {
@@ -94,6 +104,11 @@ public class BookSceneController implements Initializable {
         
         // Bind the ObservableList to the TableView
         booksTableView.setItems(data);
+        
+        fieldSearch.setPromptText("Thông tin tìm kiếm");
+        
+        comboBox.setPromptText("Thuộc tính tìm kiếm");
+        comboBox.setItems(items);
 
         // Bind the columns to the corresponding properties in MyDataModel
         colID.setCellValueFactory(new PropertyValueFactory<Books, Integer>("publicationID"));
@@ -106,6 +121,8 @@ public class BookSceneController implements Initializable {
         colPublisher.setCellValueFactory(new PropertyValueFactory<Books, String>("publisher"));
         colCategory.setCellValueFactory(new PropertyValueFactory<Books, String>("category"));
         colReissue.setCellValueFactory(new PropertyValueFactory<Books, Integer>("reissue"));
+        
+        
 	}
 	
 	Date now = new Date(new java.util.Date().getTime());
