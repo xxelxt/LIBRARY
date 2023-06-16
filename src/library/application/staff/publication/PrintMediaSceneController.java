@@ -2,6 +2,7 @@ package library.application.staff.publication;
 
 import java.net.URL;
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -106,6 +107,8 @@ public class PrintMediaSceneController implements Initializable {
         
         comboBox.setPromptText("Thuộc tính tìm kiếm");
         comboBox.setItems(items);
+        
+        fieldSearch.setOnAction(event -> btnSearch(event));
 
         // Bind the columns to the corresponding properties in MyDataModel
         colID.setCellValueFactory(new PropertyValueFactory<PrintMedia, Integer>("publicationID"));
@@ -157,6 +160,35 @@ public class PrintMediaSceneController implements Initializable {
 
     @FXML
     void btnSearch(ActionEvent event) {
+    	String searchText = fieldSearch.getText();
+        String searchOption = comboBox.getValue();
 
+        pmTableView.getItems().clear();
+        List<PrintMedia> searchResults = performSearch(searchText, searchOption);
+
+        pmTableView.getItems().addAll(searchResults);
+    }
+    
+    private List<PrintMedia> performSearch(String searchText, String searchOption) {
+    	List<PrintMedia> searchResults = new ArrayList<>();
+
+        switch (searchOption) {
+            case "ID":
+                if (searchText == " " || searchText.isEmpty()) refresh();
+                int searchID = Integer.parseInt(searchText);
+                searchResults = pmDAO.getPMbyID(searchID);
+                break;
+            case "Tên ấn phẩm":
+                searchResults = pmDAO.getPMbyTitle(searchText);
+                break;
+            case "Loại ấn phẩm":
+                searchResults = pmDAO.getPMbyPrintType(searchText);
+                break;
+            case "Quốc gia":
+                searchResults = pmDAO.getPMbyCountry(searchText);
+                break;
+        }
+        
+        return searchResults;
     }
 }

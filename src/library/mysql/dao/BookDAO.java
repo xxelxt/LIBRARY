@@ -4,6 +4,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.List;
 
 import library.mysql.DatabaseLayer;
 import library.publication.Books;
@@ -108,6 +109,191 @@ public class BookDAO {
         return publicationDAO.deletePublication(publicationID);
         // FOREIGN KEY (`BookID`) REFERENCES `publications` (`PublicationID`) ON DELETE CASCADE
     }
+    
+    public List<Books> getBookbyID(int bID) {
+        List<Books> bookList = new ArrayList<>();
+
+        try {
+            String sql = "SELECT p.PublicationID, p.Title, GROUP_CONCAT(a.AuthorName) as Authors, p.ReleaseDate, p.Country, p.Quantity, b.Category, b.Reissue, pb.PublisherName " +
+                    "FROM Publications p " +
+                    "INNER JOIN Books b ON p.PublicationID = b.BookID " +
+                    "INNER JOIN BookAuthors ba ON b.BookID = ba.BookID " +
+                    "INNER JOIN Authors a ON ba.AuthorID = a.AuthorID " +
+                    "INNER JOIN Publishers pb ON b.PublisherID = pb.PublisherID " + 
+                    "WHERE p.PublicationID = ? " +
+                    "GROUP BY p.PublicationID, p.Title, p.ReleaseDate, p.Country, p.Quantity, b.Category, b.Reissue";
+
+            PreparedStatement pstmt = DatabaseLayer.prepareStatement(sql);
+            pstmt.setInt(1, bID);
+
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+            	Integer publicationID = rs.getInt("PublicationID");
+
+                ArrayList<String> authors = authorDAO.getBookAuthor(publicationID);
+
+                Books Book = new Books(
+                		rs.getInt(1), 
+                		rs.getString(2), 
+                		authors, 
+                		rs.getDate(4), 
+                		rs.getString(5), 
+                		rs.getInt(6), 
+                		rs.getString(7), 
+                		rs.getInt(8), 
+                		rs.getString(9)
+                );
+                bookList.add(Book);
+            }
+
+            rs.close();
+            pstmt.close();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+
+        return bookList;
+    }
+
+    public List<Books> getBookbyTitle(String bTitle) {
+        List<Books> bookList = new ArrayList<>();
+
+        try {
+            String sql = "SELECT p.PublicationID, p.Title, GROUP_CONCAT(a.AuthorName) as Authors, p.ReleaseDate, p.Country, p.Quantity, b.Category, b.Reissue, pb.PublisherName " +
+                    "FROM Publications p " +
+                    "INNER JOIN Books b ON p.PublicationID = b.BookID " +
+                    "INNER JOIN BookAuthors ba ON b.BookID = ba.BookID " +
+                    "INNER JOIN Authors a ON ba.AuthorID = a.AuthorID " +
+                    "INNER JOIN Publishers pb ON b.PublisherID = pb.PublisherID " + 
+                    "WHERE p.Title LIKE ? " +
+                    "GROUP BY p.PublicationID, p.Title, p.ReleaseDate, p.Country, p.Quantity, b.Category, b.Reissue";
+
+            PreparedStatement pstmt = DatabaseLayer.prepareStatement(sql);
+            pstmt.setString(1, "%" + bTitle + "%");
+
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+            	Integer publicationID = rs.getInt("PublicationID");
+
+                ArrayList<String> authors = authorDAO.getBookAuthor(publicationID);
+
+                Books Book = new Books(
+                		rs.getInt(1), 
+                		rs.getString(2), 
+                		authors, 
+                		rs.getDate(4), 
+                		rs.getString(5), 
+                		rs.getInt(6), 
+                		rs.getString(7), 
+                		rs.getInt(8), 
+                		rs.getString(9)
+                );
+                bookList.add(Book);
+            }
+
+            rs.close();
+            pstmt.close();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+
+        return bookList;
+    }
+    
+    public List<Books> getBookbyCountry(String bCountry) {
+        List<Books> bookList = new ArrayList<>();
+
+        try {
+            String sql = "SELECT p.PublicationID, p.Title, GROUP_CONCAT(a.AuthorName) as Authors, p.ReleaseDate, p.Country, p.Quantity, b.Category, b.Reissue, pb.PublisherName " +
+                    "FROM Publications p " +
+                    "INNER JOIN Books b ON p.PublicationID = b.BookID " +
+                    "INNER JOIN BookAuthors ba ON b.BookID = ba.BookID " +
+                    "INNER JOIN Authors a ON ba.AuthorID = a.AuthorID " +
+                    "INNER JOIN Publishers pb ON b.PublisherID = pb.PublisherID " + 
+                    "WHERE p.Country LIKE ? " +
+                    "GROUP BY p.PublicationID, p.Title, p.ReleaseDate, p.Country, p.Quantity, b.Category, b.Reissue";
+
+            PreparedStatement pstmt = DatabaseLayer.prepareStatement(sql);
+            pstmt.setString(1, "%" + bCountry + "%");
+
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+            	Integer publicationID = rs.getInt("PublicationID");
+
+                ArrayList<String> authors = authorDAO.getBookAuthor(publicationID);
+
+                Books Book = new Books(
+                		rs.getInt(1), 
+                		rs.getString(2), 
+                		authors, 
+                		rs.getDate(4), 
+                		rs.getString(5), 
+                		rs.getInt(6), 
+                		rs.getString(7), 
+                		rs.getInt(8), 
+                		rs.getString(9)
+                );
+                bookList.add(Book);
+            }
+
+            rs.close();
+            pstmt.close();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+
+        return bookList;
+    }
+    
+    public List<Books> getBookbyCategory(String bCategory) {
+        List<Books> bookList = new ArrayList<>();
+
+        try {
+            String sql = "SELECT p.PublicationID, p.Title, GROUP_CONCAT(a.AuthorName) as Authors, p.ReleaseDate, p.Country, p.Quantity, b.Category, b.Reissue, pb.PublisherName " +
+                    "FROM Publications p " +
+                    "INNER JOIN Books b ON p.PublicationID = b.BookID " +
+                    "INNER JOIN BookAuthors ba ON b.BookID = ba.BookID " +
+                    "INNER JOIN Authors a ON ba.AuthorID = a.AuthorID " +
+                    "INNER JOIN Publishers pb ON b.PublisherID = pb.PublisherID " + 
+                    "WHERE b.Category LIKE ? " +
+                    "GROUP BY p.PublicationID, p.Title, p.ReleaseDate, p.Country, p.Quantity, b.Category, b.Reissue";
+
+            PreparedStatement pstmt = DatabaseLayer.prepareStatement(sql);
+            pstmt.setString(1, "%" + bCategory + "%");
+
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+            	Integer publicationID = rs.getInt("PublicationID");
+
+                ArrayList<String> authors = authorDAO.getBookAuthor(publicationID);
+
+                Books Book = new Books(
+                		rs.getInt(1), 
+                		rs.getString(2), 
+                		authors, 
+                		rs.getDate(4), 
+                		rs.getString(5), 
+                		rs.getInt(6), 
+                		rs.getString(7), 
+                		rs.getInt(8), 
+                		rs.getString(9)
+                );
+                bookList.add(Book);
+            }
+
+            rs.close();
+            pstmt.close();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+
+        return bookList;
+    }
+    
 	
 	/* UNTESTED REGION */
 	/* UNTESTED REGION */
@@ -119,55 +305,7 @@ public class BookDAO {
 	/* UNTESTED REGION */
 	/* UNTESTED REGION */
 	/* UNTESTED REGION */
-
-    public Books getBookbyID(String BookID) {
-        Books currentBook = null;
-
-        try {
-            String sql = "SELECT p.PublicationID, p.Title, GROUP_CONCAT(a.AuthorName) as Authors, p.ReleaseDate, p.Country, p.Quantity, b.Category, b.Reissue, pb.PublisherName " +
-                    "FROM Publications p " +
-                    "INNER JOIN Books b ON p.PublicationID = b.BookID " +
-                    "INNER JOIN BookAuthors ba ON b.BookID = ba.BookID " +
-                    "INNER JOIN Authors a ON ba.AuthorID = a.AuthorID " +
-                    "INNER JOIN Publishers pb ON b.PublisherID = pb.PublisherID " +
-                    "WHERE b.BookID = ? " +
-                    "GROUP BY p.PublicationID, p.Title, p.ReleaseDate, p.Country, p.Quantity, b.Category, b.Reissue, pb.PublisherName";
-
-            PreparedStatement pstmt = DatabaseLayer.prepareStatement(sql);
-            pstmt.setString(1, BookID);
-
-            ResultSet rs = pstmt.executeQuery();
-
-            while (rs.next()) {
-                Integer publicationID = rs.getInt(1);
-                String title = rs.getString(2);
-                
-                AuthorDAO authordaobj = new AuthorDAO();
-                ArrayList<String> authors = authordaobj.getBookAuthor(publicationID);
-
-                Date releaseDate = rs.getDate(4);
-                String country = rs.getString(5);
-                int quantity = rs.getInt(6);
-
-                String category = rs.getString(7);
-                int reissue = rs.getInt(8);
-                String publisher = rs.getString(9);
-
-                Books newBook = new Books(publicationID, title, authors, releaseDate, country, quantity, category, reissue, publisher);
-
-                currentBook = newBook;
-            }
-
-            rs.close();
-            pstmt.close();
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-
-        return currentBook;
-    }
     
-
     public String getBookCategory(String BookID) {
         String category = "";
         try {

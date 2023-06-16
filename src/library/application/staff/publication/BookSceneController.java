@@ -2,6 +2,7 @@ package library.application.staff.publication;
 
 import java.net.URL;
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -74,7 +75,7 @@ public class BookSceneController implements Initializable {
     
     private ObservableList<Books> data;
     
-    private ObservableList<String> items = FXCollections.observableArrayList("ID", "Tên sách", "Tác giả", "Quốc gia");
+    private ObservableList<String> items = FXCollections.observableArrayList("ID", "Tên sách", "Tác giả", "Quốc gia", "Thể loại");
     
     private BookDAO bookDAO = new BookDAO();
 
@@ -109,6 +110,8 @@ public class BookSceneController implements Initializable {
         
         comboBox.setPromptText("Thuộc tính tìm kiếm");
         comboBox.setItems(items);
+        
+        fieldSearch.setOnAction(event -> btnSearch(event));
 
         // Bind the columns to the corresponding properties in MyDataModel
         colID.setCellValueFactory(new PropertyValueFactory<Books, Integer>("publicationID"));
@@ -164,7 +167,40 @@ public class BookSceneController implements Initializable {
     
     @FXML
     void btnSearch(ActionEvent event) {
+        String searchText = fieldSearch.getText();
+        String searchOption = comboBox.getValue();
 
+        booksTableView.getItems().clear();
+        List<Books> searchResults = performSearch(searchText, searchOption);
+
+        booksTableView.getItems().addAll(searchResults);
     }
+    
+    private List<Books> performSearch(String searchText, String searchOption) {
+    	List<Books> searchResults = new ArrayList<>();
+
+        switch (searchOption) {
+            case "ID":
+                if (searchText == " " || searchText.isEmpty()) refresh();
+                int searchID = Integer.parseInt(searchText);
+                searchResults = bookDAO.getBookbyID(searchID);
+                break;
+            case "Tên sách":
+                searchResults = bookDAO.getBookbyTitle(searchText);
+                break;
+            case "Tác giả":
+                
+                break;
+            case "Quốc gia":
+                searchResults = bookDAO.getBookbyCountry(searchText);
+                break;
+            case "Thể loại":
+                searchResults = bookDAO.getBookbyCategory(searchText);
+                break;
+        }
+        
+        return searchResults;
+    }
+
 
 }
