@@ -107,7 +107,8 @@ public class PrintMediaSceneController implements Initializable {
     
     @FXML
     void btnAddPrintMedia(ActionEvent event) {
-
+    	paneMain.setVisible(false);
+    	paneAdd.setVisible(true);
     }
 
 
@@ -127,15 +128,17 @@ public class PrintMediaSceneController implements Initializable {
         	pmTableView.getSelectionModel().clearSelection();
         }
     }
-
+    
     @FXML
-    void btnEditPrintMedia(ActionEvent event) {
-
+    void btnReturn(ActionEvent event) {
+    	paneMain.setVisible(true);
+    	paneAdd.setVisible(false);
+    	this.refresh();
     }
 
     @FXML
-    void btnReturn(ActionEvent event) {
-
+    void btnEditPrintMedia(ActionEvent event) {
+    	
     }
 
     @FXML
