@@ -48,7 +48,18 @@ public class AddPrintMediaController {
     		fieldQuantity.getValue(),
     		fieldReleaseNumber.getValue(),
     		fieldPrintType.getText()
-    	); 
+    	);
+    	
+    	clearTextField();
+    }
+    
+    void clearTextField() {
+    	fieldTitle.clear();
+    	fieldCountry.clear();
+    	fieldPublishDate.setValue(null);
+    	fieldQuantity.getValueFactory().setValue(1);
+    	fieldReleaseNumber.getValueFactory().setValue(1);
+    	fieldPrintType.clear();
     }
 
     @FXML

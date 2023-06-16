@@ -70,6 +70,18 @@ public class AddBookController {
     		fieldCategory.getText(),
     		fieldReissue.isSelected(),
     		fieldAuthors.getText()
-    	);    	
+    	);
+    	
+    	clearTextField();
+    }
+    
+    void clearTextField() {
+    	fieldTitle.clear();
+    	fieldCountry.clear();
+    	fieldPublishDate.setValue(null);
+    	fieldQuantity.getValueFactory().setValue(1);
+    	fieldAuthors.clear();
+    	fieldReissue.setSelected(false);
+    	fieldCategory.clear();
     }
 }
