@@ -20,7 +20,7 @@
                   <Button mnemonicParsing="false" onAction="#btnEditBook" text="Sửa" />
                   <Button mnemonicParsing="false" onAction="#btnDeleteBook" text="Xoá">
                      <HBox.margin>
-                        <Insets right="30.0" />
+                        <Insets right="20.0" />
                      </HBox.margin>
                   </Button>
                   <TextField fx:id="fieldSearch" prefHeight="26.0" prefWidth="413.0" HBox.hgrow="ALWAYS" />
@@ -31,10 +31,10 @@
                   <Insets />
                </opaqueInsets>
                <VBox.margin>
-                  <Insets bottom="10.0" />
+                  <Insets bottom="15.0" />
                </VBox.margin>
             </HBox>
-            <TableView fx:id="booksTableView" prefHeight="561.0" prefWidth="870.0">
+            <TableView fx:id="booksTableView" prefHeight="561.0" prefWidth="870.0" VBox.vgrow="ALWAYS">
                <columns>
                   <TableColumn fx:id="colID" prefWidth="40.0" text="ID" />
                   <TableColumn fx:id="colTitle" prefWidth="158.0" text="Tên sách" />
