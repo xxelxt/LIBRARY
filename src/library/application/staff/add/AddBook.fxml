@@ -23,8 +23,11 @@
                         <Font name="System Bold" size="32.0" />
                      </font>
                      <padding>
-                        <Insets left="29.0" />
+                        <Insets left="30.0" />
                      </padding>
+                     <HBox.margin>
+                        <Insets bottom="5.0" top="5.0" />
+                     </HBox.margin>
                   </Label>
                </children>
             </HBox>

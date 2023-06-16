@@ -9,6 +9,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -19,7 +20,7 @@ import library.mysql.dao.PrintMediaDAO;
 import library.publication.PrintMedia;
 import library.publication.Publication;
 
-public class PrintMediaSceneController {
+public class PrintMediaSceneController implements Initializable {
 
     @FXML
     private ResourceBundle resources;
