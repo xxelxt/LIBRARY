@@ -2,12 +2,14 @@ package library.application.staff.publication;
 
 import java.net.URL;
 import java.sql.Date;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -110,22 +112,28 @@ public class BookSceneController implements Initializable {
         
         comboBox.setPromptText("Thuộc tính tìm kiếm");
         comboBox.setItems(items);
+        comboBox.setValue("Tên sách");
         
-        fieldSearch.setOnAction(event -> btnSearch(event));
+        fieldSearch.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                String searchText = newValue;
+                String searchOption = comboBox.getValue();
+                SearchData(searchText, searchOption);
+            }
+        });
 
         // Bind the columns to the corresponding properties in MyDataModel
-        colID.setCellValueFactory(new PropertyValueFactory<Books, Integer>("publicationID"));
-        colTitle.setCellValueFactory(new PropertyValueFactory<Books, String>("title"));
-        colPublicationDate.setCellValueFactory(new PropertyValueFactory<Books, Date>("releaseDate"));
-        colCountry.setCellValueFactory(new PropertyValueFactory<Books, String>("country"));
-        colQuantity.setCellValueFactory(new PropertyValueFactory<Books, Integer>("quantity"));
+        colID.setCellValueFactory(new PropertyValueFactory<>("publicationID"));
+        colTitle.setCellValueFactory(new PropertyValueFactory<>("title"));
+        colPublicationDate.setCellValueFactory(new PropertyValueFactory<>("releaseDate"));
+        colCountry.setCellValueFactory(new PropertyValueFactory<>("country"));
+        colQuantity.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         
-        colAuthors.setCellValueFactory(new PropertyValueFactory<Books, String>("authors"));
-        colPublisher.setCellValueFactory(new PropertyValueFactory<Books, String>("publisher"));
-        colCategory.setCellValueFactory(new PropertyValueFactory<Books, String>("category"));
-        colReissue.setCellValueFactory(new PropertyValueFactory<Books, Integer>("reissue"));
-        
-        
+        colAuthors.setCellValueFactory(new PropertyValueFactory<>("authors"));
+        colPublisher.setCellValueFactory(new PropertyValueFactory<>("publisher"));
+        colCategory.setCellValueFactory(new PropertyValueFactory<>("category"));
+        colReissue.setCellValueFactory(new PropertyValueFactory<>("reissue"));
 	}
 	
 	Date now = new Date(new java.util.Date().getTime());
@@ -165,42 +173,84 @@ public class BookSceneController implements Initializable {
 
     }
     
-    @FXML
-    void btnSearch(ActionEvent event) {
-        String searchText = fieldSearch.getText();
-        String searchOption = comboBox.getValue();
+    private void filterBooksbyID(String idText) {
+        FilteredList<Books> filteredList = new FilteredList<>(data);
 
-        booksTableView.getItems().clear();
-        List<Books> searchResults = performSearch(searchText, searchOption);
+        filteredList.setPredicate(book -> {
+            if (idText == null || idText.isEmpty()) {
+                return true;
+            }
+            try {
+                int id = Integer.parseInt(idText);
+                return book.getPublicationID() == id;
+            } catch (NumberFormatException e) {
+                return false;
+            }
+        });
 
-        booksTableView.getItems().addAll(searchResults);
+        booksTableView.setItems(filteredList);
+    }
+
+    
+    private void filterBooksbyTitle(String title) {
+        FilteredList<Books> filteredList = new FilteredList<>(data);
+
+        filteredList.setPredicate(book -> {
+            if (title == null || title.isEmpty()) {
+                return true;
+            }
+            String lowerCaseTitle = title.toLowerCase();
+            return book.getTitle().toLowerCase().contains(lowerCaseTitle);
+        });
+
+        booksTableView.setItems(filteredList);
     }
     
-    private List<Books> performSearch(String searchText, String searchOption) {
-    	List<Books> searchResults = new ArrayList<>();
+    private void filterBooksbyCountry(String country) {
+        FilteredList<Books> filteredList = new FilteredList<>(data);
 
-        switch (searchOption) {
-            case "ID":
-                if (searchText == " " || searchText.isEmpty()) refresh();
-                int searchID = Integer.parseInt(searchText);
-                searchResults = bookDAO.getBookbyID(searchID);
-                break;
-            case "Tên sách":
-                searchResults = bookDAO.getBookbyTitle(searchText);
-                break;
-            case "Tác giả":
-                
-                break;
-            case "Quốc gia":
-                searchResults = bookDAO.getBookbyCountry(searchText);
-                break;
-            case "Thể loại":
-                searchResults = bookDAO.getBookbyCategory(searchText);
-                break;
-        }
-        
-        return searchResults;
+        filteredList.setPredicate(book -> {
+            if (country == null || country.isEmpty()) {
+                return true;
+            }
+            String lowerCaseTitle = country.toLowerCase();
+            return book.getCountry().toLowerCase().contains(lowerCaseTitle);
+        });
+
+        booksTableView.setItems(filteredList);
     }
+    
+    private void filterBooksbyCategory(String category) {
+        FilteredList<Books> filteredList = new FilteredList<>(data);
 
+        filteredList.setPredicate(book -> {
+            if (category == null || category.isEmpty()) {
+                return true;
+            }
+            String lowerCaseTitle = category.toLowerCase();
+            return book.getCategory().toLowerCase().contains(lowerCaseTitle);
+        });
 
+        booksTableView.setItems(filteredList);
+    }
+    
+    private void SearchData(String searchText, String searchOption) {
+    	switch (searchOption) {
+        case "ID":
+        	filterBooksbyID(searchText);
+            break;
+        case "Tên sách":
+            filterBooksbyTitle(searchText);
+            break;
+        case "Tác giả":
+            
+            break;
+        case "Quốc gia":
+        	filterBooksbyCountry(searchText);
+            break;
+        case "Thể loại":
+        	filterBooksbyCategory(searchText);
+            break;
+    	}
+    }
 }

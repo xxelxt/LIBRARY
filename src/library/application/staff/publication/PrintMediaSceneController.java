@@ -6,8 +6,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -107,8 +110,16 @@ public class PrintMediaSceneController implements Initializable {
         
         comboBox.setPromptText("Thuộc tính tìm kiếm");
         comboBox.setItems(items);
+        comboBox.setValue("Tên ấn phẩm");
         
-        fieldSearch.setOnAction(event -> btnSearch(event));
+        fieldSearch.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                String searchText = newValue;
+                String searchOption = comboBox.getValue();
+                SearchData(searchText, searchOption);
+            }
+        });
 
         // Bind the columns to the corresponding properties in MyDataModel
         colID.setCellValueFactory(new PropertyValueFactory<PrintMedia, Integer>("publicationID"));
@@ -135,7 +146,7 @@ public class PrintMediaSceneController implements Initializable {
     	Publication selectedRow = pmTableView.getSelectionModel().getSelectedItem();
     	
     	if (selectedRow != null) {
-	    	pmDAO.deleteBook(selectedRow.getPublicationID());
+	    	pmDAO.deletePrintMedia(selectedRow.getPublicationID());
 	    	this.refresh();
 	    	
 	        if (selectedIndex >= 0 && selectedIndex < data.size()) {
@@ -158,37 +169,81 @@ public class PrintMediaSceneController implements Initializable {
     	
     }
 
-    @FXML
-    void btnSearch(ActionEvent event) {
-    	String searchText = fieldSearch.getText();
-        String searchOption = comboBox.getValue();
+    private void filterPMbyID(String idText) {
+        FilteredList<PrintMedia> filteredList = new FilteredList<>(data);
 
-        pmTableView.getItems().clear();
-        List<PrintMedia> searchResults = performSearch(searchText, searchOption);
+        filteredList.setPredicate(pm -> {
+            if (idText == null || idText.isEmpty()) {
+                return true;
+            }
+            try {
+                int id = Integer.parseInt(idText);
+                return pm.getPublicationID() == id;
+            } catch (NumberFormatException e) {
+                return false;
+            }
+        });
 
-        pmTableView.getItems().addAll(searchResults);
+        pmTableView.setItems(filteredList);
+    }
+
+    
+    private void filterPMbyTitle(String title) {
+        FilteredList<PrintMedia> filteredList = new FilteredList<>(data);
+
+        filteredList.setPredicate(pm -> {
+            if (title == null || title.isEmpty()) {
+                return true;
+            }
+            String lowerCaseTitle = title.toLowerCase();
+            return pm.getTitle().toLowerCase().contains(lowerCaseTitle);
+        });
+
+        pmTableView.setItems(filteredList);
     }
     
-    private List<PrintMedia> performSearch(String searchText, String searchOption) {
-    	List<PrintMedia> searchResults = new ArrayList<>();
+    private void filterPMbyCountry(String country) {
+        FilteredList<PrintMedia> filteredList = new FilteredList<>(data);
 
-        switch (searchOption) {
-            case "ID":
-                if (searchText == " " || searchText.isEmpty()) refresh();
-                int searchID = Integer.parseInt(searchText);
-                searchResults = pmDAO.getPMbyID(searchID);
-                break;
-            case "Tên ấn phẩm":
-                searchResults = pmDAO.getPMbyTitle(searchText);
-                break;
-            case "Loại ấn phẩm":
-                searchResults = pmDAO.getPMbyPrintType(searchText);
-                break;
-            case "Quốc gia":
-                searchResults = pmDAO.getPMbyCountry(searchText);
-                break;
-        }
-        
-        return searchResults;
+        filteredList.setPredicate(pm -> {
+            if (country == null || country.isEmpty()) {
+                return true;
+            }
+            String lowerCaseTitle = country.toLowerCase();
+            return pm.getCountry().toLowerCase().contains(lowerCaseTitle);
+        });
+
+        pmTableView.setItems(filteredList);
+    }
+    
+    private void filterPMbyType(String category) {
+        FilteredList<PrintMedia> filteredList = new FilteredList<>(data);
+
+        filteredList.setPredicate(pm -> {
+            if (category == null || category.isEmpty()) {
+                return true;
+            }
+            String lowerCaseTitle = category.toLowerCase();
+            return pm.getPrintType().toLowerCase().contains(lowerCaseTitle);
+        });
+
+        pmTableView.setItems(filteredList);
+    }
+    
+    private void SearchData(String searchText, String searchOption) {
+    	switch (searchOption) {
+        case "ID":
+        	filterPMbyID(searchText);
+            break;
+        case "Tên ấn phẩm":
+            filterPMbyTitle(searchText);
+            break;
+        case "Loại ấn phẩm":
+        	filterPMbyType(searchText);
+            break;
+        case "Quốc gia":
+        	filterPMbyCountry(searchText);
+            break;
+    	}
     }
 }
