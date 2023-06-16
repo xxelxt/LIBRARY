@@ -53,10 +53,11 @@ public class PrintMediaDAO {
 
         if (publicationID > 0) {
         	try {
-                String sql = "INSERT INTO PrintMedia (ReleaseNumber, PrintType) VALUES (?, ?)";
+                String sql = "INSERT INTO PrintMedia (PrintMediaID, ReleaseNumber, PrintType) VALUES (?, ?, ?)";
                 PreparedStatement insertPMStmt = DatabaseLayer.prepareStatement(sql);
-                insertPMStmt.setInt(1, releaseNumber);
-                insertPMStmt.setString(2, printType);
+                insertPMStmt.setInt(1, publicationID);
+                insertPMStmt.setInt(2, releaseNumber);
+                insertPMStmt.setString(3, printType);
 
                 insertPMStmt.executeUpdate();
                 insertPMStmt.close();
