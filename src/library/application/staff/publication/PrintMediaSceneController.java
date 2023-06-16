@@ -85,7 +85,7 @@ public class PrintMediaSceneController implements Initializable {
     
     @Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-        System.out.println("Controller initialized");
+        System.out.println("Print media controller initialized");
         // Add a default row
 		refresh();
         

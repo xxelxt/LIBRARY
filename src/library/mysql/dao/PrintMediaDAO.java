@@ -62,7 +62,7 @@ public class PrintMediaDAO {
                 insertPMStmt.executeUpdate();
                 insertPMStmt.close();
                 
-                System.out.println("Added PM");
+                System.out.println("Added print media");
             } catch (Exception e) {
                 System.out.println(e);
                 return false;
