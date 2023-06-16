@@ -10,6 +10,7 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
 import library.mysql.dao.BookDAO;
 
 public class AddBookController {
@@ -43,6 +44,9 @@ public class AddBookController {
 
     @FXML
     private TextField fieldTitle;
+    
+    @FXML
+    private AnchorPane paneAdd;
 
     @FXML
     void initialize() {
