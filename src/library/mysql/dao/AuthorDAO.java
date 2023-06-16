@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import library.mysql.DatabaseLayer;
 
 public class AuthorDAO {
-    // Books
+
     public ArrayList<String> getBookAuthor(Integer BookID) {
         ArrayList<String> authors = new ArrayList<>();
 
