@@ -24,6 +24,7 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.input.InputMethodEvent;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -203,16 +204,7 @@ public class BookSceneController implements Initializable, SceneFeatureGate {
 //        colCategory.setCellFactory(TextFieldTableCell.forTableColumn());
 //        colReissue.setCellFactory(TextFieldTableCell.forTableColumn());
 	}
-	
-    @FXML
-    void inputSearch(InputMethodEvent event) {
-        String searchText = fieldSearch.getText();
-        System.out.println(searchText);
-        String searchOption = comboBox.getValue();
-        SearchData(searchText, searchOption);
-    }
 
-	
 	Date now = new Date(new java.util.Date().getTime());
 	
     @FXML
@@ -254,85 +246,44 @@ public class BookSceneController implements Initializable, SceneFeatureGate {
     	}
     }
     
-    private void filterBooksbyID(String idText) {
-        FilteredList<Books> filteredList = new FilteredList<>(data);
-
-        filteredList.setPredicate(book -> {
-            if (idText == null || idText.isEmpty()) {
-                return true;
-            }
-            try {
-                int id = Integer.parseInt(idText);
-                return book.getPublicationID() == id;
-            } catch (NumberFormatException e) {
-                return false;
-            }
-        });
-
-        booksTableView.setItems(filteredList);
-    }
-
     
-    private void filterBooksbyTitle(String title) {
-        FilteredList<Books> filteredList = new FilteredList<>(data);
-
-        filteredList.setPredicate(book -> {
-            if (title == null || title.isEmpty()) {
-                return true;
-            }
-            String lowerCaseTitle = title.toLowerCase();
-            return book.getTitle().toLowerCase().contains(lowerCaseTitle);
-        });
-
-        booksTableView.setItems(filteredList);
-    }
-    
-    private void filterBooksbyCountry(String country) {
-        FilteredList<Books> filteredList = new FilteredList<>(data);
-
-        filteredList.setPredicate(book -> {
-            if (country == null || country.isEmpty()) {
-                return true;
-            }
-            String lowerCaseTitle = country.toLowerCase();
-            return book.getCountry().toLowerCase().contains(lowerCaseTitle);
-        });
-
-        booksTableView.setItems(filteredList);
-    }
-    
-    private void filterBooksbyCategory(String category) {
-        FilteredList<Books> filteredList = new FilteredList<>(data);
-
-        filteredList.setPredicate(book -> {
-            if (category == null || category.isEmpty()) {
-                return true;
-            }
-            String lowerCaseTitle = category.toLowerCase();
-            return book.getCategory().toLowerCase().contains(lowerCaseTitle);
-        });
-
-        booksTableView.setItems(filteredList);
+    @FXML
+    void inputSearch(KeyEvent event) {
+        String searchText = fieldSearch.getText();
+        String searchOption = comboBox.getValue();
+        SearchData(searchText, searchOption);
     }
     
     private void SearchData(String searchText, String searchOption) {
-    	switch (searchOption) {
-        case "ID":
-        	filterBooksbyID(searchText);
-            break;
-        case "Tên sách":
-            filterBooksbyTitle(searchText);
-            break;
-        case "Tác giả":
-            
-            break;
-        case "Quốc gia":
-        	filterBooksbyCountry(searchText);
-            break;
-        case "Thể loại":
-        	filterBooksbyCategory(searchText);
-            break;
-    	}
+        FilteredList<Books> filteredList = new FilteredList<>(data);
+
+        filteredList.setPredicate(book -> {
+            if (searchText == null || searchText.isEmpty()) {
+                return true;
+            }
+            if (searchOption.equals("ID")) {
+	            try {
+	                int id = Integer.parseInt(searchText);
+	                return book.getPublicationID() == id;
+	            } catch (NumberFormatException e) {
+	                return false;
+	            }
+            } else {
+            	String originalText = "";
+            	switch (searchOption) {
+	    	        case "Tên sách":	originalText = book.getTitle(); break;
+	    	        case "Tác giả":		originalText = book.getAuthors(); break;	
+	    	        case "Quốc gia":	originalText = book.getCountry(); break;
+	    	        case "Thể loại":	originalText = book.getCategory(); break;
+	        	}
+            	if (originalText != "") {
+            		return originalText.toLowerCase().contains(searchText.toLowerCase());
+            	}
+            	return false;
+            }
+        });
+
+        booksTableView.setItems(filteredList);
     }
 
     @FXML
