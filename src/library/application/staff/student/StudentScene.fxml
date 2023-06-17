@@ -10,33 +10,35 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="library.application.staff.student.StudentSceneController">
    <children>
-      <VBox layoutX="107.0" layoutY="47.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <VBox fx:id="paneMain" layoutX="107.0" layoutY="47.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <HBox alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="484.0" spacing="10.0" VBox.vgrow="NEVER">
+            <HBox alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="484.0" spacing="10.0" VBox.vgrow="NEVER">
                <children>
-                  <Button mnemonicParsing="false" onAction="#btnAddStudent" text="Thêm" />
-                  <Button mnemonicParsing="false" onAction="#btnEditStudent" text="Sửa" />
-                  <Button mnemonicParsing="false" onAction="#btnDeleteStudent" text="Xoá">
+                  <Button mnemonicParsing="false" onAction="#btnAddStudent" onSort="#btnAddStudent" text="Thêm" />
+                  <Button mnemonicParsing="false" onAction="#btnEditStudent" onSort="#btnEditStudent" text="Sửa" />
+                  <Button mnemonicParsing="false" onAction="#btnDeleteStudent" onSort="#btnDeleteStudent" text="Xoá">
                      <HBox.margin>
-                        <Insets right="15.0" />
+                        <Insets right="10.0" />
                      </HBox.margin>
                   </Button>
-                  <Button layoutX="174.0" layoutY="23.0" mnemonicParsing="false" onAction="#btnBorrowHistory" text="Xem lịch sử mượn">
+                  <Button mnemonicParsing="false" onAction="#btnBorrowHistory" onSort="#btnBorrowHistory" text="Xem lịch sử mượn">
                      <HBox.margin>
-                        <Insets right="15.0" />
+                        <Insets right="10.0" />
                      </HBox.margin>
                   </Button>
-                  <TextField fx:id="fieldSearch" prefHeight="26.0" prefWidth="369.0" />
-                  <ComboBox prefHeight="25.0" prefWidth="109.0" />
-                  <Button mnemonicParsing="false" onAction="#btnSearch" text="Tìm kiếm" />
+                  <TextField fx:id="fieldSearch" prefHeight="26.0" prefWidth="406.0" HBox.hgrow="ALWAYS" />
+                  <ComboBox fx:id="comboBox" prefHeight="25.0" prefWidth="150.0" HBox.hgrow="ALWAYS" />
                </children>
                <opaqueInsets>
                   <Insets />
                </opaqueInsets>
+               <VBox.margin>
+                  <Insets bottom="15.0" />
+               </VBox.margin>
             </HBox>
-            <TableView fx:id="booksTableView" prefHeight="561.0" prefWidth="870.0">
+            <TableView fx:id="studentTableView" prefHeight="561.0" prefWidth="870.0" VBox.vgrow="ALWAYS">
                <columns>
                   <TableColumn fx:id="colStudentID" prefWidth="96.0" text="Mã sinh viên" />
                   <TableColumn fx:id="colName" prefWidth="113.0" text="Họ tên" />
@@ -48,11 +50,16 @@
                   <TableColumn fx:id="colFineStatus" prefWidth="108.0" text="Tình trạng phạt" />
                   <TableColumn fx:id="colFine" prefWidth="89.0" text="Số tiền phạt" />
                </columns>
-               <VBox.margin>
-                  <Insets bottom="20.0" left="20.0" right="20.0" />
-               </VBox.margin>
             </TableView>
          </children>
       </VBox>
+      <AnchorPane fx:id="paneAdd" prefHeight="200.0" prefWidth="200.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <Button mnemonicParsing="false" onAction="#btnReturn" text="Quay lại" />
+         </children>
+      </AnchorPane>
    </children>
+   <padding>
+      <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+   </padding>
 </AnchorPane>
