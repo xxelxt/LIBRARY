@@ -203,9 +203,6 @@ public class BookSceneController implements Initializable, SceneFeatureGate {
 //        colCategory.setCellFactory(TextFieldTableCell.forTableColumn());
 //        colReissue.setCellFactory(TextFieldTableCell.forTableColumn());
 	}
-<<<<<<< Updated upstream
-
-=======
 
     @FXML
     void inputSearch(InputMethodEvent event) {
@@ -215,8 +212,6 @@ public class BookSceneController implements Initializable, SceneFeatureGate {
 //        SearchData(searchText, searchOption);
     }
 
-
->>>>>>> Stashed changes
 	Date now = new Date(new java.util.Date().getTime());
 
     @FXML
@@ -257,16 +252,7 @@ public class BookSceneController implements Initializable, SceneFeatureGate {
     		booksTableView.setEditable(false);
     	}
     }
-<<<<<<< Updated upstream
     
-    
-    @FXML
-    void inputSearch(KeyEvent event) {
-        String searchText = fieldSearch.getText();
-        String searchOption = comboBox.getValue();
-        SearchData(searchText, searchOption);
-=======
-
     private void filterBooksbyID(String idText) {
         FilteredList<Books> filteredList = new FilteredList<>(data);
 
@@ -349,7 +335,6 @@ public class BookSceneController implements Initializable, SceneFeatureGate {
         });
 
         booksTableView.setItems(filteredList);
->>>>>>> Stashed changes
     }
 
     private void SearchData(String searchText, String searchOption) {

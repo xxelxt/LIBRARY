@@ -31,7 +31,7 @@ public class Main extends Application {
 			MainSceneController controller = loader.getController();
 			controller.setMain(this);
 
-	        primaryStage.setTitle("libra(ry) by xxelxt");
+	        primaryStage.setTitle("---");
 
 	        Scene scene = new Scene(root);
 			scene.getStylesheets().add(getClass().getResource("primer-light.css").toExternalForm());
