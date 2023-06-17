@@ -47,7 +47,7 @@ public class MainSceneController implements SceneFeatureGate {
     	if( inputPassword.getText().equals(logUser.getPassword()) ) {
     		contentPane.setVisible(true);
     		loginPane.setVisible(false);
-    		main.maximize();
+    		main.setWindowSize();
     		
     		Integer type = logUser.getType();
     		

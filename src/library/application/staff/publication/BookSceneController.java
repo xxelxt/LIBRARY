@@ -2,6 +2,7 @@ package library.application.staff.publication;
 
 import java.net.URL;
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -170,14 +171,14 @@ public class BookSceneController implements Initializable, SceneFeatureGate {
         comboBox.setItems(items);
         comboBox.setValue("Tên sách");
         
-//        fieldSearch.textProperty().addListener(new ChangeListener<String>() {
-//            @Override
-//            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-//                String searchText = newValue;
-//                String searchOption = comboBox.getValue();
-//                SearchData(searchText, searchOption);
-//            }
-//        });
+        fieldSearch.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                String searchText = newValue;
+                String searchOption = comboBox.getValue();
+                SearchData(searchText, searchOption);
+            }
+        });
 
         // Bind the columns to the corresponding properties in MyDataModel
         colID.setCellValueFactory(new PropertyValueFactory<>("publicationID"));
@@ -206,10 +207,10 @@ public class BookSceneController implements Initializable, SceneFeatureGate {
 	
     @FXML
     void inputSearch(InputMethodEvent event) {
-        String searchText = fieldSearch.getText();
-        System.out.println(searchText);
-        String searchOption = comboBox.getValue();
-        SearchData(searchText, searchOption);
+//        String searchText = fieldSearch.getText();
+//        System.out.println(searchText);
+//        String searchOption = comboBox.getValue();
+//        SearchData(searchText, searchOption);
     }
 
 	
@@ -287,6 +288,29 @@ public class BookSceneController implements Initializable, SceneFeatureGate {
         booksTableView.setItems(filteredList);
     }
     
+    private void filterBooksByAuthor(String author) {
+        FilteredList<Books> filteredList = new FilteredList<>(data);
+
+        filteredList.setPredicate(book -> {
+            if (author == null || author.isEmpty()) {
+                return true;
+            }
+
+            String lowerCaseAuthor = author.toLowerCase();
+            ArrayList<String> authors = authorDAO.getAuthors();
+
+            for (String au : authors) {
+                if (au.toLowerCase().contains(lowerCaseAuthor)) {
+                    return true;
+                }
+            }
+
+            return false;
+        });
+
+        booksTableView.setItems(filteredList);
+    }
+    
     private void filterBooksbyCountry(String country) {
         FilteredList<Books> filteredList = new FilteredList<>(data);
 
@@ -324,7 +348,7 @@ public class BookSceneController implements Initializable, SceneFeatureGate {
             filterBooksbyTitle(searchText);
             break;
         case "Tác giả":
-            
+            filterBooksByAuthor(searchText);
             break;
         case "Quốc gia":
         	filterBooksbyCountry(searchText);
