@@ -10,23 +10,26 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="536.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="library.application.addbook.AddStudentController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="643.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="library.application.staff.add.AddStudentController">
    <children>
-      <VBox alignment="TOP_CENTER" layoutX="122.0" layoutY="62.0" prefHeight="400.0" prefWidth="600.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <VBox alignment="TOP_CENTER" layoutX="122.0" layoutY="62.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <HBox prefHeight="48.0" prefWidth="600.0">
+            <HBox alignment="CENTER" prefHeight="48.0" prefWidth="600.0">
                <children>
                   <Label text="Thêm sinh viên">
                      <font>
                         <Font name="System Bold" size="32.0" />
                      </font>
                      <padding>
-                        <Insets left="29.0" top="10.0" />
+                        <Insets left="30.0" />
                      </padding>
+                     <HBox.margin>
+                        <Insets bottom="5.0" top="5.0" />
+                     </HBox.margin>
                   </Label>
                </children>
             </HBox>
-            <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="87.0" prefHeight="0.0" prefWidth="600.0">
+            <HBox alignment="CENTER_LEFT" prefHeight="0.0" prefWidth="600.0">
                <children>
                   <Label prefHeight="27.0" prefWidth="133.0" text="Mã sinh viên">
                      <font>
@@ -39,7 +42,7 @@
                   <Insets bottom="5.0" left="30.0" right="30.0" />
                </padding>
             </HBox>
-            <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="583.0" prefHeight="0.0" prefWidth="600.0">
+            <HBox alignment="CENTER_LEFT" prefHeight="0.0" prefWidth="600.0">
                <children>
                   <Label prefHeight="27.0" prefWidth="133.0" text="Họ tên">
                      <font>
@@ -52,7 +55,7 @@
                   <Insets bottom="5.0" left="30.0" right="30.0" />
                </padding>
             </HBox>
-            <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="583.0" prefHeight="0.0" prefWidth="600.0">
+            <HBox alignment="CENTER_LEFT" prefHeight="0.0" prefWidth="600.0">
                <children>
                   <Label prefHeight="27.0" prefWidth="133.0" text="Lớp">
                      <font>
@@ -65,6 +68,32 @@
                   <Insets bottom="5.0" left="30.0" right="30.0" />
                </padding>
             </HBox>
+            <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="129.0" prefHeight="0.0" prefWidth="600.0">
+               <children>
+                  <Label prefHeight="27.0" prefWidth="133.0" text="Tên đăng nhập">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="fieldUsername" prefHeight="26.0" prefWidth="250.0" HBox.hgrow="ALWAYS" />
+               </children>
+               <padding>
+                  <Insets bottom="5.0" left="30.0" right="30.0" />
+               </padding>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="171.0" prefHeight="0.0" prefWidth="600.0">
+               <children>
+                  <Label prefHeight="27.0" prefWidth="133.0" text="Mật khẩu">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="fieldPassword" prefHeight="26.0" prefWidth="250.0" HBox.hgrow="ALWAYS" />
+               </children>
+               <padding>
+                  <Insets bottom="5.0" left="30.0" right="30.0" />
+               </padding>
+            </HBox>
             <HBox alignment="CENTER_LEFT" prefHeight="0.0" prefWidth="600.0">
                <children>
                   <Label prefHeight="27.0" prefWidth="133.0" text="Giới tính">
@@ -72,13 +101,13 @@
                         <Font size="18.0" />
                      </font>
                   </Label>
-                  <ComboBox prefWidth="150.0" />
+                  <ComboBox fx:id="comboboxGender" prefWidth="150.0" />
                </children>
                <padding>
                   <Insets bottom="5.0" left="30.0" right="30.0" />
                </padding>
             </HBox>
-            <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="76.0" prefHeight="0.0" prefWidth="600.0">
+            <HBox alignment="CENTER_LEFT" prefHeight="0.0" prefWidth="600.0">
                <children>
                   <Label prefHeight="27.0" prefWidth="133.0" text="Email">
                      <font>
@@ -91,7 +120,7 @@
                   <Insets bottom="5.0" left="30.0" right="30.0" />
                </padding>
             </HBox>
-            <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="255.0" prefHeight="0.0" prefWidth="600.0">
+            <HBox alignment="CENTER_LEFT" prefHeight="0.0" prefWidth="600.0">
                <children>
                   <Label prefHeight="27.0" prefWidth="133.0" text="Số điện thoại">
                      <font>
@@ -104,7 +133,7 @@
                   <Insets bottom="5.0" left="30.0" right="30.0" />
                </padding>
             </HBox>
-            <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="297.0" prefHeight="0.0" prefWidth="600.0">
+            <HBox alignment="CENTER_LEFT" prefHeight="0.0" prefWidth="600.0">
                <children>
                   <Label prefHeight="27.0" prefWidth="133.0" text="Địa chỉ">
                      <font>
@@ -117,20 +146,20 @@
                   <Insets bottom="5.0" left="30.0" right="30.0" />
                </padding>
             </HBox>
-            <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="339.0" prefHeight="0.0" prefWidth="600.0">
+            <HBox alignment="CENTER_LEFT" prefHeight="0.0" prefWidth="600.0">
                <children>
                   <Label prefHeight="27.0" prefWidth="133.0" text="Tình trạng phạt">
                      <font>
                         <Font size="18.0" />
                      </font>
                   </Label>
-                  <ComboBox prefWidth="150.0" />
+                  <ComboBox fx:id="comboboxFineStatus" prefWidth="150.0" />
                </children>
                <padding>
                   <Insets bottom="5.0" left="30.0" right="30.0" />
                </padding>
             </HBox>
-            <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="381.0" prefHeight="0.0" prefWidth="600.0">
+            <HBox alignment="CENTER_LEFT" prefHeight="0.0" prefWidth="600.0">
                <children>
                   <Label prefHeight="27.0" prefWidth="133.0" text="Số tiền phạt">
                      <font>
@@ -143,7 +172,7 @@
                   <Insets bottom="5.0" left="30.0" right="30.0" />
                </padding>
             </HBox>
-            <HBox alignment="TOP_RIGHT" prefHeight="76.0" prefWidth="600.0" VBox.vgrow="ALWAYS">
+            <HBox alignment="TOP_RIGHT" prefHeight="76.0" prefWidth="600.0">
                <children>
                   <Button mnemonicParsing="false" onAction="#btnAddStudent" text="Thêm">
                      <font>

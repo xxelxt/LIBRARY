@@ -19,9 +19,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
-import library.mysql.dao.BookDAO;
 import library.mysql.dao.StudentDAO;
-import library.publication.Books;
 import library.user.Student;
 
 public class StudentSceneController implements Initializable {
