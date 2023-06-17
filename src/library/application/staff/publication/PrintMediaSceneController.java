@@ -19,6 +19,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -114,15 +115,6 @@ public class PrintMediaSceneController implements Initializable, SceneFeatureGat
         comboBox.setItems(items);
         comboBox.setValue("Tên ấn phẩm");
 
-        fieldSearch.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                String searchText = newValue;
-                String searchOption = comboBox.getValue();
-                SearchData(searchText, searchOption);
-            }
-        });
-
         // Bind the columns to the corresponding properties in MyDataModel
         colID.setCellValueFactory(new PropertyValueFactory<>("publicationID"));
         colTitle.setCellValueFactory(new PropertyValueFactory<>("title"));
@@ -136,6 +128,13 @@ public class PrintMediaSceneController implements Initializable, SceneFeatureGat
 
 	Date now = new Date(new java.util.Date().getTime());
 
+	@FXML
+    void inputSearch(KeyEvent event) {
+        String searchText = fieldSearch.getText();
+        String searchOption = comboBox.getValue();
+        SearchData(searchText, searchOption);
+    }
+	
     @FXML
     void btnActionAddPrintMedia(ActionEvent event) {
     	paneMain.setVisible(false);
@@ -170,83 +169,34 @@ public class PrintMediaSceneController implements Initializable, SceneFeatureGat
     void btnActionEditPrintMedia(ActionEvent event) {
 
     }
-
-    private void filterPMbyID(String idText) {
-        FilteredList<PrintMedia> filteredList = new FilteredList<>(data);
-
-        filteredList.setPredicate(pm -> {
-            if (idText == null || idText.isEmpty()) {
-                return true;
-            }
-            try {
-                int id = Integer.parseInt(idText);
-                return pm.getPublicationID() == id;
-            } catch (NumberFormatException e) {
-                return false;
-            }
-        });
-
-        pmTableView.setItems(filteredList);
-    }
-
-
-    private void filterPMbyTitle(String title) {
-        FilteredList<PrintMedia> filteredList = new FilteredList<>(data);
-
-        filteredList.setPredicate(pm -> {
-            if (title == null || title.isEmpty()) {
-                return true;
-            }
-            String lowerCaseTitle = title.toLowerCase();
-            return pm.getTitle().toLowerCase().contains(lowerCaseTitle);
-        });
-
-        pmTableView.setItems(filteredList);
-    }
-
-    private void filterPMbyCountry(String country) {
-        FilteredList<PrintMedia> filteredList = new FilteredList<>(data);
-
-        filteredList.setPredicate(pm -> {
-            if (country == null || country.isEmpty()) {
-                return true;
-            }
-            String lowerCaseTitle = country.toLowerCase();
-            return pm.getCountry().toLowerCase().contains(lowerCaseTitle);
-        });
-
-        pmTableView.setItems(filteredList);
-    }
-
-    private void filterPMbyType(String category) {
-        FilteredList<PrintMedia> filteredList = new FilteredList<>(data);
-
-        filteredList.setPredicate(pm -> {
-            if (category == null || category.isEmpty()) {
-                return true;
-            }
-            String lowerCaseTitle = category.toLowerCase();
-            return pm.getPrintType().toLowerCase().contains(lowerCaseTitle);
-        });
-
-        pmTableView.setItems(filteredList);
-    }
-
+    
     private void SearchData(String searchText, String searchOption) {
-    	switch (searchOption) {
-        case "ID":
-        	filterPMbyID(searchText);
-            break;
-        case "Tên ấn phẩm":
-            filterPMbyTitle(searchText);
-            break;
-        case "Loại ấn phẩm":
-        	filterPMbyType(searchText);
-            break;
-        case "Quốc gia":
-        	filterPMbyCountry(searchText);
-            break;
-    	}
+        FilteredList<PrintMedia> filteredList = new FilteredList<>(data);
+
+        filteredList.setPredicate(pm -> {
+            if (searchText == null || searchText.isEmpty()) {
+                return true;
+            }
+            
+        	String originalText = "";
+        	switch (searchOption) {
+        		case "ID":			originalText = Integer.toString(pm.getPublicationID()); break;
+    	        case "Tên ấn phẩm":	originalText = pm.getTitle(); break;
+    	        case "Loại ấn phẩm":		originalText = pm.getPrintType(); break;	
+    	        case "Quốc gia":	originalText = pm.getCountry(); break;
+        	}
+        	
+        	if (originalText != "") {
+                if (searchOption.equals("ID")) {
+    	            return originalText.startsWith(searchText);
+                } else {
+                	return originalText.toLowerCase().contains(searchText.toLowerCase());
+                }
+        	}
+        	return false;
+        });
+
+        pmTableView.setItems(filteredList);
     }
 
 
