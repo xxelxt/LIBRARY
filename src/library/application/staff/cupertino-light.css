@@ -2369,6 +2369,11 @@ Add support for NO_HEADER tweak in tables .table-view.no-header > .column-header
   -fx-padding: 0.25em 0 0.25em 0;
 }
 
+.tab-label {
+  -fx-rotate: 90;
+  -fx-translate-y: -10; /* Adjust the value as needed */
+}
+
 .tab-pane {
   -color-tab-bg-selected: -color-bg-default;
   -color-tab-fg-selected: -color-fg-default;
