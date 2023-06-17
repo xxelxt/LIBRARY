@@ -4,6 +4,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.List;
 
 import library.mysql.DatabaseLayer;
 import library.publication.Books;
@@ -108,66 +109,18 @@ public class BookDAO {
         return publicationDAO.deletePublication(publicationID);
         // FOREIGN KEY (`BookID`) REFERENCES `publications` (`PublicationID`) ON DELETE CASCADE
     }
-	
-	/* UNTESTED REGION */
-	/* UNTESTED REGION */
-	/* UNTESTED REGION */
-	/* UNTESTED REGION */
-	/* UNTESTED REGION */
-	/* UNTESTED REGION */
-	/* UNTESTED REGION */
-	/* UNTESTED REGION */
-	/* UNTESTED REGION */
-	/* UNTESTED REGION */
-
-    public Books getBookbyID(String BookID) {
-        Books currentBook = null;
-
-        try {
-            String sql = "SELECT p.PublicationID, p.Title, GROUP_CONCAT(a.AuthorName) as Authors, p.ReleaseDate, p.Country, p.Quantity, b.Category, b.Reissue, pb.PublisherName " +
-                    "FROM Publications p " +
-                    "INNER JOIN Books b ON p.PublicationID = b.BookID " +
-                    "INNER JOIN BookAuthors ba ON b.BookID = ba.BookID " +
-                    "INNER JOIN Authors a ON ba.AuthorID = a.AuthorID " +
-                    "INNER JOIN Publishers pb ON b.PublisherID = pb.PublisherID " +
-                    "WHERE b.BookID = ? " +
-                    "GROUP BY p.PublicationID, p.Title, p.ReleaseDate, p.Country, p.Quantity, b.Category, b.Reissue, pb.PublisherName";
-
-            PreparedStatement pstmt = DatabaseLayer.prepareStatement(sql);
-            pstmt.setString(1, BookID);
-
-            ResultSet rs = pstmt.executeQuery();
-
-            while (rs.next()) {
-                Integer publicationID = rs.getInt(1);
-                String title = rs.getString(2);
-                
-                AuthorDAO authordaobj = new AuthorDAO();
-                ArrayList<String> authors = authordaobj.getBookAuthor(publicationID);
-
-                Date releaseDate = rs.getDate(4);
-                String country = rs.getString(5);
-                int quantity = rs.getInt(6);
-
-                String category = rs.getString(7);
-                int reissue = rs.getInt(8);
-                String publisher = rs.getString(9);
-
-                Books newBook = new Books(publicationID, title, authors, releaseDate, country, quantity, category, reissue, publisher);
-
-                currentBook = newBook;
-            }
-
-            rs.close();
-            pstmt.close();
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-
-        return currentBook;
-    }
     
-
+	/* UNTESTED REGION */
+	/* UNTESTED REGION */
+	/* UNTESTED REGION */
+	/* UNTESTED REGION */
+	/* UNTESTED REGION */
+	/* UNTESTED REGION */
+	/* UNTESTED REGION */
+	/* UNTESTED REGION */
+	/* UNTESTED REGION */
+	/* UNTESTED REGION */
+    
     public String getBookCategory(String BookID) {
         String category = "";
         try {

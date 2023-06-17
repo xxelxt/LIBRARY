@@ -9,12 +9,12 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TextField;
-import library.application.staff.PrintMediaSceneController;
-import library.mysql.Database;
+import javafx.scene.layout.AnchorPane;
+import library.mysql.dao.PrintMediaDAO;
 
 public class AddPrintMediaController {
 
-	@FXML
+    @FXML
     private ResourceBundle resources;
 
     @FXML
@@ -37,18 +37,33 @@ public class AddPrintMediaController {
 
     @FXML
     private TextField fieldTitle;
-
     
     @FXML
+    private AnchorPane paneAdd;
+
+    @FXML
     void btnAddPrintMedia(ActionEvent event) {
-    	mainDb.addPrintMedia();
-    	mainController.refresh();
-    	mainController.scrollToLast();
+    	PrintMediaDAO pmDAO = new PrintMediaDAO();
+    	
+    	pmDAO.addPrintMedia(
+    		fieldTitle.getText(),
+    		Date.valueOf(fieldPublishDate.getValue()),
+    		fieldCountry.getText(),
+    		fieldQuantity.getValue(),
+    		fieldReleaseNumber.getValue(),
+    		fieldPrintType.getText()
+    	);
+    	
+    	clearTextField();
     }
     
-    private PrintMediaSceneController mainController;
-    public void setMainController(PrintMediaSceneController control) {
-    	this.mainController = control;
+    void clearTextField() {
+    	fieldTitle.clear();
+    	fieldCountry.clear();
+    	fieldPublishDate.setValue(null);
+    	fieldQuantity.getValueFactory().setValue(1);
+    	fieldReleaseNumber.getValueFactory().setValue(1);
+    	fieldPrintType.clear();
     }
 
     @FXML
@@ -60,11 +75,8 @@ public class AddPrintMediaController {
         assert fieldReleaseNumber != null : "fx:id=\"fieldReleaseNumber\" was not injected: check your FXML file 'AddPrintMedia.fxml'.";
         assert fieldTitle != null : "fx:id=\"fieldTitle\" was not injected: check your FXML file 'AddPrintMedia.fxml'.";
 
+        fieldQuantity.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100, 1));
+        fieldReleaseNumber.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100, 1));
     }
 
-    private Database mainDb;
-    
-    public void setDB(Database db) {
-    	this.mainDb = db;
-    }
 }

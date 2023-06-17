@@ -10,6 +10,7 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
 import library.mysql.dao.BookDAO;
 
 public class AddBookController {
@@ -43,6 +44,9 @@ public class AddBookController {
 
     @FXML
     private TextField fieldTitle;
+    
+    @FXML
+    private AnchorPane paneAdd;
 
     @FXML
     void initialize() {
@@ -55,7 +59,7 @@ public class AddBookController {
         assert fieldReissue != null : "fx:id=\"fieldReissue\" was not injected: check your FXML file 'AddBook.fxml'.";
         assert fieldTitle != null : "fx:id=\"fieldTitle\" was not injected: check your FXML file 'AddBook.fxml'.";
         
-        fieldQuantity.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 9999, 1));
+        fieldQuantity.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100, 1));
     }
     
     @FXML
@@ -70,6 +74,18 @@ public class AddBookController {
     		fieldCategory.getText(),
     		fieldReissue.isSelected(),
     		fieldAuthors.getText()
-    	);    	
+    	);
+    	
+    	clearTextField();
+    }
+    
+    void clearTextField() {
+    	fieldTitle.clear();
+    	fieldCountry.clear();
+    	fieldPublishDate.setValue(null);
+    	fieldQuantity.getValueFactory().setValue(1);
+    	fieldAuthors.clear();
+    	fieldReissue.setSelected(false);
+    	fieldCategory.clear();
     }
 }

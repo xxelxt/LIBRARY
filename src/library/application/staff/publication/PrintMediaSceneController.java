@@ -2,43 +2,55 @@ package library.application.staff.publication;
 
 import java.net.URL;
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.stage.Stage;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-import library.application.staff.add.AddPrintMediaController;
-import library.mysql.Database;
-
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
+import library.mysql.dao.PrintMediaDAO;
+import library.publication.Books;
 import library.publication.PrintMedia;
 import library.publication.Publication;
 
 public class PrintMediaSceneController implements Initializable {
 
-	@FXML
+    @FXML
     private ResourceBundle resources;
 
     @FXML
     private URL location;
+    
+    @FXML
+    private TableView<Books> booksTableView;
+    
+    @FXML
+    private ComboBox<String> comboBox;
 
     @FXML
     private TableView<PrintMedia> pmTableView;
-    
+
     @FXML
     private TableColumn<PrintMedia, String> colCountry;
 
     @FXML
     private TableColumn<PrintMedia, Integer> colID;
+
+    @FXML
+    private TableColumn<PrintMedia, String> colPrintType;
 
     @FXML
     private TableColumn<PrintMedia, Date> colPublicationDate;
@@ -51,43 +63,63 @@ public class PrintMediaSceneController implements Initializable {
 
     @FXML
     private TableColumn<PrintMedia, String> colTitle;
-    
-    @FXML
-    private TableColumn<PrintMedia, String> colPrintType;
 
+    @FXML
+    private TextField fieldSearch;
+
+    @FXML
+    private AnchorPane paneAdd;
+
+    @FXML
+    private VBox paneMain;
     
     private ObservableList<PrintMedia> data;
-    private Database mainDb;
-
     
+    private ObservableList<String> items = FXCollections.observableArrayList("ID", "Tên ẩn phẩm", "Loại ấn phẩm", "Quốc gia");
+    
+    private PrintMediaDAO pmDAO = new PrintMediaDAO();
+
     public void refresh() {
         data = FXCollections.observableArrayList();
 
-        List<PrintMedia> allPM = mainDb.loadAllPrintMedias();
+        List<PrintMedia> allPM = pmDAO.loadAllPrintMedias();
 		System.out.println(allPM);
 		
-	    for (PrintMedia pm: allPM){
+	    for (PrintMedia pm : allPM){
 	    	data.add(pm);
 	    }
 	    
 	    pmTableView.setItems(data);
     }
-    
+
     public void scrollToLast() {
     	int lastIndex = pmTableView.getItems().size() - 1;
     	pmTableView.scrollTo(lastIndex);
     }
     
-	@Override
+    @Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-
-        System.out.println("Controller initialized");
+        System.out.println("Print media controller initialized");
         // Add a default row
-		mainDb = new Database();
 		refresh();
         
         // Bind the ObservableList to the TableView
         pmTableView.setItems(data);
+        
+        fieldSearch.setPromptText("Thông tin tìm kiếm");
+        
+        comboBox.setPromptText("Thuộc tính tìm kiếm");
+        comboBox.setItems(items);
+        comboBox.setValue("Tên ấn phẩm");
+        
+        fieldSearch.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                String searchText = newValue;
+                String searchOption = comboBox.getValue();
+                SearchData(searchText, searchOption);
+            }
+        });
 
         // Bind the columns to the corresponding properties in MyDataModel
         colID.setCellValueFactory(new PropertyValueFactory<PrintMedia, Integer>("publicationID"));
@@ -101,37 +133,24 @@ public class PrintMediaSceneController implements Initializable {
 	}
 	
 	Date now = new Date(new java.util.Date().getTime());
-	
+    
     @FXML
     void btnAddPrintMedia(ActionEvent event) {
-		try {
-	        FXMLLoader loader = new FXMLLoader(getClass().getResource("add/AddPrintMedia.fxml"));
-	        Parent root = loader.load();
-	        AddPrintMediaController pmcontroller = (AddPrintMediaController) loader.getController();
-	        pmcontroller.setDB(mainDb);
-	        pmcontroller.setMainController(this);
-	        
-	        Stage secondStage = new Stage();
-	        secondStage.setTitle("Second Window");
-	        
-	        secondStage.setScene(new Scene(root));
-	        secondStage.show();
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
+    	paneMain.setVisible(false);
+    	paneAdd.setVisible(true);
     }
-    
+
     @FXML
     void btnDeletePrintMedia(ActionEvent event) {
     	Integer selectedIndex = pmTableView.getSelectionModel().getSelectedIndex();
     	Publication selectedRow = pmTableView.getSelectionModel().getSelectedItem();
     	
     	if (selectedRow != null) {
-	    	mainDb.deletePublication(selectedRow.getPublicationID());
+	    	pmDAO.deletePrintMedia(selectedRow.getPublicationID());
 	    	this.refresh();
 	    	
 	        if (selectedIndex >= 0 && selectedIndex < data.size()) {
-	        	pmTableView.getSelectionModel().select(selectedIndex);
+	            pmTableView.getSelectionModel().select(selectedIndex);
 	        } 
     	} else {
         	pmTableView.getSelectionModel().clearSelection();
@@ -139,9 +158,92 @@ public class PrintMediaSceneController implements Initializable {
     }
     
     @FXML
-    void btnEditPrintMedia(ActionEvent event) {
-
+    void btnReturn(ActionEvent event) {
+    	paneMain.setVisible(true);
+    	paneAdd.setVisible(false);
+    	this.refresh();
     }
 
+    @FXML
+    void btnEditPrintMedia(ActionEvent event) {
+    	
+    }
 
+    private void filterPMbyID(String idText) {
+        FilteredList<PrintMedia> filteredList = new FilteredList<>(data);
+
+        filteredList.setPredicate(pm -> {
+            if (idText == null || idText.isEmpty()) {
+                return true;
+            }
+            try {
+                int id = Integer.parseInt(idText);
+                return pm.getPublicationID() == id;
+            } catch (NumberFormatException e) {
+                return false;
+            }
+        });
+
+        pmTableView.setItems(filteredList);
+    }
+
+    
+    private void filterPMbyTitle(String title) {
+        FilteredList<PrintMedia> filteredList = new FilteredList<>(data);
+
+        filteredList.setPredicate(pm -> {
+            if (title == null || title.isEmpty()) {
+                return true;
+            }
+            String lowerCaseTitle = title.toLowerCase();
+            return pm.getTitle().toLowerCase().contains(lowerCaseTitle);
+        });
+
+        pmTableView.setItems(filteredList);
+    }
+    
+    private void filterPMbyCountry(String country) {
+        FilteredList<PrintMedia> filteredList = new FilteredList<>(data);
+
+        filteredList.setPredicate(pm -> {
+            if (country == null || country.isEmpty()) {
+                return true;
+            }
+            String lowerCaseTitle = country.toLowerCase();
+            return pm.getCountry().toLowerCase().contains(lowerCaseTitle);
+        });
+
+        pmTableView.setItems(filteredList);
+    }
+    
+    private void filterPMbyType(String category) {
+        FilteredList<PrintMedia> filteredList = new FilteredList<>(data);
+
+        filteredList.setPredicate(pm -> {
+            if (category == null || category.isEmpty()) {
+                return true;
+            }
+            String lowerCaseTitle = category.toLowerCase();
+            return pm.getPrintType().toLowerCase().contains(lowerCaseTitle);
+        });
+
+        pmTableView.setItems(filteredList);
+    }
+    
+    private void SearchData(String searchText, String searchOption) {
+    	switch (searchOption) {
+        case "ID":
+        	filterPMbyID(searchText);
+            break;
+        case "Tên ấn phẩm":
+            filterPMbyTitle(searchText);
+            break;
+        case "Loại ấn phẩm":
+        	filterPMbyType(searchText);
+            break;
+        case "Quốc gia":
+        	filterPMbyCountry(searchText);
+            break;
+    	}
+    }
 }

@@ -38,6 +38,15 @@ public class MainSceneController implements Initializable {
 
     @FXML
     private Tab tab2;
+    
+    @FXML
+    private Tab tab3;
+
+    @FXML
+    private Tab tab4;
+
+    @FXML
+    private Tab tab5;
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {

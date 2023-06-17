@@ -11,19 +11,22 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="418.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="library.application.addbook.AddBookController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="library.application.staff.add.AddPrintMediaController">
    <children>
-      <VBox alignment="TOP_CENTER" layoutX="122.0" layoutY="62.0" prefHeight="400.0" prefWidth="600.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <VBox alignment="TOP_CENTER" layoutX="122.0" layoutY="62.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <HBox prefHeight="48.0" prefWidth="600.0">
+            <HBox alignment="CENTER" prefHeight="48.0" prefWidth="600.0">
                <children>
-                  <Label text="Thêm ấn phẩm ">
+                  <Label text="Thêm ấn phẩm">
                      <font>
                         <Font name="System Bold" size="32.0" />
                      </font>
                      <padding>
-                        <Insets left="29.0" top="10.0" />
+                        <Insets left="30.0" />
                      </padding>
+                     <HBox.margin>
+                        <Insets bottom="5.0" top="5.0" />
+                     </HBox.margin>
                   </Label>
                </children>
             </HBox>
@@ -40,7 +43,7 @@
                   <Insets bottom="5.0" left="30.0" right="30.0" />
                </padding>
             </HBox>
-            <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="583.0" prefHeight="0.0" prefWidth="600.0">
+            <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="129.0" prefHeight="0.0" prefWidth="600.0">
                <children>
                   <Label prefHeight="27.0" prefWidth="133.0" text="Quốc gia">
                      <font>
@@ -66,22 +69,9 @@
                   <Insets bottom="5.0" left="30.0" right="30.0" />
                </padding>
             </HBox>
-            <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="87.0" prefHeight="0.0" prefWidth="600.0">
+            <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="583.0" prefHeight="0.0" prefWidth="600.0">
                <children>
-                  <Label prefHeight="27.0" prefWidth="133.0" text="Loại ấn phẩm">
-                     <font>
-                        <Font size="18.0" />
-                     </font>
-                  </Label>
-                  <TextField fx:id="fieldPrintType" prefHeight="26.0" prefWidth="250.0" HBox.hgrow="ALWAYS" />
-               </children>
-               <padding>
-                  <Insets bottom="5.0" left="30.0" right="30.0" />
-               </padding>
-            </HBox>
-            <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="275.0" prefHeight="0.0" prefWidth="600.0">
-               <children>
-                  <Label prefHeight="27.0" prefWidth="133.0" text="Số ra mắt">
+                  <Label prefHeight="27.0" prefWidth="133.0" text="Số phát hành">
                      <font>
                         <Font size="18.0" />
                      </font>
@@ -92,7 +82,20 @@
                   <Insets bottom="5.0" left="30.0" right="30.0" />
                </padding>
             </HBox>
-            <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="146.0" prefHeight="0.0" prefWidth="600.0">
+            <HBox alignment="CENTER_LEFT" prefHeight="0.0" prefWidth="600.0">
+               <children>
+                  <Label prefHeight="27.0" prefWidth="133.0" text="Loại ẩn phẩm">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="fieldPrintType" prefHeight="26.0" prefWidth="250.0" HBox.hgrow="ALWAYS" />
+               </children>
+               <padding>
+                  <Insets bottom="5.0" left="30.0" right="30.0" />
+               </padding>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" prefHeight="0.0" prefWidth="600.0">
                <children>
                   <Label prefHeight="27.0" prefWidth="133.0" text="Số lượng">
                      <font>
@@ -105,7 +108,7 @@
                   <Insets bottom="5.0" left="30.0" right="30.0" />
                </padding>
             </HBox>
-            <HBox alignment="TOP_RIGHT" prefHeight="83.0" prefWidth="600.0" VBox.vgrow="ALWAYS">
+            <HBox alignment="TOP_RIGHT" prefHeight="76.0" prefWidth="600.0" VBox.vgrow="ALWAYS">
                <children>
                   <Button mnemonicParsing="false" onAction="#btnAddPrintMedia" text="Thêm">
                      <font>
