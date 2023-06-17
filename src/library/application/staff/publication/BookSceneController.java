@@ -45,14 +45,9 @@ public class BookSceneController implements Initializable, SceneFeatureGate {
     @FXML
     private URL location;
 
+    // Table
     @FXML
     private TableView<Books> booksTableView;
-    
-    @FXML
-    private ComboBox<String> comboBox;
-    
-    @FXML
-    private TextField fieldSearch;
 
     @FXML
     private TableColumn<Books, String> colCategory;
@@ -81,6 +76,16 @@ public class BookSceneController implements Initializable, SceneFeatureGate {
     @FXML
     private TableColumn<Books, Integer> colReissue;
     
+    // Searching
+    @FXML
+    private ComboBox<String> comboBox;
+    
+    @FXML
+    private TextField fieldSearch;
+    
+    private ObservableList<String> comboBoxItems = FXCollections.observableArrayList("ID", "Tên sách", "Tác giả", "Quốc gia", "Thể loại");
+    
+    // PANES & DATA
     @FXML
     private VBox paneMain;
     
@@ -90,7 +95,7 @@ public class BookSceneController implements Initializable, SceneFeatureGate {
     
     private ObservableList<Books> data;
     
-    private ObservableList<String> items = FXCollections.observableArrayList("ID", "Tên sách", "Tác giả", "Quốc gia", "Thể loại");
+    
     
     private AuthorDAO authorDAO = new AuthorDAO();
     private BookDAO bookDAO = new BookDAO();
@@ -163,23 +168,12 @@ public class BookSceneController implements Initializable, SceneFeatureGate {
         // Add a default row
 		refresh();
 		editableCols();
+		
         // Bind the ObservableList to the TableView
         booksTableView.setItems(data);
         
-        fieldSearch.setPromptText("Thông tin tìm kiếm");
-        
-        comboBox.setPromptText("Thuộc tính tìm kiếm");
-        comboBox.setItems(items);
+        comboBox.setItems(comboBoxItems);
         comboBox.setValue("Tên sách");
-        
-        fieldSearch.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                String searchText = newValue;
-                String searchOption = comboBox.getValue();
-                SearchData(searchText, searchOption);
-            }
-        });
 
         // Bind the columns to the corresponding properties in MyDataModel
         colID.setCellValueFactory(new PropertyValueFactory<>("publicationID"));

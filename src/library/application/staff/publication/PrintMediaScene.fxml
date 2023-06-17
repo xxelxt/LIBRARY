@@ -6,6 +6,7 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
@@ -17,14 +18,10 @@
             <HBox fx:id="hboxFeature" alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="484.0" spacing="10.0" VBox.vgrow="NEVER">
                <children>
                   <Button fx:id="btnAdd" mnemonicParsing="false" onAction="#btnActionAddPrintMedia" text="Thêm" />
-                  <Button fx:id="btnEdit" mnemonicParsing="false" onAction="#btnActionEditPrintMedia" text="Sửa" />
-                  <Button fx:id="btnDelete" mnemonicParsing="false" onAction="#btnActionDeletePrintMedia" text="Xoá">
-                     <HBox.margin>
-                        <Insets right="20.0" />
-                     </HBox.margin>
-                  </Button>
-                  <TextField fx:id="fieldSearch" prefHeight="26.0" prefWidth="413.0" HBox.hgrow="ALWAYS" />
-                  <ComboBox fx:id="comboBox" prefHeight="25.0" prefWidth="150.0" HBox.hgrow="ALWAYS" />
+                  <ToggleButton fx:id="btnEdit" mnemonicParsing="false" onAction="#btnActionEditPrintMedia" text="Sửa" />
+                  <Button fx:id="btnDelete" mnemonicParsing="false" onAction="#btnActionDeletePrintMedia" text="Xóa" />
+                  <TextField fx:id="fieldSearch" onKeyTyped="#inputSearch" prefHeight="26.0" prefWidth="413.0" promptText="Thông tin tìm kiếm" HBox.hgrow="ALWAYS" />
+                  <ComboBox fx:id="comboBox" prefHeight="25.0" prefWidth="150.0" promptText="Thuộc tính tìm kiếm" HBox.hgrow="ALWAYS" />
                </children>
                <opaqueInsets>
                   <Insets />
@@ -33,7 +30,7 @@
                   <Insets bottom="15.0" />
                </VBox.margin>
             </HBox>
-            <TableView fx:id="pmTableView" editable="true" prefHeight="561.0" prefWidth="870.0" VBox.vgrow="ALWAYS">
+            <TableView fx:id="printMediaTableView" editable="true" prefHeight="561.0" prefWidth="870.0" VBox.vgrow="ALWAYS">
                <columns>
                   <TableColumn fx:id="colID" prefWidth="40.0" text="ID" />
                   <TableColumn fx:id="colTitle" prefWidth="158.0" text="Tên ấn phẩm" />

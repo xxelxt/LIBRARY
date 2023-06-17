@@ -19,7 +19,9 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -37,14 +39,10 @@ public class PrintMediaSceneController implements Initializable, SceneFeatureGat
     @FXML
     private URL location;
     
-    @FXML
-    private TableView<Books> booksTableView;
     
+    // Table
     @FXML
-    private ComboBox<String> comboBox;
-
-    @FXML
-    private TableView<PrintMedia> pmTableView;
+    private TableView<PrintMedia> printMediaTableView;
 
     @FXML
     private TableColumn<PrintMedia, String> colCountry;
@@ -67,18 +65,23 @@ public class PrintMediaSceneController implements Initializable, SceneFeatureGat
     @FXML
     private TableColumn<PrintMedia, String> colTitle;
 
+    // Searching
+    @FXML
+    private ComboBox<String> comboBox;
+    
     @FXML
     private TextField fieldSearch;
 
-    @FXML
-    private AnchorPane paneAdd;
-
+    private ObservableList<String> comboBoxItems = FXCollections.observableArrayList("ID", "Tên ẩn phẩm", "Loại ấn phẩm", "Quốc gia");
+    
+    // PANES & DATA
     @FXML
     private VBox paneMain;
     
-    private ObservableList<PrintMedia> data;
+    @FXML
+    private AnchorPane paneAdd;
     
-    private ObservableList<String> items = FXCollections.observableArrayList("ID", "Tên ẩn phẩm", "Loại ấn phẩm", "Quốc gia");
+    private ObservableList<PrintMedia> data;
     
     private PrintMediaDAO pmDAO = new PrintMediaDAO();
 
@@ -92,12 +95,12 @@ public class PrintMediaSceneController implements Initializable, SceneFeatureGat
 	    	data.add(pm);
 	    }
 	    
-	    pmTableView.setItems(data);
+	    printMediaTableView.setItems(data);
     }
 
     public void scrollToLast() {
-    	int lastIndex = pmTableView.getItems().size() - 1;
-    	pmTableView.scrollTo(lastIndex);
+    	int lastIndex = printMediaTableView.getItems().size() - 1;
+    	printMediaTableView.scrollTo(lastIndex);
     }
     
     @Override
@@ -107,22 +110,10 @@ public class PrintMediaSceneController implements Initializable, SceneFeatureGat
 		refresh();
         
         // Bind the ObservableList to the TableView
-        pmTableView.setItems(data);
-        
-        fieldSearch.setPromptText("Thông tin tìm kiếm");
-        
-        comboBox.setPromptText("Thuộc tính tìm kiếm");
-        comboBox.setItems(items);
+		printMediaTableView.setItems(data);
+
+        comboBox.setItems(comboBoxItems);
         comboBox.setValue("Tên ấn phẩm");
-        
-        fieldSearch.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                String searchText = newValue;
-                String searchOption = comboBox.getValue();
-                SearchData(searchText, searchOption);
-            }
-        });
 
         // Bind the columns to the corresponding properties in MyDataModel
         colID.setCellValueFactory(new PropertyValueFactory<PrintMedia, Integer>("publicationID"));
@@ -142,23 +133,6 @@ public class PrintMediaSceneController implements Initializable, SceneFeatureGat
     	paneMain.setVisible(false);
     	paneAdd.setVisible(true);
     }
-
-    @FXML
-    void btnActionDeletePrintMedia(ActionEvent event) {
-    	Integer selectedIndex = pmTableView.getSelectionModel().getSelectedIndex();
-    	Publication selectedRow = pmTableView.getSelectionModel().getSelectedItem();
-    	
-    	if (selectedRow != null) {
-	    	pmDAO.deletePrintMedia(selectedRow.getPublicationID());
-	    	this.refresh();
-	    	
-	        if (selectedIndex >= 0 && selectedIndex < data.size()) {
-	            pmTableView.getSelectionModel().select(selectedIndex);
-	        } 
-    	} else {
-        	pmTableView.getSelectionModel().clearSelection();
-        }
-    }
     
     @FXML
     void btnActionReturn(ActionEvent event) {
@@ -168,97 +142,72 @@ public class PrintMediaSceneController implements Initializable, SceneFeatureGat
     }
 
     @FXML
+    void btnActionDeletePrintMedia(ActionEvent event) {
+    	Integer selectedIndex = printMediaTableView.getSelectionModel().getSelectedIndex();
+    	Publication selectedRow = printMediaTableView.getSelectionModel().getSelectedItem();
+    	
+    	if (selectedRow != null) {
+	    	pmDAO.deletePrintMedia(selectedRow.getPublicationID());
+	    	this.refresh();
+	    	
+	        if (selectedIndex >= 0 && selectedIndex < data.size()) {
+	        	printMediaTableView.getSelectionModel().select(selectedIndex);
+	        } 
+    	} else {
+    		printMediaTableView.getSelectionModel().clearSelection();
+        }
+    }
+    
+    
+    @FXML
     void btnActionEditPrintMedia(ActionEvent event) {
     	
     }
 
-    private void filterPMbyID(String idText) {
-        FilteredList<PrintMedia> filteredList = new FilteredList<>(data);
-
-        filteredList.setPredicate(pm -> {
-            if (idText == null || idText.isEmpty()) {
-                return true;
-            }
-            try {
-                int id = Integer.parseInt(idText);
-                return pm.getPublicationID() == id;
-            } catch (NumberFormatException e) {
-                return false;
-            }
-        });
-
-        pmTableView.setItems(filteredList);
-    }
-
-    
-    private void filterPMbyTitle(String title) {
-        FilteredList<PrintMedia> filteredList = new FilteredList<>(data);
-
-        filteredList.setPredicate(pm -> {
-            if (title == null || title.isEmpty()) {
-                return true;
-            }
-            String lowerCaseTitle = title.toLowerCase();
-            return pm.getTitle().toLowerCase().contains(lowerCaseTitle);
-        });
-
-        pmTableView.setItems(filteredList);
-    }
-    
-    private void filterPMbyCountry(String country) {
-        FilteredList<PrintMedia> filteredList = new FilteredList<>(data);
-
-        filteredList.setPredicate(pm -> {
-            if (country == null || country.isEmpty()) {
-                return true;
-            }
-            String lowerCaseTitle = country.toLowerCase();
-            return pm.getCountry().toLowerCase().contains(lowerCaseTitle);
-        });
-
-        pmTableView.setItems(filteredList);
-    }
-    
-    private void filterPMbyType(String category) {
-        FilteredList<PrintMedia> filteredList = new FilteredList<>(data);
-
-        filteredList.setPredicate(pm -> {
-            if (category == null || category.isEmpty()) {
-                return true;
-            }
-            String lowerCaseTitle = category.toLowerCase();
-            return pm.getPrintType().toLowerCase().contains(lowerCaseTitle);
-        });
-
-        pmTableView.setItems(filteredList);
+    @FXML
+    void inputSearch(KeyEvent event) {
+        String searchText = fieldSearch.getText();
+        String searchOption = comboBox.getValue();
+        SearchData(searchText, searchOption);
     }
     
     private void SearchData(String searchText, String searchOption) {
-    	switch (searchOption) {
-        case "ID":
-        	filterPMbyID(searchText);
-            break;
-        case "Tên ấn phẩm":
-            filterPMbyTitle(searchText);
-            break;
-        case "Loại ấn phẩm":
-        	filterPMbyType(searchText);
-            break;
-        case "Quốc gia":
-        	filterPMbyCountry(searchText);
-            break;
-    	}
+        FilteredList<PrintMedia> filteredList = new FilteredList<>(data);
+
+        filteredList.setPredicate(printMedia -> {
+            if (searchText == null || searchText.isEmpty()) {
+                return true;
+            }
+            
+        	String originalText = "";
+        	switch (searchOption) {
+        		case "ID":				originalText = Integer.toString(printMedia.getPublicationID()); break;
+    	        case "Tên ấn phẩm":		originalText = printMedia.getTitle(); break;
+    	        case "Loại ấn phẩm":	originalText = printMedia.getPrintType(); break;	
+    	        case "Quốc gia":		originalText = printMedia.getCountry(); break;
+        	}
+        	
+        	if (originalText != "") {
+                if (searchOption.equals("ID")) {
+    	            return originalText.startsWith(searchText);
+                } else {
+                	return originalText.toLowerCase().contains(searchText.toLowerCase());
+                }
+        	}
+        	return false;
+        });
+
+        printMediaTableView.setItems(filteredList);
     }
-    
 
     @FXML
     private Button btnAdd;
-
-    @FXML
-    private Button btnEdit;
     
     @FXML
     private Button btnDelete;
+    
+    @FXML
+    private ToggleButton btnEdit;
     
     @FXML
     private HBox hboxFeature;
