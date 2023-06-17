@@ -4,17 +4,20 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Font;
+import library.application.staff.interfac.SceneFeatureGate;
 import library.application.staff.publication.BookSceneController;
 import library.application.staff.publication.PrintMediaSceneController;
 import library.application.staff.student.StudentSceneController;
 import library.mysql.dao.UserDAO;
 import library.user.User;
 
-public class MainSceneController {
+public class MainSceneController implements SceneFeatureGate {
 
     @FXML
     private Label labelWarning;
@@ -48,7 +51,9 @@ public class MainSceneController {
     		
     		Integer type = logUser.getType();
     		
+    		this.setFeatureFor(type);
     		bookSceneController.setFeatureFor(type);
+    		printMediaSceneController.setFeatureFor(type);
     		
     	} else {
     		labelWarning.setText("Username hoặc Password sai!\n");
@@ -69,5 +74,22 @@ public class MainSceneController {
     public void setMain(Main main) {
     	this.main = main;
     }
+    
+    @FXML
+    private TabPane tabPane;
+    
+    @FXML
+    private Tab tabBorrow;
+    
+    @FXML
+    private Tab tabStudent;
+
+	@Override
+	public void setFeatureFor(Integer user) {
+		if (user == STUDENT) {
+			tabPane.getTabs().remove(tabBorrow);
+			tabPane.getTabs().remove(tabStudent);
+		}
+	}
 
 }

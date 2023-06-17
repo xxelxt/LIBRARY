@@ -6,6 +6,7 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
@@ -14,10 +15,10 @@
    <children>
       <VBox fx:id="paneMain" layoutX="107.0" layoutY="47.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <HBox alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="484.0" spacing="10.0" VBox.vgrow="NEVER">
+            <HBox fx:id="hboxFeature" alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="484.0" spacing="10.0" VBox.vgrow="NEVER">
                <children>
                   <Button fx:id="btnAdd" mnemonicParsing="false" onAction="#btnActionAddBook" text="Thêm" />
-                  <Button fx:id="btnEdit" mnemonicParsing="false" onAction="#btnActionEditBook" text="Sửa" />
+                  <ToggleButton fx:id="btnEdit" mnemonicParsing="false" onAction="#btnActionEditBook" text="Sửa" />
                   <Button fx:id="btnDelete" mnemonicParsing="false" onAction="#btnActionDeleteBook" text="Xoá">
                      <HBox.margin>
                         <Insets right="20.0" />
@@ -33,7 +34,7 @@
                   <Insets bottom="15.0" />
                </VBox.margin>
             </HBox>
-            <TableView fx:id="booksTableView" editable="true" prefHeight="561.0" prefWidth="870.0" VBox.vgrow="ALWAYS">
+            <TableView fx:id="booksTableView" prefHeight="561.0" prefWidth="870.0" VBox.vgrow="ALWAYS">
                <columns>
                   <TableColumn fx:id="colID" prefWidth="40.0" text="ID" />
                   <TableColumn fx:id="colTitle" prefWidth="158.0" text="Tên sách" />
@@ -54,7 +55,7 @@
       <AnchorPane fx:id="paneAdd" prefHeight="200.0" prefWidth="200.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <fx:include fx:id="addBookScene" source="../add/AddBook.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-            <Button mnemonicParsing="false" onAction="#btnReturn" text="Quay lại" />
+            <Button mnemonicParsing="false" onAction="#btnActionReturn" text="Quay lại" />
          </children>
       </AnchorPane>
    </children>

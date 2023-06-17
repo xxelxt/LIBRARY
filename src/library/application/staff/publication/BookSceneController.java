@@ -11,22 +11,29 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.input.InputMethodEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 import library.application.staff.interfac.SceneFeatureGate;
 import library.mysql.dao.BookDAO;
+import library.mysql.dao.AuthorDAO;
 import library.publication.Books;
 import library.publication.Publication;
+import library.application.staff.publication.IntegerSpinnerCell;
 
 public class BookSceneController implements Initializable, SceneFeatureGate {
 
@@ -77,20 +84,13 @@ public class BookSceneController implements Initializable, SceneFeatureGate {
     
     @FXML
     private AnchorPane paneAdd;
-    
-    @FXML
-    private Button btnAdd;
 
-    @FXML
-    private Button btnDelete;
-
-    @FXML
-    private Button btnEdit;
     
     private ObservableList<Books> data;
     
     private ObservableList<String> items = FXCollections.observableArrayList("ID", "Tên sách", "Tác giả", "Quốc gia", "Thể loại");
     
+    private AuthorDAO authorDAO = new AuthorDAO();
     private BookDAO bookDAO = new BookDAO();
 
     public void refresh() {
@@ -111,12 +111,56 @@ public class BookSceneController implements Initializable, SceneFeatureGate {
     	booksTableView.scrollTo(lastIndex);
     }
     
+    private void editableCols(){
+        colTitle.setCellFactory(TextFieldTableCell.forTableColumn());
+        colCountry.setCellFactory(TextFieldTableCell.forTableColumn());
+        colAuthors.setCellFactory(TextFieldTableCell.forTableColumn());
+        colPublisher.setCellFactory(TextFieldTableCell.forTableColumn());
+        colCategory.setCellFactory(TextFieldTableCell.forTableColumn());
+
+//        colPublicationDate.setCellFactory(TextFieldTableCell.forTableColumn());
+//        colQuantity.setCellValueFactory(new PropertyValueFactory<>("quantity"));
+//        colReissue.setCellValueFactory(new PropertyValueFactory<Books, Integer>("reissue"));
+        
+        EventHandler<CellEditEvent<Books, String>> commonHandler = e -> {
+        	Books book = e.getTableView().getItems().get(e.getTablePosition().getRow());
+        	TableColumn<Books, String> col = e.getTableColumn();
+        	if (col == colTitle) { book.setTitle(e.getNewValue()); }
+        	else if (col == colCountry) { book.setCountry(e.getNewValue()); }
+        	else if (col == colPublisher) { book.setPublisher(e.getNewValue()); }
+        	else if (col == colCategory) { book.setCategory(e.getNewValue()); }
+        	
+        	if (col == colAuthors) { 
+        		authorDAO.addManyAuthorWithCheck(book.getPublicationID(), e.getNewValue()); 
+        	} else {
+            	bookDAO.updateBook(book);	
+        	}
+        };
+
+        colTitle.setOnEditCommit(commonHandler);
+        colCountry.setOnEditCommit(commonHandler);
+        colAuthors.setOnEditCommit(commonHandler);
+        colPublisher.setOnEditCommit(commonHandler);
+        colCategory.setOnEditCommit(commonHandler);
+
+
+        
+//        colReissue.setCellFactory(new IntegerSpinnerCell);
+//        colReissue.setOnEditCommit(e-> { 	
+////        	Books book = e.getTableView().getItems().get(e.getTablePosition().getRow());
+////        	book.setTitle(e.getNewValue()); 
+////        	bookDAO.updateBook(book);
+//        });
+
+        /* Allow for the values in each cell to be changable */
+    }
+    
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
         System.out.println("Book controller initialized");
         // Add a default row
 		refresh();
-        
+		editableCols();
         // Bind the ObservableList to the TableView
         booksTableView.setItems(data);
         
@@ -178,7 +222,7 @@ public class BookSceneController implements Initializable, SceneFeatureGate {
     }
     
     @FXML
-    void btnReturn(ActionEvent event) {
+    void btnActionReturn(ActionEvent event) {
     	paneMain.setVisible(true);
     	paneAdd.setVisible(false);
     	this.refresh();
@@ -203,7 +247,11 @@ public class BookSceneController implements Initializable, SceneFeatureGate {
     
     @FXML
     void btnActionEditBook(ActionEvent event) {
-    	booksTableView.setEditable(true);
+    	if (btnEdit.isSelected()) {
+    		booksTableView.setEditable(true);
+    	} else {
+    		booksTableView.setEditable(false);
+    	}
     }
     
     private void filterBooksbyID(String idText) {
@@ -287,17 +335,29 @@ public class BookSceneController implements Initializable, SceneFeatureGate {
     	}
     }
 
+    @FXML
+    private Button btnAdd;
+
+    @FXML
+    private Button btnDelete;
+
+    @FXML
+    private ToggleButton btnEdit;
+    
+    @FXML
+    private HBox hboxFeature;
+
 	@Override
 	public void setFeatureFor(Integer user) {
 		// TODO Auto-generated method stub
 		if (user == CLERK) {
-			btnAdd.setVisible(false);
-			btnEdit.setVisible(false);
-			btnDelete.setVisible(false);
+			hboxFeature.getChildren().remove(btnAdd);
+			hboxFeature.getChildren().remove(btnEdit);
+			hboxFeature.getChildren().remove(btnDelete);
 		} else if (user == STUDENT) {
-			btnAdd.setVisible(false);
-			btnEdit.setVisible(false);
-			btnDelete.setVisible(false);	
+			hboxFeature.getChildren().remove(btnAdd);
+			hboxFeature.getChildren().remove(btnEdit);
+			hboxFeature.getChildren().remove(btnDelete);
 		}
 	}
 }

@@ -17,7 +17,6 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
 <AnchorPane xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="library.application.staff.MainSceneController">
    <children>
       <AnchorPane fx:id="loginPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="335.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -97,7 +96,7 @@
       </AnchorPane>
       <BorderPane fx:id="contentPane" maxHeight="-Infinity" maxWidth="-Infinity" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <center>
-            <TabPane side="LEFT" tabClosingPolicy="UNAVAILABLE" tabMaxHeight="90.0" tabMaxWidth="90.0" tabMinHeight="90.0" tabMinWidth="90.0">
+            <TabPane fx:id="tabPane" side="LEFT" tabClosingPolicy="UNAVAILABLE" tabMaxHeight="90.0" tabMaxWidth="90.0" tabMinHeight="90.0" tabMinWidth="90.0">
               <tabs>
                 <Tab text="Sách">
                   <content>
@@ -125,12 +124,12 @@
                         </AnchorPane>
                   </content>
                 </Tab>
-                  <Tab text="Mượn">
+                  <Tab fx:id="tabBorrow" text="Mượn">
                      <content>
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
                      </content>
                   </Tab>
-                  <Tab text="Sinh viên">
+                  <Tab fx:id="tabStudent" text="Sinh viên">
                      <content>
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                            <children>

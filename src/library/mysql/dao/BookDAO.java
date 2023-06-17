@@ -58,8 +58,8 @@ public class BookDAO {
     }
 	
 
-    public boolean addBook(String title, Date releaseDate, String country, int quantity, String category, boolean reissue, 
-    		String publisherName, String authorName) {
+    public boolean addBook(String title, Date releaseDate, String country, int quantity, String category, int reissue, 
+    		String authorManyNames, String publisherName) {
         Integer publicationID = publicationDAO.addPublication(title, releaseDate, country, quantity);
 
         if (publicationID > 0) {
@@ -71,21 +71,12 @@ public class BookDAO {
                 PreparedStatement insertBookStmt = DatabaseLayer.prepareStatement(insertBookSql);
                 insertBookStmt.setInt(1, publicationID);
                 insertBookStmt.setString(2, category);
-                insertBookStmt.setBoolean(3, reissue);
+                insertBookStmt.setInt(3, reissue);
                 insertBookStmt.setInt(4, publisherID);
                 insertBookStmt.executeUpdate();
                 insertBookStmt.close();
                 
-                Integer authorID = authorDAO.addAuthorWithCheck(authorName);
-                if (authorID != -1) {
-	                // Thêm tác giả của sách
-	                String insertBookAuthorSql = "INSERT INTO BookAuthors (BookID, AuthorID) VALUES (?, ?)";
-	                PreparedStatement insertBookAuthorStmt = DatabaseLayer.prepareStatement(insertBookAuthorSql);
-	                insertBookAuthorStmt.setInt(1, publicationID);
-	                insertBookAuthorStmt.setInt(2, authorID);
-	                insertBookAuthorStmt.executeUpdate();
-	                insertBookAuthorStmt.close();
-                }
+                authorDAO.addManyAuthorWithCheck(publicationID, authorManyNames);
                               
                 System.out.println("Added Book");
             } catch (Exception e) {
@@ -99,6 +90,37 @@ public class BookDAO {
     public boolean deleteBook(Integer publicationID) {
         return publicationDAO.deletePublication(publicationID);
         // FOREIGN KEY (`BookID`) REFERENCES `publications` (`PublicationID`) ON DELETE CASCADE
+    }
+    
+    public boolean updateBook(Books book) {
+    	try {        	
+            String sql = "UPDATE Publications P "
+            		+ "JOIN Books B ON P.PublicationID = B.BookID "
+            		+ "SET P.Title = ? ,"
+            		+ "    P.ReleaseDate = ? ,"
+            		+ "    P.Country = ? ,"
+            		+ "    B.Category = ? ,"
+            		+ "    P.Quantity = ? ,"
+            		+ "    B.Reissue = ? "
+            		+ "WHERE P.PublicationID = ?;";
+            PreparedStatement pstmt = DatabaseLayer.prepareStatement(sql);
+            pstmt.setString(1, book.getTitle());
+            pstmt.setDate(2, book.getReleaseDate());
+            pstmt.setString(3, book.getCountry());
+            pstmt.setString(4, book.getCategory());
+            pstmt.setInt(5, book.getQuantity());
+            pstmt.setInt(6, book.getReissue());
+            pstmt.setInt(7, book.getPublicationID());
+            
+            pstmt.executeUpdate();
+            pstmt.close();
+            
+            System.out.println("Updated Book");
+        } catch (Exception e) {
+            System.out.println(e);
+            return false;
+        }
+    	return true;
     }
     
     public Integer addPublisher(String publisherName) throws SQLException {

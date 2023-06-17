@@ -85,4 +85,29 @@ public class AuthorDAO {
         
         return authorID;
     }
+    
+    public void addManyAuthorWithCheck(Integer publicationID, String authorManyNames) {
+
+    	for (String authorName: authorManyNames.split(",")) {
+        	authorName = authorName.strip();
+        	if (authorName != "") {
+        		try {
+		            Integer authorID = this.addAuthorWithCheck(authorName);
+		            if (authorID != -1) {
+		                // Thêm tác giả của sách
+		                String insertBookAuthorSql = "INSERT INTO BookAuthors (BookID, AuthorID) VALUES (?, ?)";
+		                PreparedStatement insertBookAuthorStmt = DatabaseLayer.prepareStatement(insertBookAuthorSql);
+		
+						insertBookAuthorStmt.setInt(1, publicationID);
+		                insertBookAuthorStmt.setInt(2, authorID);
+		                insertBookAuthorStmt.executeUpdate();
+		                insertBookAuthorStmt.close();
+		            }
+    			} catch (SQLException e) {
+    				// TODO Auto-generated catch block
+    				e.printStackTrace();
+    			}
+        	}
+    	}
+    }
 }

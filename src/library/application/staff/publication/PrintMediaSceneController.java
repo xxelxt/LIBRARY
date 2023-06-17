@@ -21,6 +21,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import library.application.staff.interfac.SceneFeatureGate;
 import library.mysql.dao.PrintMediaDAO;
@@ -258,18 +259,21 @@ public class PrintMediaSceneController implements Initializable, SceneFeatureGat
     
     @FXML
     private Button btnDelete;
+    
+    @FXML
+    private HBox hboxFeature;
 
 	@Override
 	public void setFeatureFor(Integer user) {
 		// TODO Auto-generated method stub
 		if (user == CLERK) {
-			btnAdd.setVisible(false);
-			btnEdit.setVisible(false);
-			btnDelete.setVisible(false);
+			hboxFeature.getChildren().remove(btnAdd);
+			hboxFeature.getChildren().remove(btnEdit);
+			hboxFeature.getChildren().remove(btnDelete);
 		} else if (user == STUDENT) {
-			btnAdd.setVisible(false);
-			btnEdit.setVisible(false);
-			btnDelete.setVisible(false);	
+			hboxFeature.getChildren().remove(btnAdd);
+			hboxFeature.getChildren().remove(btnEdit);
+			hboxFeature.getChildren().remove(btnDelete);
 		}
 	}
 }

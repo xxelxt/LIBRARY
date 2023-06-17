@@ -14,14 +14,7 @@ import javafx.scene.layout.AnchorPane;
 import library.mysql.dao.BookDAO;
 
 public class AddBookController {
-
-    @FXML
-    private ResourceBundle resources;
-
-    @FXML
-    private URL location;
-
-    @FXML
+	@FXML
     private TextField fieldAuthors;
 
     @FXML
@@ -40,7 +33,7 @@ public class AddBookController {
     private Spinner<Integer> fieldQuantity = new Spinner<Integer>();
     
     @FXML
-    private CheckBox fieldReissue;
+    private Spinner<Integer> fieldReissue = new Spinner<Integer>();
 
     @FXML
     private TextField fieldTitle;
@@ -60,6 +53,7 @@ public class AddBookController {
         assert fieldTitle != null : "fx:id=\"fieldTitle\" was not injected: check your FXML file 'AddBook.fxml'.";
         
         fieldQuantity.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100, 1));
+        fieldReissue.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 255, 1));
     }
     
     @FXML
@@ -72,7 +66,7 @@ public class AddBookController {
     		fieldCountry.getText(),
     		fieldQuantity.getValue(),
     		fieldCategory.getText(),
-    		fieldReissue.isSelected(),
+    		fieldReissue.getValue(),
     		fieldAuthors.getText(),
     		fieldPublisher.getText()
     	);
@@ -86,7 +80,7 @@ public class AddBookController {
     	fieldPublishDate.setValue(null);
     	fieldQuantity.getValueFactory().setValue(1);
     	fieldAuthors.clear();
-    	fieldReissue.setSelected(false);
+    	fieldReissue.getValueFactory().setValue(1);
     	fieldCategory.clear();
     	fieldPublisher.clear();
     }

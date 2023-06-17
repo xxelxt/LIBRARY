@@ -14,11 +14,11 @@
    <children>
       <VBox fx:id="paneMain" layoutX="107.0" layoutY="47.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <HBox alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="484.0" spacing="10.0" VBox.vgrow="NEVER">
+            <HBox fx:id="hboxFeature" alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="484.0" spacing="10.0" VBox.vgrow="NEVER">
                <children>
                   <Button fx:id="btnAdd" mnemonicParsing="false" onAction="#btnActionAddPrintMedia" text="Thêm" />
                   <Button fx:id="btnEdit" mnemonicParsing="false" onAction="#btnActionEditPrintMedia" text="Sửa" />
-                  <Button mnemonicParsing="false" onAction="#btnActionDeletePrintMedia" text="Xoá">
+                  <Button fx:id="btnDelete" mnemonicParsing="false" onAction="#btnActionDeletePrintMedia" text="Xoá">
                      <HBox.margin>
                         <Insets right="20.0" />
                      </HBox.margin>
@@ -52,7 +52,7 @@
       <AnchorPane fx:id="paneAdd" layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <fx:include fx:id="addPrintMediaScene" source="../add/AddPrintMedia.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-            <Button mnemonicParsing="false" onAction="#btnReturn" text="Quay lại" />
+            <Button mnemonicParsing="false" onAction="#btnActionReturn" text="Quay lại" />
          </children>
       </AnchorPane>
    </children>

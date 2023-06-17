@@ -26,12 +26,14 @@ public class Main extends Application {
 			
 	        primaryStage.setTitle("---");
 	        
-	        Scene scene = new Scene(root);	        
+	        Scene scene = new Scene(root);
 			scene.getStylesheets().add(getClass().getResource("cupertino-light.css").toExternalForm());
 			primaryStage.setScene(scene);
 			
+			primaryStage.setMaximized(false);		
 			primaryStage.setWidth(335);
 			primaryStage.setHeight(500);
+			primaryStage.centerOnScreen();
 			primaryStage.show();	
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

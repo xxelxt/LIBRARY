@@ -1,6 +1,6 @@
 package library.publication;
 
-import java.util.Date;
+import java.sql.Date;
 
 public class Publication {
 	private Integer PublicationID;
