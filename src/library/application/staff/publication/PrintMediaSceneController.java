@@ -124,13 +124,6 @@ public class PrintMediaSceneController implements Initializable, SceneFeatureGat
 	}
 
 	Date now = new Date(new java.util.Date().getTime());
-
-	@FXML
-    void inputSearch(KeyEvent event) {
-        String searchText = fieldSearch.getText();
-        String searchOption = comboBox.getValue();
-        SearchData(searchText, searchOption);
-    }
 	
     @FXML
     void btnActionAddPrintMedia(ActionEvent event) {
@@ -166,6 +159,9 @@ public class PrintMediaSceneController implements Initializable, SceneFeatureGat
     @FXML
     void btnActionEditPrintMedia(ActionEvent event) {
 
+    	
+    }
+    
     @FXML
     void inputSearch(KeyEvent event) {
         String searchText = fieldSearch.getText();

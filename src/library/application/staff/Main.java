@@ -55,8 +55,8 @@ public class Main extends Application {
 			this.primaryStage = primaryStage;
 			this.restart();
 			
-	        Image icon = new Image(getClass().getResourceAsStream("icon.png"));
-	        primaryStage.getIcons().add(icon);
+//	        Image icon = new Image(getClass().getResourceAsStream("icon.png"));
+//	        primaryStage.getIcons().add(icon);
 
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
