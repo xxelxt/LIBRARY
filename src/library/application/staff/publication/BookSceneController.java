@@ -18,6 +18,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import library.application.staff.add.AddBookController;
@@ -132,6 +133,18 @@ public class BookSceneController implements Initializable {
         colPublisher.setCellValueFactory(new PropertyValueFactory<Books, String>("publisher"));
         colCategory.setCellValueFactory(new PropertyValueFactory<Books, String>("category"));
         colReissue.setCellValueFactory(new PropertyValueFactory<Books, Integer>("reissue"));
+        
+        // Editing ;
+        colID.setCellFactory(TextFieldTableCell.forTableColumn());
+        colTitle.setCellFactory(TextFieldTableCell.forTableColumn());
+        colPublicationDate.setCellFactory(TextFieldTableCell.forTableColumn());
+        colCountry.setCellFactory(TextFieldTableCell.forTableColumn());
+        colQuantity.setCellFactory(TextFieldTableCell.forTableColumn());
+        
+        colAuthors.setCellFactory(TextFieldTableCell.forTableColumn());
+        colPublisher.setCellFactory(TextFieldTableCell.forTableColumn());
+        colCategory.setCellFactory(TextFieldTableCell.forTableColumn());
+        colReissue.setCellFactory(TextFieldTableCell.forTableColumn());
 	}
 	
 	Date now = new Date(new java.util.Date().getTime());
@@ -168,7 +181,7 @@ public class BookSceneController implements Initializable {
     
     @FXML
     void btnEditBook(ActionEvent event) {
-
+    	booksTableView.setEditable(true);
     }
     
     @FXML
