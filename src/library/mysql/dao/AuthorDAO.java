@@ -5,7 +5,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.List;
 
 import library.mysql.DatabaseLayer;
 
@@ -38,20 +37,20 @@ public class AuthorDAO {
 
         return authors;
     }
-    
+
     public Integer addAuthor(String authorName) throws SQLException {
     	Integer authorID = -1;
         try {
             String sql = "INSERT INTO Authors (AuthorName) VALUES (?)";
             PreparedStatement pstmt = DatabaseLayer.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             pstmt.setString(1, authorName);
-            
+
             pstmt.executeUpdate();
             ResultSet rs = pstmt.getGeneratedKeys();
-            if (rs.next()){ 
-            	authorID = rs.getInt(1); 
+            if (rs.next()){
+            	authorID = rs.getInt(1);
             }
-            
+
             rs.close();
             pstmt.close();
         } catch (SQLException e) {
@@ -60,7 +59,7 @@ public class AuthorDAO {
         }
         return authorID;
     }
-    
+
     public Integer addAuthorWithCheck(String authorName) {
     	Integer authorID = -1;
         try {
@@ -68,7 +67,7 @@ public class AuthorDAO {
             String checkAuthorSql = "SELECT * FROM Authors WHERE AuthorName = ?";
             PreparedStatement pstmt = DatabaseLayer.prepareStatement(checkAuthorSql);
             pstmt.setString(1, authorName);
-            
+
             ResultSet rs = pstmt.executeQuery();
 			if (!rs.next()) {
 				// Nếu không có thì thêm tác giả mới vào trước
@@ -78,15 +77,15 @@ public class AuthorDAO {
 			}
 			rs.close();
 			pstmt.close();
-			
+
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-        
+
         return authorID;
     }
-    
+
     public void addManyAuthorWithCheck(Integer publicationID, String authorManyNames) {
 
     	for (String authorName: authorManyNames.split(",")) {
@@ -98,7 +97,7 @@ public class AuthorDAO {
 		                // Thêm tác giả của sách
 		                String insertBookAuthorSql = "INSERT INTO BookAuthors (BookID, AuthorID) VALUES (?, ?)";
 		                PreparedStatement insertBookAuthorStmt = DatabaseLayer.prepareStatement(insertBookAuthorSql);
-		
+
 						insertBookAuthorStmt.setInt(1, publicationID);
 		                insertBookAuthorStmt.setInt(2, authorID);
 		                insertBookAuthorStmt.executeUpdate();
@@ -111,10 +110,10 @@ public class AuthorDAO {
         	}
     	}
     }
-    
+
     public ArrayList<String> getAuthors() {
         ArrayList<String> authors = new ArrayList<>();
-        
+
         try {
         	String sql = "SELECT AuthorName FROM Authors";
             PreparedStatement pstmt = DatabaseLayer.prepareStatement(sql);

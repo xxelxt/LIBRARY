@@ -2,7 +2,6 @@ package library.application.staff.publication;
 
 import java.net.URL;
 import java.sql.Date;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -36,10 +35,10 @@ public class PrintMediaSceneController implements Initializable, SceneFeatureGat
 
     @FXML
     private URL location;
-    
+
     @FXML
     private TableView<Books> booksTableView;
-    
+
     @FXML
     private ComboBox<String> comboBox;
 
@@ -75,11 +74,11 @@ public class PrintMediaSceneController implements Initializable, SceneFeatureGat
 
     @FXML
     private VBox paneMain;
-    
+
     private ObservableList<PrintMedia> data;
-    
+
     private ObservableList<String> items = FXCollections.observableArrayList("ID", "Tên ẩn phẩm", "Loại ấn phẩm", "Quốc gia");
-    
+
     private PrintMediaDAO pmDAO = new PrintMediaDAO();
 
     public void refresh() {
@@ -87,11 +86,11 @@ public class PrintMediaSceneController implements Initializable, SceneFeatureGat
 
         List<PrintMedia> allPM = pmDAO.loadAllPrintMedias();
 		System.out.println(allPM);
-		
+
 	    for (PrintMedia pm : allPM){
 	    	data.add(pm);
 	    }
-	    
+
 	    pmTableView.setItems(data);
     }
 
@@ -99,22 +98,22 @@ public class PrintMediaSceneController implements Initializable, SceneFeatureGat
     	int lastIndex = pmTableView.getItems().size() - 1;
     	pmTableView.scrollTo(lastIndex);
     }
-    
+
     @Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
         System.out.println("Print media controller initialized");
         // Add a default row
 		refresh();
-        
+
         // Bind the ObservableList to the TableView
         pmTableView.setItems(data);
-        
+
         fieldSearch.setPromptText("Thông tin tìm kiếm");
-        
+
         comboBox.setPromptText("Thuộc tính tìm kiếm");
         comboBox.setItems(items);
         comboBox.setValue("Tên ấn phẩm");
-        
+
         fieldSearch.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
@@ -125,18 +124,18 @@ public class PrintMediaSceneController implements Initializable, SceneFeatureGat
         });
 
         // Bind the columns to the corresponding properties in MyDataModel
-        colID.setCellValueFactory(new PropertyValueFactory<PrintMedia, Integer>("publicationID"));
-        colTitle.setCellValueFactory(new PropertyValueFactory<PrintMedia, String>("title"));
-        colPublicationDate.setCellValueFactory(new PropertyValueFactory<PrintMedia, Date>("releaseDate"));
-        colCountry.setCellValueFactory(new PropertyValueFactory<PrintMedia, String>("country"));
-        colQuantity.setCellValueFactory(new PropertyValueFactory<PrintMedia, Integer>("quantity"));
-        
-        colReleaseNumber.setCellValueFactory(new PropertyValueFactory<PrintMedia, Integer>("releaseNumber"));
-        colPrintType.setCellValueFactory(new PropertyValueFactory<PrintMedia, String>("printType"));
+        colID.setCellValueFactory(new PropertyValueFactory<>("publicationID"));
+        colTitle.setCellValueFactory(new PropertyValueFactory<>("title"));
+        colPublicationDate.setCellValueFactory(new PropertyValueFactory<>("releaseDate"));
+        colCountry.setCellValueFactory(new PropertyValueFactory<>("country"));
+        colQuantity.setCellValueFactory(new PropertyValueFactory<>("quantity"));
+
+        colReleaseNumber.setCellValueFactory(new PropertyValueFactory<>("releaseNumber"));
+        colPrintType.setCellValueFactory(new PropertyValueFactory<>("printType"));
 	}
-	
+
 	Date now = new Date(new java.util.Date().getTime());
-    
+
     @FXML
     void btnActionAddPrintMedia(ActionEvent event) {
     	paneMain.setVisible(false);
@@ -147,19 +146,19 @@ public class PrintMediaSceneController implements Initializable, SceneFeatureGat
     void btnActionDeletePrintMedia(ActionEvent event) {
     	Integer selectedIndex = pmTableView.getSelectionModel().getSelectedIndex();
     	Publication selectedRow = pmTableView.getSelectionModel().getSelectedItem();
-    	
+
     	if (selectedRow != null) {
 	    	pmDAO.deletePrintMedia(selectedRow.getPublicationID());
 	    	this.refresh();
-	    	
+
 	        if (selectedIndex >= 0 && selectedIndex < data.size()) {
 	            pmTableView.getSelectionModel().select(selectedIndex);
-	        } 
+	        }
     	} else {
         	pmTableView.getSelectionModel().clearSelection();
         }
     }
-    
+
     @FXML
     void btnActionReturn(ActionEvent event) {
     	paneMain.setVisible(true);
@@ -169,7 +168,7 @@ public class PrintMediaSceneController implements Initializable, SceneFeatureGat
 
     @FXML
     void btnActionEditPrintMedia(ActionEvent event) {
-    	
+
     }
 
     private void filterPMbyID(String idText) {
@@ -190,7 +189,7 @@ public class PrintMediaSceneController implements Initializable, SceneFeatureGat
         pmTableView.setItems(filteredList);
     }
 
-    
+
     private void filterPMbyTitle(String title) {
         FilteredList<PrintMedia> filteredList = new FilteredList<>(data);
 
@@ -204,7 +203,7 @@ public class PrintMediaSceneController implements Initializable, SceneFeatureGat
 
         pmTableView.setItems(filteredList);
     }
-    
+
     private void filterPMbyCountry(String country) {
         FilteredList<PrintMedia> filteredList = new FilteredList<>(data);
 
@@ -218,7 +217,7 @@ public class PrintMediaSceneController implements Initializable, SceneFeatureGat
 
         pmTableView.setItems(filteredList);
     }
-    
+
     private void filterPMbyType(String category) {
         FilteredList<PrintMedia> filteredList = new FilteredList<>(data);
 
@@ -232,7 +231,7 @@ public class PrintMediaSceneController implements Initializable, SceneFeatureGat
 
         pmTableView.setItems(filteredList);
     }
-    
+
     private void SearchData(String searchText, String searchOption) {
     	switch (searchOption) {
         case "ID":
@@ -249,17 +248,17 @@ public class PrintMediaSceneController implements Initializable, SceneFeatureGat
             break;
     	}
     }
-    
+
 
     @FXML
     private Button btnAdd;
 
     @FXML
     private Button btnEdit;
-    
+
     @FXML
     private Button btnDelete;
-    
+
     @FXML
     private HBox hboxFeature;
 

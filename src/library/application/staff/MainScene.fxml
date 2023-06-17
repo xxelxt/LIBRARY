@@ -158,7 +158,6 @@
                         <MenuItem mnemonicParsing="false" onAction="#mainLogOut" text="Log out" />
                      </items>
                   </Menu>
-                <Menu mnemonicParsing="false" text="WWhy2" />
               </menus>
             </MenuBar>
          </top>

@@ -30,7 +30,7 @@ public class StudentSceneController implements Initializable {
 
     @FXML
     private URL location;
-    
+
     @FXML
     private TableView<Student> studentTableView;
 
@@ -72,46 +72,46 @@ public class StudentSceneController implements Initializable {
 
     @FXML
     private VBox paneMain;
-    
+
     private ObservableList<Student> data;
-    
+
     private ObservableList<String> items = FXCollections.observableArrayList("Mã sinh viên", "Tên sinh viên", "Lớp");
-    
+
     private StudentDAO studentDAO = new StudentDAO();
-    
+
     public void refresh() {
         data = FXCollections.observableArrayList();
 
         List<Student> allStudents = studentDAO.loadAllStudents();
 		System.out.println(allStudents);
-		
+
 	    for (Student student : allStudents){
 	    	data.add(student);
 	    }
-	    
+
 	    studentTableView.setItems(data);
     }
-    
+
     public void scrollToLast() {
     	int lastIndex = studentTableView.getItems().size() - 1;
     	studentTableView.scrollTo(lastIndex);
     }
-    
+
     @Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
         System.out.println("Student controller initialized");
         // Add a default row
 		refresh();
-        
+
         // Bind the ObservableList to the TableView
         studentTableView.setItems(data);
-        
+
         fieldSearch.setPromptText("Thông tin tìm kiếm");
-        
+
         comboBox.setPromptText("Thuộc tính tìm kiếm");
         comboBox.setItems(items);
         comboBox.setValue("Mã sinh viên");
-        
+
         fieldSearch.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
@@ -127,13 +127,13 @@ public class StudentSceneController implements Initializable {
         colClass.setCellValueFactory(new PropertyValueFactory<>("className"));
         colGender.setCellValueFactory(new PropertyValueFactory<>("gender"));
         colEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
-        
+
         colPhoneNum.setCellValueFactory(new PropertyValueFactory<>("phone"));
         colAddress.setCellValueFactory(new PropertyValueFactory<>("address"));
         colFineStatus.setCellValueFactory(new PropertyValueFactory<>("fineStatus"));
         colFine.setCellValueFactory(new PropertyValueFactory<>("fine"));
-        
-        colGender.setCellFactory(col -> new TableCell<Student, Boolean>() {
+
+        colGender.setCellFactory(col -> new TableCell<>() {
             @Override
             protected void updateItem(Boolean item, boolean empty) {
                 super.updateItem(item, empty) ;
@@ -141,7 +141,7 @@ public class StudentSceneController implements Initializable {
             }
         });
 	}
-	
+
 	Date now = new Date(new java.util.Date().getTime());
 
     @FXML

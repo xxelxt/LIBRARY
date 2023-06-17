@@ -33,8 +33,8 @@ public class UserDAO {
 
         return user;
 	}
-	
-	
+
+
 	public String getPasswordfromUsername(String username) {
         String password = "";
         try {
