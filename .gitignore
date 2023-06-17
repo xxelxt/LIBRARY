@@ -28,3 +28,6 @@ CONFIG.txt
 /nbproject/private/
 /build/
 ~$braryProjectForm.docx
+
+# Password
+/src/library/mysql/DatabaseLayer.java
