@@ -2,7 +2,6 @@ package library.application.staff.publication;
 
 import java.net.URL;
 import java.sql.Date;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -24,7 +23,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.scene.input.InputMethodEvent;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
@@ -85,7 +83,6 @@ public class BookSceneController implements Initializable, SceneFeatureGate {
     @FXML
     private AnchorPane paneAdd;
 
-
     private ObservableList<Books> data;
 
     private ObservableList<String> items = FXCollections.observableArrayList("ID", "Tên sách", "Tác giả", "Quốc gia", "Thể loại");
@@ -143,16 +140,12 @@ public class BookSceneController implements Initializable, SceneFeatureGate {
         colPublisher.setOnEditCommit(commonHandler);
         colCategory.setOnEditCommit(commonHandler);
 
-
-
 //        colReissue.setCellFactory(new IntegerSpinnerCell);
 //        colReissue.setOnEditCommit(e-> {
 ////        	Books book = e.getTableView().getItems().get(e.getTablePosition().getRow());
 ////        	book.setTitle(e.getNewValue());
 ////        	bookDAO.updateBook(book);
 //        });
-
-        /* Allow for the values in each cell to be changable */
     }
 
 	@Override
@@ -190,26 +183,13 @@ public class BookSceneController implements Initializable, SceneFeatureGate {
         colPublisher.setCellValueFactory(new PropertyValueFactory<>("publisher"));
         colCategory.setCellValueFactory(new PropertyValueFactory<>("category"));
         colReissue.setCellValueFactory(new PropertyValueFactory<>("reissue"));
-
-        // Editing ;
-//        colID.setCellFactory(TextFieldTableCell.forTableColumn());
-//        colTitle.setCellFactory(TextFieldTableCell.forTableColumn());
-//        colPublicationDate.setCellFactory(TextFieldTableCell.forTableColumn());
-//        colCountry.setCellFactory(TextFieldTableCell.forTableColumn());
-//        colQuantity.setCellFactory(TextFieldTableCell.forTableColumn());
-//
-//        colAuthors.setCellFactory(TextFieldTableCell.forTableColumn());
-//        colPublisher.setCellFactory(TextFieldTableCell.forTableColumn());
-//        colCategory.setCellFactory(TextFieldTableCell.forTableColumn());
-//        colReissue.setCellFactory(TextFieldTableCell.forTableColumn());
 	}
 
     @FXML
-    void inputSearch(InputMethodEvent event) {
-//        String searchText = fieldSearch.getText();
-//        System.out.println(searchText);
-//        String searchOption = comboBox.getValue();
-//        SearchData(searchText, searchOption);
+    void inputSearch(KeyEvent event) {
+        String searchText = fieldSearch.getText();
+        String searchOption = comboBox.getValue();
+        SearchData(searchText, searchOption);
     }
 
 	Date now = new Date(new java.util.Date().getTime());
@@ -253,90 +233,6 @@ public class BookSceneController implements Initializable, SceneFeatureGate {
     	}
     }
     
-    private void filterBooksbyID(String idText) {
-        FilteredList<Books> filteredList = new FilteredList<>(data);
-
-        filteredList.setPredicate(book -> {
-            if (idText == null || idText.isEmpty()) {
-                return true;
-            }
-            try {
-                int id = Integer.parseInt(idText);
-                return book.getPublicationID() == id;
-            } catch (NumberFormatException e) {
-                return false;
-            }
-        });
-
-        booksTableView.setItems(filteredList);
-    }
-
-
-    private void filterBooksbyTitle(String title) {
-        FilteredList<Books> filteredList = new FilteredList<>(data);
-
-        filteredList.setPredicate(book -> {
-            if (title == null || title.isEmpty()) {
-                return true;
-            }
-            String lowerCaseTitle = title.toLowerCase();
-            return book.getTitle().toLowerCase().contains(lowerCaseTitle);
-        });
-
-        booksTableView.setItems(filteredList);
-    }
-
-    private void filterBooksByAuthor(String author) {
-        FilteredList<Books> filteredList = new FilteredList<>(data);
-
-        filteredList.setPredicate(book -> {
-            if (author == null || author.isEmpty()) {
-                return true;
-            }
-
-            String lowerCaseAuthor = author.toLowerCase();
-            ArrayList<String> authors = authorDAO.getAuthors();
-
-            for (String au : authors) {
-                if (au.toLowerCase().contains(lowerCaseAuthor)) {
-                    return true;
-                }
-            }
-
-            return false;
-        });
-
-        booksTableView.setItems(filteredList);
-    }
-
-    private void filterBooksbyCountry(String country) {
-        FilteredList<Books> filteredList = new FilteredList<>(data);
-
-        filteredList.setPredicate(book -> {
-            if (country == null || country.isEmpty()) {
-                return true;
-            }
-            String lowerCaseTitle = country.toLowerCase();
-            return book.getCountry().toLowerCase().contains(lowerCaseTitle);
-        });
-
-        booksTableView.setItems(filteredList);
-    }
-
-    private void filterBooksbyCategory(String category) {
-        FilteredList<Books> filteredList = new FilteredList<>(data);
-
-        filteredList.setPredicate(book -> {
-            if (category == null || category.isEmpty()) {
-                return true;
-            }
-            String lowerCaseTitle = category.toLowerCase();
-            return book.getCategory().toLowerCase().contains(lowerCaseTitle);
-        });
-
-        booksTableView.setItems(filteredList);
-    }
-
     private void SearchData(String searchText, String searchOption) {
         FilteredList<Books> filteredList = new FilteredList<>(data);
 
@@ -381,7 +277,6 @@ public class BookSceneController implements Initializable, SceneFeatureGate {
 
 	@Override
 	public void setFeatureFor(Integer user) {
-		// TODO Auto-generated method stub
 		if (user == CLERK) {
 			hboxFeature.getChildren().remove(btnAdd);
 			hboxFeature.getChildren().remove(btnEdit);
