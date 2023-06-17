@@ -37,7 +37,7 @@ CREATE TABLE `authors` (
   `AuthorName` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
   PRIMARY KEY (`AuthorID`),
   KEY `AuthorName` (`AuthorName`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -46,7 +46,7 @@ CREATE TABLE `authors` (
 
 LOCK TABLES `authors` WRITE;
 /*!40000 ALTER TABLE `authors` DISABLE KEYS */;
-INSERT INTO `authors` VALUES (3,'Harri Won'),(1,'Haruki Murakami'),(2,'Kevin Chen');
+INSERT INTO `authors` VALUES (5,'2demo, kllkrkr'),(4,'demo'),(1,'Haruki Murakami'),(2,'Kevin Chen'),(3,'Nhiều tác giả');
 /*!40000 ALTER TABLE `authors` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -73,7 +73,7 @@ CREATE TABLE `bookauthors` (
 
 LOCK TABLES `bookauthors` WRITE;
 /*!40000 ALTER TABLE `bookauthors` DISABLE KEYS */;
-INSERT INTO `bookauthors` VALUES (1,1),(2,2),(6,3),(7,3),(8,3);
+INSERT INTO `bookauthors` VALUES (1,1),(2,2);
 /*!40000 ALTER TABLE `bookauthors` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -94,7 +94,7 @@ CREATE TABLE `books` (
   KEY `Category` (`Category`),
   CONSTRAINT `books_ibfk_1` FOREIGN KEY (`BookID`) REFERENCES `publications` (`PublicationID`) ON DELETE CASCADE,
   CONSTRAINT `books_ibfk_2` FOREIGN KEY (`PublisherID`) REFERENCES `publishers` (`PublisherID`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -103,7 +103,7 @@ CREATE TABLE `books` (
 
 LOCK TABLES `books` WRITE;
 /*!40000 ALTER TABLE `books` DISABLE KEYS */;
-INSERT INTO `books` VALUES (1,'Văn học nước ngoài',0,1),(2,'Văn học nước ngoài',0,2),(5,'Visual Novel',0,NULL),(6,'Visual Novel',0,NULL),(7,'Visual Novel',0,NULL),(8,'Visual Novel',1,NULL);
+INSERT INTO `books` VALUES (1,'Văn học nước ngoài',0,1),(2,'Văn học nước ngoài',0,2);
 /*!40000 ALTER TABLE `books` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -120,7 +120,7 @@ CREATE TABLE `printmedia` (
   `PrintType` varchar(20) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
   PRIMARY KEY (`PrintMediaID`),
   CONSTRAINT `printmedia_ibfk_1` FOREIGN KEY (`PrintMediaID`) REFERENCES `publications` (`PublicationID`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -129,7 +129,7 @@ CREATE TABLE `printmedia` (
 
 LOCK TABLES `printmedia` WRITE;
 /*!40000 ALTER TABLE `printmedia` DISABLE KEYS */;
-INSERT INTO `printmedia` VALUES (3,6,'Tạp chí'),(4,6,'Tạp chí');
+INSERT INTO `printmedia` VALUES (3,6,'Tạp chí'),(4,6,'Tạp chí'),(31,6,'Tạp chí'),(32,6,'Tạp chí'),(33,6,'Tạp chí');
 /*!40000 ALTER TABLE `printmedia` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -149,7 +149,7 @@ CREATE TABLE `publications` (
   PRIMARY KEY (`PublicationID`),
   KEY `Title` (`Title`),
   KEY `Country` (`Country`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -158,7 +158,7 @@ CREATE TABLE `publications` (
 
 LOCK TABLES `publications` WRITE;
 /*!40000 ALTER TABLE `publications` DISABLE KEYS */;
-INSERT INTO `publications` VALUES (1,'Ngôi thứ nhất số ít','2023-05-24','Nhật Bản',7),(2,'Vùng đất quỷ tha ma bắt','2023-03-27','Đài Loan',5),(3,'Tạp chí Ngân hàng','2023-06-14','Việt Nam',3),(4,'Tạp chí Giáo dục','2023-06-13','Việt Nam',1),(5,'Harri Won','2023-06-06','Korea',2),(6,'Harri Won','2023-05-28','Korea',1),(7,'Harri Won','2023-05-28','Korea',1),(8,'Harri Won Life part 3','2023-05-11','Korea',1);
+INSERT INTO `publications` VALUES (1,'Ngôi thứ nhất số ít','2023-05-24','Nhật Bản',7),(2,'Vùng đất quỷ tha ma bắt','2023-03-27','Đài Loan',5),(3,'Tạp chí Ngân hàng','2023-06-14','Việt Nam',3),(4,'Tạp chí Giáo dục','2023-06-13','Việt Nam',1),(8,'abc','2023-06-01','def',5),(9,'abc','2023-06-01','def',5),(10,'abc','2023-06-02','def',5),(11,'abc','2023-06-02','def',5),(12,'abc','2023-06-02','def',5),(13,'abc','2023-06-02','def',5),(14,'abc','2023-06-02','def',5),(15,'abc','2023-06-02','def',5),(16,'abc','2023-06-02','def',5),(17,'abc','2023-06-02','def',5),(18,'abc','2023-06-02','def',5),(19,'abc','2023-06-02','def',5),(20,'abc','2023-06-02','def',5),(21,'abc','2023-06-02','def',5),(22,'abc','2023-06-02','def',5),(23,'abcddd','2023-06-02','def',5),(24,'abcddd','2023-06-02','def',5),(25,'abcddd','2023-06-02','def',5),(26,'abcddd','2023-06-02','def',5),(27,'abcddd','2023-06-02','def',5),(28,'abcddd','2023-06-02','def',5),(29,'Tạp chí Kinh tế','2023-06-16','Việt Nam',3),(30,'Tạp chí Kinh tế','2023-06-16','Việt Nam',3),(31,'Tạp chí Kinh tế','2023-06-16','Việt Nam',5),(32,'Tạp chí Tài chính','2023-06-15','Việt Nam',2),(33,'The Wall Street Journal','2023-06-15','Mỹ',2);
 /*!40000 ALTER TABLE `publications` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -371,4 +371,4 @@ USE `library`;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-06-15 12:44:02
+-- Dump completed on 2023-06-17 10:20:54
