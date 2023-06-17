@@ -17,6 +17,12 @@ public class Main extends Application {
 		primaryStage.setMaximized(true);
 	}
 	
+	public void setWindowSize() {
+		primaryStage.setWidth(1200);
+		primaryStage.setHeight(800);
+		primaryStage.centerOnScreen();
+	}
+	
 	public void restart() {
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("MainScene.fxml"));

@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.List;
 
 import library.mysql.DatabaseLayer;
 
@@ -109,5 +110,26 @@ public class AuthorDAO {
     			}
         	}
     	}
+    }
+    
+    public ArrayList<String> getAuthors() {
+        ArrayList<String> authors = new ArrayList<>();
+        
+        try {
+        	String sql = "SELECT AuthorName FROM Authors";
+            PreparedStatement pstmt = DatabaseLayer.prepareStatement(sql);
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                authors.add(rs.getString(1));
+            }
+
+            rs.close();
+            pstmt.close();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+
+        return authors;
     }
 }

@@ -2,6 +2,7 @@ package library.application.staff.publication;
 
 import java.net.URL;
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -171,14 +172,14 @@ public class BookSceneController implements Initializable, SceneFeatureGate {
         comboBox.setItems(items);
         comboBox.setValue("Tên sách");
         
-//        fieldSearch.textProperty().addListener(new ChangeListener<String>() {
-//            @Override
-//            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-//                String searchText = newValue;
-//                String searchOption = comboBox.getValue();
-//                SearchData(searchText, searchOption);
-//            }
-//        });
+        fieldSearch.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                String searchText = newValue;
+                String searchOption = comboBox.getValue();
+                SearchData(searchText, searchOption);
+            }
+        });
 
         // Bind the columns to the corresponding properties in MyDataModel
         colID.setCellValueFactory(new PropertyValueFactory<>("publicationID"));

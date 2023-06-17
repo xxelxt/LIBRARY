@@ -31,3 +31,4 @@ CONFIG.txt
 
 # Password
 /src/library/mysql/DatabaseLayer.java
+src/library/mysql/DatabaseLayer.java
