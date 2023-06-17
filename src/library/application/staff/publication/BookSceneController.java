@@ -262,26 +262,24 @@ public class BookSceneController implements Initializable, SceneFeatureGate {
             if (searchText == null || searchText.isEmpty()) {
                 return true;
             }
-            if (searchOption.equals("ID")) {
-	            try {
-	                int id = Integer.parseInt(searchText);
-	                return book.getPublicationID() == id;
-	            } catch (NumberFormatException e) {
-	                return false;
-	            }
-            } else {
-            	String originalText = "";
-            	switch (searchOption) {
-	    	        case "Tên sách":	originalText = book.getTitle(); break;
-	    	        case "Tác giả":		originalText = book.getAuthors(); break;	
-	    	        case "Quốc gia":	originalText = book.getCountry(); break;
-	    	        case "Thể loại":	originalText = book.getCategory(); break;
-	        	}
-            	if (originalText != "") {
-            		return originalText.toLowerCase().contains(searchText.toLowerCase());
-            	}
-            	return false;
-            }
+            
+        	String originalText = "";
+        	switch (searchOption) {
+        		case "ID":			originalText = Integer.toString(book.getPublicationID()); break;
+    	        case "Tên sách":	originalText = book.getTitle(); break;
+    	        case "Tác giả":		originalText = book.getAuthors(); break;	
+    	        case "Quốc gia":	originalText = book.getCountry(); break;
+    	        case "Thể loại":	originalText = book.getCategory(); break;
+        	}
+        	
+        	if (originalText != "") {
+                if (searchOption.equals("ID")) {
+    	            return originalText.startsWith(searchText);
+                } else {
+                	return originalText.toLowerCase().contains(searchText.toLowerCase());
+                }
+        	}
+        	return false;
         });
 
         booksTableView.setItems(filteredList);
