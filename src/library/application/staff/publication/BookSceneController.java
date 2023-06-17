@@ -24,7 +24,6 @@ import library.mysql.dao.BookDAO;
 import library.publication.Books;
 import library.publication.Publication;
 
-
 public class BookSceneController implements Initializable {
 
     @FXML

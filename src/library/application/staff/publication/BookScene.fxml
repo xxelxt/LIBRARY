@@ -23,7 +23,7 @@
                         <Insets right="20.0" />
                      </HBox.margin>
                   </Button>
-                  <TextField fx:id="fieldSearch" prefHeight="26.0" prefWidth="413.0" HBox.hgrow="ALWAYS" />
+                  <TextField fx:id="fieldSearch" prefHeight="26.0" prefWidth="531.0" HBox.hgrow="ALWAYS" />
                   <ComboBox fx:id="comboBox" prefHeight="25.0" prefWidth="150.0" HBox.hgrow="ALWAYS" />
                </children>
                <opaqueInsets>
