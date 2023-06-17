@@ -13,19 +13,22 @@ import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.input.InputMethodEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import library.application.staff.interfac.SceneFeatureGate;
 import library.mysql.dao.BookDAO;
 import library.publication.Books;
 import library.publication.Publication;
 
-public class BookSceneController implements Initializable {
+public class BookSceneController implements Initializable, SceneFeatureGate {
 
     @FXML
     private ResourceBundle resources;
@@ -75,6 +78,15 @@ public class BookSceneController implements Initializable {
     @FXML
     private AnchorPane paneAdd;
     
+    @FXML
+    private Button btnAdd;
+
+    @FXML
+    private Button btnDelete;
+
+    @FXML
+    private Button btnEdit;
+    
     private ObservableList<Books> data;
     
     private ObservableList<String> items = FXCollections.observableArrayList("ID", "Tên sách", "Tác giả", "Quốc gia", "Thể loại");
@@ -114,14 +126,14 @@ public class BookSceneController implements Initializable {
         comboBox.setItems(items);
         comboBox.setValue("Tên sách");
         
-        fieldSearch.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                String searchText = newValue;
-                String searchOption = comboBox.getValue();
-                SearchData(searchText, searchOption);
-            }
-        });
+//        fieldSearch.textProperty().addListener(new ChangeListener<String>() {
+//            @Override
+//            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+//                String searchText = newValue;
+//                String searchOption = comboBox.getValue();
+//                SearchData(searchText, searchOption);
+//            }
+//        });
 
         // Bind the columns to the corresponding properties in MyDataModel
         colID.setCellValueFactory(new PropertyValueFactory<>("publicationID"));
@@ -148,10 +160,19 @@ public class BookSceneController implements Initializable {
 //        colReissue.setCellFactory(TextFieldTableCell.forTableColumn());
 	}
 	
+    @FXML
+    void inputSearch(InputMethodEvent event) {
+        String searchText = fieldSearch.getText();
+        System.out.println(searchText);
+        String searchOption = comboBox.getValue();
+        SearchData(searchText, searchOption);
+    }
+
+	
 	Date now = new Date(new java.util.Date().getTime());
 	
     @FXML
-    void btnAddBook(ActionEvent event) {
+    void btnActionAddBook(ActionEvent event) {
     	paneMain.setVisible(false);
     	paneAdd.setVisible(true);
     }
@@ -164,7 +185,7 @@ public class BookSceneController implements Initializable {
     }
     
     @FXML
-    void btnDeleteBook(ActionEvent event) {
+    void btnActionDeleteBook(ActionEvent event) {
     	Integer selectedIndex = booksTableView.getSelectionModel().getSelectedIndex();
     	Publication selectedRow = booksTableView.getSelectionModel().getSelectedItem();
     	
@@ -181,7 +202,7 @@ public class BookSceneController implements Initializable {
     }
     
     @FXML
-    void btnEditBook(ActionEvent event) {
+    void btnActionEditBook(ActionEvent event) {
     	booksTableView.setEditable(true);
     }
     
@@ -265,4 +286,18 @@ public class BookSceneController implements Initializable {
             break;
     	}
     }
+
+	@Override
+	public void setFeatureFor(Integer user) {
+		// TODO Auto-generated method stub
+		if (user == CLERK) {
+			btnAdd.setVisible(false);
+			btnEdit.setVisible(false);
+			btnDelete.setVisible(false);
+		} else if (user == STUDENT) {
+			btnAdd.setVisible(false);
+			btnEdit.setVisible(false);
+			btnDelete.setVisible(false);	
+		}
+	}
 }

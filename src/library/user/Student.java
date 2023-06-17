@@ -1,72 +1,49 @@
 package library.user;
 
-public class Student extends Info {
+public class Student extends Person {
 	private String StudentID;
 	private String ClassName;
-	private boolean FineStatus;
-	private double Fine;
+	private boolean FineStatus = false;
+	private double Fine = 0;
 
-	public Student() {
-		super();
-		this.StudentID = " ";
-		this.ClassName = " ";
-		this.FineStatus = false;
-		this.Fine = -1.0;
-	}
-
-	public Student(String StudentID, String Name, boolean Gender, String Username, String Password, String Address, String Email, String Phone,
-				   String ClassName, double Fine, boolean FineStatus) {
-		super(Name, Gender, Username, Password, Address, Email, Phone);
-		this.StudentID = StudentID;
-		this.ClassName = ClassName;
-		this.Fine = Fine;
-		this.FineStatus = FineStatus;
-	}
-
-	public Student(String StudentID, String Name, boolean Gender, String Address, String Email, String Phone,
-				   String ClassName, double Fine, boolean FineStatus) {
-		super(Name, Gender, Address, Email, Phone);
-		this.StudentID = StudentID;
-		this.ClassName = ClassName;
-		this.Fine = Fine;
-		this.FineStatus = FineStatus;
-	}
-
-	public Student(String StudentID, String Name) {
-		setName(Name);
-		this.StudentID = StudentID;
+	public Student(String name, boolean gender, String address, String email, String phone, User account,
+			String studentID, String className, boolean fineStatus, double fine) {
+		super(name, gender, address, email, phone, account);
+		StudentID = studentID;
+		ClassName = className;
+		FineStatus = fineStatus;
+		Fine = fine;
 	}
 
 	public String getStudentID() {
-		return this.StudentID;
+		return StudentID;
 	}
 
-	public void setStudentID(String StudentID) {
-		this.StudentID = StudentID;
+	public void setStudentID(String studentID) {
+		StudentID = studentID;
 	}
 
 	public String getClassName() {
-		return this.ClassName;
+		return ClassName;
 	}
 
-	public void setClassName(String ClassName) {
-		this.ClassName = ClassName;
+	public void setClassName(String className) {
+		ClassName = className;
+	}
+
+	public boolean isFineStatus() {
+		return FineStatus;
+	}
+
+	public void setFineStatus(boolean fineStatus) {
+		FineStatus = fineStatus;
 	}
 
 	public double getFine() {
-		return this.Fine;
+		return Fine;
 	}
 
-	public void setFine(double Fine) {
-		this.Fine = Fine;
+	public void setFine(double fine) {
+		Fine = fine;
 	}
-
-	public boolean getFineStatus() {
-		return this.FineStatus;
-	}
-
-	public void setFineStatus(boolean FineStatus) {
-		this.FineStatus = FineStatus;
-	}
-
 }

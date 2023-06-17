@@ -16,7 +16,6 @@ public class Library {
     public static ArrayList<Student> StudentList;
     public static ArrayList<Books> BooksList;
     public static ArrayList<PrintMedia> PrintMediaList;
-    public static ArrayList<Librarian> LibrarianList;
     public static ArrayList<Clerk> ClerkList;
     public static ArrayList<Borrow> BorrowList;
 

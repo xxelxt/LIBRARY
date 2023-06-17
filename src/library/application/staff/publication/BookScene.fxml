@@ -10,20 +10,20 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="library.application.staff.publication.BookSceneController">
+<AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="library.application.staff.publication.BookSceneController">
    <children>
       <VBox fx:id="paneMain" layoutX="107.0" layoutY="47.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <HBox alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="484.0" spacing="10.0" VBox.vgrow="NEVER">
                <children>
-                  <Button mnemonicParsing="false" onAction="#btnAddBook" text="Thêm" />
-                  <Button mnemonicParsing="false" onAction="#btnEditBook" text="Sửa" />
-                  <Button mnemonicParsing="false" onAction="#btnDeleteBook" text="Xoá">
+                  <Button fx:id="btnAdd" mnemonicParsing="false" onAction="#btnActionAddBook" text="Thêm" />
+                  <Button fx:id="btnEdit" mnemonicParsing="false" onAction="#btnActionEditBook" text="Sửa" />
+                  <Button fx:id="btnDelete" mnemonicParsing="false" onAction="#btnActionDeleteBook" text="Xoá">
                      <HBox.margin>
                         <Insets right="20.0" />
                      </HBox.margin>
                   </Button>
-                  <TextField fx:id="fieldSearch" prefHeight="26.0" prefWidth="531.0" HBox.hgrow="ALWAYS" />
+                  <TextField fx:id="fieldSearch" onInputMethodTextChanged="#inputSearch" prefHeight="26.0" prefWidth="531.0" HBox.hgrow="ALWAYS" />
                   <ComboBox fx:id="comboBox" prefHeight="25.0" prefWidth="150.0" HBox.hgrow="ALWAYS" />
                </children>
                <opaqueInsets>

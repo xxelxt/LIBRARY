@@ -14,6 +14,7 @@ import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -21,12 +22,13 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import library.application.staff.interfac.SceneFeatureGate;
 import library.mysql.dao.PrintMediaDAO;
 import library.publication.Books;
 import library.publication.PrintMedia;
 import library.publication.Publication;
 
-public class PrintMediaSceneController implements Initializable {
+public class PrintMediaSceneController implements Initializable, SceneFeatureGate {
 
     @FXML
     private ResourceBundle resources;
@@ -135,13 +137,13 @@ public class PrintMediaSceneController implements Initializable {
 	Date now = new Date(new java.util.Date().getTime());
     
     @FXML
-    void btnAddPrintMedia(ActionEvent event) {
+    void btnActionAddPrintMedia(ActionEvent event) {
     	paneMain.setVisible(false);
     	paneAdd.setVisible(true);
     }
 
     @FXML
-    void btnDeletePrintMedia(ActionEvent event) {
+    void btnActionDeletePrintMedia(ActionEvent event) {
     	Integer selectedIndex = pmTableView.getSelectionModel().getSelectedIndex();
     	Publication selectedRow = pmTableView.getSelectionModel().getSelectedItem();
     	
@@ -158,14 +160,14 @@ public class PrintMediaSceneController implements Initializable {
     }
     
     @FXML
-    void btnReturn(ActionEvent event) {
+    void btnActionReturn(ActionEvent event) {
     	paneMain.setVisible(true);
     	paneAdd.setVisible(false);
     	this.refresh();
     }
 
     @FXML
-    void btnEditPrintMedia(ActionEvent event) {
+    void btnActionEditPrintMedia(ActionEvent event) {
     	
     }
 
@@ -246,4 +248,28 @@ public class PrintMediaSceneController implements Initializable {
             break;
     	}
     }
+    
+
+    @FXML
+    private Button btnAdd;
+
+    @FXML
+    private Button btnEdit;
+    
+    @FXML
+    private Button btnDelete;
+
+	@Override
+	public void setFeatureFor(Integer user) {
+		// TODO Auto-generated method stub
+		if (user == CLERK) {
+			btnAdd.setVisible(false);
+			btnEdit.setVisible(false);
+			btnDelete.setVisible(false);
+		} else if (user == STUDENT) {
+			btnAdd.setVisible(false);
+			btnEdit.setVisible(false);
+			btnDelete.setVisible(false);	
+		}
+	}
 }

@@ -73,7 +73,8 @@ public class AddBookController {
     		fieldQuantity.getValue(),
     		fieldCategory.getText(),
     		fieldReissue.isSelected(),
-    		fieldAuthors.getText()
+    		fieldAuthors.getText(),
+    		fieldPublisher.getText()
     	);
     	
     	clearTextField();
@@ -87,5 +88,6 @@ public class AddBookController {
     	fieldAuthors.clear();
     	fieldReissue.setSelected(false);
     	fieldCategory.clear();
+    	fieldPublisher.clear();
     }
 }

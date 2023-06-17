@@ -1,5 +1,7 @@
 package library.application.staff;
 
+import java.io.IOException;
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -8,26 +10,46 @@ import javafx.stage.Stage;
 import library.mysql.DatabaseLayer;
 
 public class Main extends Application {
+	
+	private Stage primaryStage;
 
+	public void maximize() {
+		primaryStage.setMaximized(true);
+	}
+	
+	public void restart() {
+		try {
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("MainScene.fxml"));
+			Parent root = loader.load();
+			MainSceneController controller = loader.getController();
+			controller.setMain(this);
+			
+	        primaryStage.setTitle("---");
+	        
+	        Scene scene = new Scene(root);	        
+			scene.getStylesheets().add(getClass().getResource("cupertino-light.css").toExternalForm());
+			primaryStage.setScene(scene);
+			
+			primaryStage.setWidth(335);
+			primaryStage.setHeight(500);
+			primaryStage.show();	
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	@Override
 	public void start(Stage primaryStage) {
 		try {
 			DatabaseLayer.getConnection();
+			this.primaryStage = primaryStage;
+			this.restart();
 			
-			Parent root = FXMLLoader.load(getClass().getResource("MainScene.fxml"));
-	        primaryStage.setTitle("---");
-	        
-	        Scene scene = new Scene(root, 1024, 768);
-	        primaryStage.setScene(scene);
-	        primaryStage.show();
-	        
-			scene.getStylesheets().add(getClass().getResource("cupertino-light.css").toExternalForm());
-			primaryStage.setScene(scene);
-			
-			primaryStage.show();
-		} catch(Exception e) {
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}	
 	}
 	
 	@Override

@@ -1,34 +1,21 @@
 package library.user;
 
-public class Clerk extends Info {
+public class Clerk extends Person {
     private String StaffID;
-    private String Position;
 
-    public Clerk() {
-        super();
-        this.StaffID = " ";
-    }
+	public Clerk(String name, boolean gender, String address, String email, String phone, User account,
+			String staffID) {
+		super(name, gender, address, email, phone, account);
+		StaffID = staffID;
+	}
 
-    public Clerk(String StaffID, String Name, boolean Gender, String Username, String Password, String Address, String Email, String Phone,
-                 String Position) {
-        super(Name, Gender, Username, Password, Address, Email, Phone);
-        this.StaffID = StaffID;
-        this.Position = Position;
-    }
+	public String getStaffID() {
+		return StaffID;
+	}
 
-    public Clerk(String StaffID, String Name, boolean Gender, String Address, String Email, String Phone,
-                 String Position) {
-        super(Name, Gender, Address, Email, Phone);
-        this.StaffID = StaffID;
-        this.Position = Position;
-    }
+	public void setStaffID(String staffID) {
+		StaffID = staffID;
+	}
 
-    public String getStaffID() {
-        return this.StaffID;
-    }
-
-    public void setStaffID(String StaffID) {
-        this.StaffID = StaffID;
-    }
 
 }

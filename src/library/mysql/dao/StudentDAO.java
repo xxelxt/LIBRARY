@@ -8,31 +8,36 @@ import java.util.List;
 
 import library.mysql.DatabaseLayer;
 import library.user.Student;
+import library.user.User;
 
 public class StudentDAO {
+	
+	private UserDAO userDAO = new UserDAO();
 	
 	public List<Student> loadAllStudents() {
         List<Student> students = new ArrayList<>();
 
         try {
-            String sql = "SELECT StudentID, Name, Gender, Address, Email, Phone, ClassName, Fine, FineStatus " +
+            String sql = "SELECT Name, Gender, Address, Email, Phone, Username, StudentID, ClassName, FineStatus, Fine " +
                          "FROM Students";
 
             PreparedStatement pstmt = DatabaseLayer.prepareStatement(sql);
             ResultSet rs = pstmt.executeQuery();
 
             while (rs.next()) {
+            	User user = userDAO.getUserfromUsername(rs.getString(6));
             	
             	Student student = new Student(
             			rs.getString(1),
-            			rs.getString(2),
-            			rs.getBoolean(3),
+            			rs.getBoolean(2),
+            			rs.getString(3),
             			rs.getString(4),
             			rs.getString(5),
-            			rs.getString(6),
+            			user,
             			rs.getString(7),
-            			rs.getDouble(8),
-            			rs.getBoolean(9)
+            			rs.getString(8),
+            			rs.getBoolean(9),
+            			rs.getDouble(10)
             	);
                 students.add(student);
             }

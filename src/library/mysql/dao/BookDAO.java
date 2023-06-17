@@ -3,6 +3,8 @@ package library.mysql.dao;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +19,13 @@ public class BookDAO {
 	public ArrayList<Books> loadAllBooks() {
         ArrayList<Books> bookList = new ArrayList<>();
         try {
-            String sql = "SELECT p.PublicationID, p.Title, GROUP_CONCAT(a.AuthorName) as Authors, p.ReleaseDate, p.Country, p.Quantity, b.Category, b.Reissue FROM Publications p INNER JOIN Books b ON p.PublicationID = b.BookID INNER JOIN BookAuthors ba ON b.BookID = ba.BookID INNER JOIN Authors a ON ba.AuthorID = a.AuthorID GROUP BY p.PublicationID, p.Title, p.ReleaseDate, p.Country, p.Quantity, b.Category, b.Reissue";
+            String sql = "SELECT p.PublicationID, p.Title, GROUP_CONCAT(a.AuthorName) as Authors, p.ReleaseDate, p.Country, p.Quantity, b.Category, b.Reissue, pb.PublisherName "
+            		+ "FROM Publications p "
+            		+ "INNER JOIN Books b ON p.PublicationID = b.BookID "
+            		+ "INNER JOIN BookAuthors ba ON b.BookID = ba.BookID "
+            		+ "INNER JOIN Authors a ON ba.AuthorID = a.AuthorID "
+            		+ "INNER JOIN Publishers pb ON b.PublisherID = pb.PublisherID "
+            		+ "GROUP BY p.PublicationID, p.Title, p.ReleaseDate, p.Country, p.Quantity, b.Category, b.Reissue, pb.PublisherName";
 
             PreparedStatement pstmt = DatabaseLayer.prepareStatement(sql);
             ResultSet rs = pstmt.executeQuery();
@@ -36,7 +44,7 @@ public class BookDAO {
                 		rs.getInt(6), 
                 		rs.getString(7), 
                 		rs.getInt(8), 
-                		""
+                		rs.getString(9)
                 );
                 bookList.add(Book);
             }
@@ -50,38 +58,21 @@ public class BookDAO {
     }
 	
 
-    public boolean addBook(String title, Date releaseDate, String country, int quantity, String category, boolean reissue, /*
-    		String publisherName, String authorID, */ String authorName) {
+    public boolean addBook(String title, Date releaseDate, String country, int quantity, String category, boolean reissue, 
+    		String publisherName, String authorName) {
         Integer publicationID = publicationDAO.addPublication(title, releaseDate, country, quantity);
 
         if (publicationID > 0) {
             try {
-//                // Kiểm tra xem đã có NXB trong CSDL chưa
-//                String checkPublisherSql = "SELECT * FROM Publishers WHERE PublisherName = ?";
-//                PreparedStatement checkPublisherStmt = DatabaseLayer.prepareStatement(checkPublisherSql);
-//                checkPublisherStmt.setString(1, publisherName);
-//                ResultSet checkPublisherResult = checkPublisherStmt.executeQuery();
-//
-//                if (!checkPublisherResult.next()) {
-//                    // Nếu không có thì thêm NXB mới vào trước
-//                    boolean addPublisherResult = addPublisher(publisherName);
-//                    if (!addPublisherResult) {
-//                        // Hết danh sách
-//                        checkPublisherResult.close();
-//                        checkPublisherStmt.close();
-//                        return false;
-//                    }
-//                }
-//
-//                checkPublisherResult.close();
-//                checkPublisherStmt.close();
-
                 // Thêm sách
-                String insertBookSql = "INSERT INTO Books (BookID, Category, Reissue) VALUES (?, ?, ?)";
+            	Integer publisherID = this.addPublisherWithCheck(publisherName); 
+            	
+                String insertBookSql = "INSERT INTO Books (BookID, Category, Reissue, PublisherID) VALUES (?, ?, ?, ?)";
                 PreparedStatement insertBookStmt = DatabaseLayer.prepareStatement(insertBookSql);
                 insertBookStmt.setInt(1, publicationID);
                 insertBookStmt.setString(2, category);
                 insertBookStmt.setBoolean(3, reissue);
+                insertBookStmt.setInt(4, publisherID);
                 insertBookStmt.executeUpdate();
                 insertBookStmt.close();
                 
@@ -95,10 +86,10 @@ public class BookDAO {
 	                insertBookAuthorStmt.executeUpdate();
 	                insertBookAuthorStmt.close();
                 }
-                
+                              
                 System.out.println("Added Book");
             } catch (Exception e) {
-                e.printStackTrace();
+                System.out.println(e);
                 return false;
             }
         }
@@ -108,6 +99,54 @@ public class BookDAO {
     public boolean deleteBook(Integer publicationID) {
         return publicationDAO.deletePublication(publicationID);
         // FOREIGN KEY (`BookID`) REFERENCES `publications` (`PublicationID`) ON DELETE CASCADE
+    }
+    
+    public Integer addPublisher(String publisherName) throws SQLException {
+    	Integer publisherID = -1;
+        try {
+            String sql = "INSERT INTO Publishers (PublisherName) VALUES (?)";
+            PreparedStatement pstmt = DatabaseLayer.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            pstmt.setString(1, publisherName);
+            
+            pstmt.executeUpdate();
+            ResultSet rs = pstmt.getGeneratedKeys();
+            if (rs.next()){ 
+            	publisherID = rs.getInt(1); 
+            }
+            
+            rs.close();
+            pstmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw e;
+        }
+        return publisherID;
+    }
+    
+    public Integer addPublisherWithCheck(String publisherName) {
+    	Integer publisherID = -1;
+        try {
+            // Kiểm tra xem đã có tác giả trong CSDL chưa
+            String sql = "SELECT * FROM Publishers WHERE PublisherName = ?";
+            PreparedStatement pstmt = DatabaseLayer.prepareStatement(sql);
+            pstmt.setString(1, publisherName);
+            
+            ResultSet rs = pstmt.executeQuery();
+			if (!rs.next()) {
+				// Nếu không có thì thêm tác giả mới vào trước
+				publisherID = this.addPublisher(publisherName);
+			} else {
+				publisherID = rs.getInt(1);
+			}
+			rs.close();
+			pstmt.close();
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        
+        return publisherID;
     }
     
 	/* UNTESTED REGION */
