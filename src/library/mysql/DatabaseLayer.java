@@ -9,7 +9,7 @@ public class DatabaseLayer {
 
     private static final String URL = "jdbc:mysql://localhost/library";
     private static final String USER_NAME = "root";
-    private static final String PASSWORD = "q12Q!@";
+    private static final String PASSWORD = "b0rderless";
 
     private static Connection conn;
 
