@@ -3,6 +3,7 @@ package library.application.staff.add;
 import java.net.URL;
 import java.sql.Date;
 import java.util.ResourceBundle;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.DatePicker;
@@ -30,21 +31,21 @@ public class AddPrintMediaController {
     private DatePicker fieldPublishDate;
 
     @FXML
-    private Spinner<Integer> fieldQuantity = new Spinner<Integer>();
-    
+    private Spinner<Integer> fieldQuantity = new Spinner<>();
+
     @FXML
-    private Spinner<Integer> fieldReleaseNumber = new Spinner<Integer>();
+    private Spinner<Integer> fieldReleaseNumber = new Spinner<>();
 
     @FXML
     private TextField fieldTitle;
-    
+
     @FXML
     private AnchorPane paneAdd;
 
     @FXML
     void btnAddPrintMedia(ActionEvent event) {
     	PrintMediaDAO pmDAO = new PrintMediaDAO();
-    	
+
     	pmDAO.addPrintMedia(
     		fieldTitle.getText(),
     		Date.valueOf(fieldPublishDate.getValue()),
@@ -53,10 +54,10 @@ public class AddPrintMediaController {
     		fieldReleaseNumber.getValue(),
     		fieldPrintType.getText()
     	);
-    	
+
     	clearTextField();
     }
-    
+
     void clearTextField() {
     	fieldTitle.clear();
     	fieldCountry.clear();

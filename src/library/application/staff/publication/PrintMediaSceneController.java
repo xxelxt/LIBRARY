@@ -2,12 +2,9 @@ package library.application.staff.publication;
 
 import java.net.URL;
 import java.sql.Date;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -90,7 +87,7 @@ public class PrintMediaSceneController implements Initializable, SceneFeatureGat
 
         List<PrintMedia> allPM = pmDAO.loadAllPrintMedias();
 		System.out.println(allPM);
-		
+
 	    for (PrintMedia pm : allPM){
 	    	data.add(pm);
 	    }
@@ -102,13 +99,13 @@ public class PrintMediaSceneController implements Initializable, SceneFeatureGat
     	int lastIndex = printMediaTableView.getItems().size() - 1;
     	printMediaTableView.scrollTo(lastIndex);
     }
-    
+
     @Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
         System.out.println("Print media controller initialized");
         // Add a default row
 		refresh();
-        
+
         // Bind the ObservableList to the TableView
 		printMediaTableView.setItems(data);
 
@@ -116,18 +113,25 @@ public class PrintMediaSceneController implements Initializable, SceneFeatureGat
         comboBox.setValue("Tên ấn phẩm");
 
         // Bind the columns to the corresponding properties in MyDataModel
-        colID.setCellValueFactory(new PropertyValueFactory<PrintMedia, Integer>("publicationID"));
-        colTitle.setCellValueFactory(new PropertyValueFactory<PrintMedia, String>("title"));
-        colPublicationDate.setCellValueFactory(new PropertyValueFactory<PrintMedia, Date>("releaseDate"));
-        colCountry.setCellValueFactory(new PropertyValueFactory<PrintMedia, String>("country"));
-        colQuantity.setCellValueFactory(new PropertyValueFactory<PrintMedia, Integer>("quantity"));
-        
-        colReleaseNumber.setCellValueFactory(new PropertyValueFactory<PrintMedia, Integer>("releaseNumber"));
-        colPrintType.setCellValueFactory(new PropertyValueFactory<PrintMedia, String>("printType"));
+        colID.setCellValueFactory(new PropertyValueFactory<>("publicationID"));
+        colTitle.setCellValueFactory(new PropertyValueFactory<>("title"));
+        colPublicationDate.setCellValueFactory(new PropertyValueFactory<>("releaseDate"));
+        colCountry.setCellValueFactory(new PropertyValueFactory<>("country"));
+        colQuantity.setCellValueFactory(new PropertyValueFactory<>("quantity"));
+
+        colReleaseNumber.setCellValueFactory(new PropertyValueFactory<>("releaseNumber"));
+        colPrintType.setCellValueFactory(new PropertyValueFactory<>("printType"));
 	}
-	
+
 	Date now = new Date(new java.util.Date().getTime());
-    
+
+	@FXML
+    void inputSearch(KeyEvent event) {
+        String searchText = fieldSearch.getText();
+        String searchOption = comboBox.getValue();
+        SearchData(searchText, searchOption);
+    }
+	
     @FXML
     void btnActionAddPrintMedia(ActionEvent event) {
     	paneMain.setVisible(false);
@@ -161,8 +165,6 @@ public class PrintMediaSceneController implements Initializable, SceneFeatureGat
     
     @FXML
     void btnActionEditPrintMedia(ActionEvent event) {
-    	
-    }
 
     @FXML
     void inputSearch(KeyEvent event) {
@@ -205,7 +207,7 @@ public class PrintMediaSceneController implements Initializable, SceneFeatureGat
     
     @FXML
     private Button btnDelete;
-    
+
     @FXML
     private ToggleButton btnEdit;
     

@@ -7,13 +7,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import library.mysql.DatabaseLayer;
-import library.publication.Books;
 import library.publication.PrintMedia;
 
 public class PrintMediaDAO {
-	
+
 	private PublicationDAO publicationDAO = new PublicationDAO();
-	
+
 	public List<PrintMedia> loadAllPrintMedias() {
         List<PrintMedia> printMediaList = new ArrayList<>();
 
@@ -30,12 +29,12 @@ public class PrintMediaDAO {
             	Integer publicationID = rs.getInt("PublicationID");
 
                 PrintMedia PM = new PrintMedia(
-                		rs.getInt(1), 
+                		rs.getInt(1),
                 		rs.getString(2),
-                		rs.getDate(3), 
-                		rs.getString(4), 
-                		rs.getInt(5), 
-                		rs.getInt(6), 
+                		rs.getDate(3),
+                		rs.getString(4),
+                		rs.getInt(5),
+                		rs.getInt(6),
                 		rs.getString(7)
                 );
                 printMediaList.add(PM);
@@ -48,7 +47,7 @@ public class PrintMediaDAO {
         }
         return printMediaList;
     }
-	
+
 	public boolean addPrintMedia(String title, Date releaseDate, String country, int quantity, int releaseNumber, String printType) {
         Integer publicationID = publicationDAO.addPublication(title, releaseDate, country, quantity);
 
@@ -62,7 +61,7 @@ public class PrintMediaDAO {
 
                 insertPMStmt.executeUpdate();
                 insertPMStmt.close();
-                
+
                 System.out.println("Added print media");
             } catch (Exception e) {
                 System.out.println(e);

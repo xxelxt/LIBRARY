@@ -6,16 +6,15 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.List;
 
 import library.mysql.DatabaseLayer;
 import library.publication.Books;
 
 public class BookDAO {
-	
+
 	private AuthorDAO authorDAO = new AuthorDAO();
 	private PublicationDAO publicationDAO = new PublicationDAO();
-	
+
 	public ArrayList<Books> loadAllBooks() {
         ArrayList<Books> bookList = new ArrayList<>();
         try {
@@ -36,14 +35,14 @@ public class BookDAO {
                 ArrayList<String> authors = authorDAO.getBookAuthor(publicationID);
 
                 Books Book = new Books(
-                		rs.getInt(1), 
-                		rs.getString(2), 
-                		authors, 
-                		rs.getDate(4), 
-                		rs.getString(5), 
-                		rs.getInt(6), 
-                		rs.getString(7), 
-                		rs.getInt(8), 
+                		rs.getInt(1),
+                		rs.getString(2),
+                		authors,
+                		rs.getDate(4),
+                		rs.getString(5),
+                		rs.getInt(6),
+                		rs.getString(7),
+                		rs.getInt(8),
                 		rs.getString(9)
                 );
                 bookList.add(Book);
@@ -56,17 +55,17 @@ public class BookDAO {
         }
         return bookList;
     }
-	
 
-    public boolean addBook(String title, Date releaseDate, String country, int quantity, String category, int reissue, 
+
+    public boolean addBook(String title, Date releaseDate, String country, int quantity, String category, int reissue,
     		String authorManyNames, String publisherName) {
         Integer publicationID = publicationDAO.addPublication(title, releaseDate, country, quantity);
 
         if (publicationID > 0) {
             try {
                 // Thêm sách
-            	Integer publisherID = this.addPublisherWithCheck(publisherName); 
-            	
+            	Integer publisherID = this.addPublisherWithCheck(publisherName);
+
                 String insertBookSql = "INSERT INTO Books (BookID, Category, Reissue, PublisherID) VALUES (?, ?, ?, ?)";
                 PreparedStatement insertBookStmt = DatabaseLayer.prepareStatement(insertBookSql);
                 insertBookStmt.setInt(1, publicationID);
@@ -75,9 +74,9 @@ public class BookDAO {
                 insertBookStmt.setInt(4, publisherID);
                 insertBookStmt.executeUpdate();
                 insertBookStmt.close();
-                
+
                 authorDAO.addManyAuthorWithCheck(publicationID, authorManyNames);
-                              
+
                 System.out.println("Added Book");
             } catch (Exception e) {
                 System.out.println(e);
@@ -86,14 +85,14 @@ public class BookDAO {
         }
         return true;
     }
-    
+
     public boolean deleteBook(Integer publicationID) {
         return publicationDAO.deletePublication(publicationID);
         // FOREIGN KEY (`BookID`) REFERENCES `publications` (`PublicationID`) ON DELETE CASCADE
     }
-    
+
     public boolean updateBook(Books book) {
-    	try {        	
+    	try {
             String sql = "UPDATE Publications P "
             		+ "JOIN Books B ON P.PublicationID = B.BookID "
             		+ "SET P.Title = ? ,"
@@ -111,10 +110,10 @@ public class BookDAO {
             pstmt.setInt(5, book.getQuantity());
             pstmt.setInt(6, book.getReissue());
             pstmt.setInt(7, book.getPublicationID());
-            
+
             pstmt.executeUpdate();
             pstmt.close();
-            
+
             System.out.println("Updated Book");
         } catch (Exception e) {
             System.out.println(e);
@@ -122,20 +121,20 @@ public class BookDAO {
         }
     	return true;
     }
-    
+
     public Integer addPublisher(String publisherName) throws SQLException {
     	Integer publisherID = -1;
         try {
             String sql = "INSERT INTO Publishers (PublisherName) VALUES (?)";
             PreparedStatement pstmt = DatabaseLayer.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             pstmt.setString(1, publisherName);
-            
+
             pstmt.executeUpdate();
             ResultSet rs = pstmt.getGeneratedKeys();
-            if (rs.next()){ 
-            	publisherID = rs.getInt(1); 
+            if (rs.next()){
+            	publisherID = rs.getInt(1);
             }
-            
+
             rs.close();
             pstmt.close();
         } catch (SQLException e) {
@@ -144,7 +143,7 @@ public class BookDAO {
         }
         return publisherID;
     }
-    
+
     public Integer addPublisherWithCheck(String publisherName) {
     	Integer publisherID = -1;
         try {
@@ -152,7 +151,7 @@ public class BookDAO {
             String sql = "SELECT * FROM Publishers WHERE PublisherName = ?";
             PreparedStatement pstmt = DatabaseLayer.prepareStatement(sql);
             pstmt.setString(1, publisherName);
-            
+
             ResultSet rs = pstmt.executeQuery();
 			if (!rs.next()) {
 				// Nếu không có thì thêm tác giả mới vào trước
@@ -162,15 +161,15 @@ public class BookDAO {
 			}
 			rs.close();
 			pstmt.close();
-			
+
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-        
+
         return publisherID;
     }
-    
+
 	/* UNTESTED REGION */
 	/* UNTESTED REGION */
 	/* UNTESTED REGION */
@@ -181,7 +180,7 @@ public class BookDAO {
 	/* UNTESTED REGION */
 	/* UNTESTED REGION */
 	/* UNTESTED REGION */
-    
+
     public String getBookCategory(String BookID) {
         String category = "";
         try {
