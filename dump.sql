@@ -267,6 +267,7 @@ DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users` (
   `Username` char(30) NOT NULL,
   `Password` varchar(30) DEFAULT NULL,
+  `Type` int DEFAULT NULL,
   PRIMARY KEY (`Username`),
   KEY `Password` (`Password`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -278,7 +279,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES ('librarian','111111'),('student1','111111'),('student2','222222'),('clerk','2222222'),('student3','333333');
+INSERT INTO `users` VALUES ('clerk','2222222',2),('librarian','111111',1),('student1','111111',3),('student2','222222',3),('student3','333333',3);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -371,4 +372,4 @@ USE `library`;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-06-17 10:20:54
+-- Dump completed on 2023-06-17 16:08:53
