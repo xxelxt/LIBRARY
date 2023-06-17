@@ -136,16 +136,16 @@ public class BookSceneController implements Initializable {
         colReissue.setCellValueFactory(new PropertyValueFactory<Books, Integer>("reissue"));
         
         // Editing ;
-        colID.setCellFactory(TextFieldTableCell.forTableColumn());
-        colTitle.setCellFactory(TextFieldTableCell.forTableColumn());
-        colPublicationDate.setCellFactory(TextFieldTableCell.forTableColumn());
-        colCountry.setCellFactory(TextFieldTableCell.forTableColumn());
-        colQuantity.setCellFactory(TextFieldTableCell.forTableColumn());
-        
-        colAuthors.setCellFactory(TextFieldTableCell.forTableColumn());
-        colPublisher.setCellFactory(TextFieldTableCell.forTableColumn());
-        colCategory.setCellFactory(TextFieldTableCell.forTableColumn());
-        colReissue.setCellFactory(TextFieldTableCell.forTableColumn());
+//        colID.setCellFactory(TextFieldTableCell.forTableColumn());
+//        colTitle.setCellFactory(TextFieldTableCell.forTableColumn());
+//        colPublicationDate.setCellFactory(TextFieldTableCell.forTableColumn());
+//        colCountry.setCellFactory(TextFieldTableCell.forTableColumn());
+//        colQuantity.setCellFactory(TextFieldTableCell.forTableColumn());
+//        
+//        colAuthors.setCellFactory(TextFieldTableCell.forTableColumn());
+//        colPublisher.setCellFactory(TextFieldTableCell.forTableColumn());
+//        colCategory.setCellFactory(TextFieldTableCell.forTableColumn());
+//        colReissue.setCellFactory(TextFieldTableCell.forTableColumn());
 	}
 	
 	Date now = new Date(new java.util.Date().getTime());

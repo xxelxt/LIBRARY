@@ -13,6 +13,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -129,10 +130,18 @@ public class StudentSceneController implements Initializable {
         colGender.setCellValueFactory(new PropertyValueFactory<>("gender"));
         colEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
         
-        colPhoneNum.setCellValueFactory(new PropertyValueFactory<>("phoneNumber"));
+        colPhoneNum.setCellValueFactory(new PropertyValueFactory<>("phone"));
         colAddress.setCellValueFactory(new PropertyValueFactory<>("address"));
         colFineStatus.setCellValueFactory(new PropertyValueFactory<>("fineStatus"));
         colFine.setCellValueFactory(new PropertyValueFactory<>("fine"));
+        
+        colGender.setCellFactory(col -> new TableCell<Student, Boolean>() {
+            @Override
+            protected void updateItem(Boolean item, boolean empty) {
+                super.updateItem(item, empty) ;
+                setText(empty ? null : item ? "Nam" : "Nữ" );
+            }
+        });
 	}
 	
 	Date now = new Date(new java.util.Date().getTime());

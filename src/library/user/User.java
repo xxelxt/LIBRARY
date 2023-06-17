@@ -2,7 +2,6 @@ package library.user;
 
 import java.util.ArrayList;
 
-import library.mysql.Database;
 import library.publication.Books;
 import library.publication.PrintMedia;
 
@@ -46,7 +45,7 @@ public class User extends Person {
     public void setPassword(String Password) {
         this.Password = Password;
     }
-
+/*
     public ArrayList<Books> searchBookbyTitle(String title) {
         ArrayList<Books> booksList = new ArrayList<>();
         Database db = new Database();
@@ -80,7 +79,7 @@ public class User extends Person {
         Database db = new Database();
         printMediaList = db.searchPrintMediabyPrintType(type);
         return printMediaList;
-    }
+    } */
 
     /* public ArrayList<Books> searchBookByCategories(List<String> categories) {
         ArrayList<Books> booksList = new ArrayList<>();

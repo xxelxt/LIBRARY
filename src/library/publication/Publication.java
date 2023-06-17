@@ -2,8 +2,6 @@ package library.publication;
 
 import java.util.Date;
 
-import library.mysql.Database;
-
 public class Publication {
 	private Integer PublicationID;
 	private String Title;
@@ -71,7 +69,7 @@ public class Publication {
 	public void setQuantity(int Quantity) {
 		this.Quantity = Quantity;
 	}
-
+/*
 	public boolean CheckAvailable(String PublicationID) {
         Database db = new Database();
         int available = db.getPublicationQuantity(PublicationID);
@@ -91,5 +89,5 @@ public class Publication {
         this.Quantity = this.Quantity - 1;
         Database db = new Database();
         db.setPublicationQuantity(PublicationID, this.Quantity);
-    }
+    } */
 }
