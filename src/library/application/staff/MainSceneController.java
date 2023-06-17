@@ -10,6 +10,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import library.application.staff.interfac.SceneFeatureGate;
 import library.application.staff.publication.BookSceneController;
 import library.application.staff.publication.PrintMediaSceneController;
@@ -18,9 +19,6 @@ import library.mysql.dao.UserDAO;
 import library.user.User;
 
 public class MainSceneController implements SceneFeatureGate {
-
-    @FXML
-    private Label labelWarning;
 
     @FXML
     private AnchorPane loginPane;
@@ -33,6 +31,10 @@ public class MainSceneController implements SceneFeatureGate {
 
     @FXML
     private TextField inputUser;
+    
+    @FXML
+    private Label labelWarning;
+    
 
     @FXML private BookSceneController bookSceneController;
     @FXML private PrintMediaSceneController printMediaSceneController;
@@ -44,7 +46,7 @@ public class MainSceneController implements SceneFeatureGate {
     @FXML
     void btnLogin(ActionEvent event) {
     	logUser = userDAO.getUserfromUsername(inputUser.getText());
-    	if( inputPassword.getText().equals(logUser.getPassword()) ) {
+    	if( logUser != null && inputPassword.getText().equals(logUser.getPassword()) ) {
     		contentPane.setVisible(true);
     		loginPane.setVisible(false);
     		main.setWindowSize();
@@ -56,9 +58,9 @@ public class MainSceneController implements SceneFeatureGate {
     		printMediaSceneController.setFeatureFor(type);
 
     	} else {
-    		labelWarning.setText("Tên đăng nhập hoặc mật khẩu không đúng\n");
+    		labelWarning.setText("Tên đăng nhập hoặc mật khẩu không đúng");
     		labelWarning.setFont(new Font("Calibri", 14));
-    		labelWarning.setStyle("-fx-text-fill: #110000 !important;");
+    		labelWarning.setStyle("-fx-text-fill: #ff0000;");
     	}
     	logUser = null;
     }
