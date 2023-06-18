@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import library.mysql.DatabaseLayer;
+import library.publication.Books;
 import library.publication.PrintMedia;
 
 public class PrintMediaDAO {
@@ -62,13 +63,44 @@ public class PrintMediaDAO {
                 insertPMStmt.executeUpdate();
                 insertPMStmt.close();
 
-                System.out.println("Added print media");
+                System.out.println("Added print media.");
             } catch (Exception e) {
                 System.out.println(e);
                 return false;
             }
         }
         return true;
+    }
+	
+	public boolean updatePrintMedia(PrintMedia pm) {
+    	try {
+            String sql = "UPDATE Publications P "
+            		+ "JOIN PrintMedia PM ON P.PublicationID = PM.PrintMediaID "
+            		+ "SET P.Title = ? ,"
+            		+ "    P.ReleaseDate = ? ,"
+            		+ "    P.Country = ? ,"
+            		+ "    PM.ReleaseNumber = ? ,"
+            		+ "    P.Quantity = ? ,"
+            		+ "    PM.PrintType = ? "
+            		+ "WHERE P.PublicationID = ?;";
+            PreparedStatement pstmt = DatabaseLayer.prepareStatement(sql);
+            pstmt.setString(1, pm.getTitle());
+            pstmt.setDate(2, pm.getReleaseDate());
+            pstmt.setString(3, pm.getCountry());
+            pstmt.setInt(4, pm.getReleaseNumber());
+            pstmt.setInt(5, pm.getQuantity());
+            pstmt.setString(6, pm.getPrintType());
+            pstmt.setInt(7, pm.getPublicationID());
+
+            pstmt.executeUpdate();
+            pstmt.close();
+
+            System.out.println("Updated print media.");
+        } catch (Exception e) {
+            System.out.println(e);
+            return false;
+        }
+    	return true;
     }
 
     public boolean deletePrintMedia(Integer publicationID) {

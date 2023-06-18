@@ -4,6 +4,7 @@ import java.net.URL;
 import java.sql.Date;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.function.BiConsumer;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -14,6 +15,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -25,8 +27,11 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.util.StringConverter;
+import javafx.util.converter.IntegerStringConverter;
 import library.application.staff.interfac.SceneFeatureGate;
 import library.mysql.dao.PrintMediaDAO;
+import library.publication.Books;
 import library.publication.PrintMedia;
 import library.publication.Publication;
 
@@ -101,10 +106,46 @@ public class PrintMediaSceneController implements Initializable, SceneFeatureGat
     	printMediaTableView.scrollTo(lastIndex);
     }
     
+    private <T> void setupEditableColumn(TableColumn<PrintMedia, T> column, StringConverter<T> converter, BiConsumer<PrintMedia, T> updateAction) {
+        column.setCellFactory(TextFieldTableCell.forTableColumn(converter));
+
+        column.setOnEditCommit(event -> {
+            if (btnEdit.isSelected()) {
+                TableCell<PrintMedia, T> cell = event.getTablePosition().getTableColumn().getCellFactory().call(column);
+                if (cell != null) {
+                    cell.commitEdit(event.getNewValue());
+                }
+
+                PrintMedia pm = event.getRowValue();
+                updateAction.accept(pm, event.getNewValue());
+
+                pmDAO.updatePrintMedia(pm); // Call the bookDAO method to update the book in the database
+            }
+        });
+
+        column.setOnEditStart(event -> {
+            if (!btnEdit.isSelected()) {
+                TableColumn.CellEditEvent<PrintMedia, T> cellEditEvent = (TableColumn.CellEditEvent<PrintMedia, T>) event;
+                TableView<PrintMedia> tableView = cellEditEvent.getTableView();
+                tableView.edit(tableView.getSelectionModel().getSelectedIndex(), column);
+            }
+        });
+
+        column.setOnEditCancel(event -> {
+            TableCell<PrintMedia, T> cell = event.getTablePosition().getTableColumn().getCellFactory().call(column);
+            if (cell != null) {
+                cell.cancelEdit();
+            }
+        });
+    }
+    
     private void editableCols(){
         colTitle.setCellFactory(TextFieldTableCell.forTableColumn());
         colCountry.setCellFactory(TextFieldTableCell.forTableColumn());
         colPrintType.setCellFactory(TextFieldTableCell.forTableColumn());
+
+        setupEditableColumn(colReleaseNumber, new IntegerStringConverter(), PrintMedia::setReleaseNumber);
+        setupEditableColumn(colQuantity, new IntegerStringConverter(), PrintMedia::setQuantity);
 
 //        colQuantity.setCellValueFactory(new PropertyValueFactory<>("quantity"));
 
@@ -114,8 +155,10 @@ public class PrintMediaSceneController implements Initializable, SceneFeatureGat
         	if (col == colTitle) { pm.setTitle(e.getNewValue()); }
         	else if (col == colCountry) { pm.setCountry(e.getNewValue()); }
         	else if (col == colPrintType) { pm.setPrintType(e.getNewValue()); }
+        	
+        	pmDAO.updatePrintMedia(pm);
         };
-
+        
         colTitle.setOnEditCommit(commonHandler);
         colCountry.setOnEditCommit(commonHandler);
         colPrintType.setOnEditCommit(commonHandler);

@@ -77,7 +77,7 @@ public class BookDAO {
 
                 authorDAO.addManyAuthorWithCheck(publicationID, authorManyNames);
 
-                System.out.println("Added Book");
+                System.out.println("Added book.");
             } catch (Exception e) {
                 System.out.println(e);
                 return false;
@@ -101,7 +101,7 @@ public class BookDAO {
             		+ "    B.Category = ? ,"
             		+ "    P.Quantity = ? ,"
             		+ "    B.Reissue = ? "
-            		+ "WHERE P.PublicationID = ?;";
+            		+ "WHERE P.PublicationID = ?";
             PreparedStatement pstmt = DatabaseLayer.prepareStatement(sql);
             pstmt.setString(1, book.getTitle());
             pstmt.setDate(2, book.getReleaseDate());
@@ -114,7 +114,7 @@ public class BookDAO {
             pstmt.executeUpdate();
             pstmt.close();
 
-            System.out.println("Updated Book");
+            System.out.println("Updated book.");
         } catch (Exception e) {
             System.out.println(e);
             return false;

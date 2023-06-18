@@ -7,10 +7,12 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Font;
-import javafx.scene.text.Text;
+
 import library.application.staff.interfac.SceneFeatureGate;
 import library.application.staff.publication.BookSceneController;
 import library.application.staff.publication.PrintMediaSceneController;
@@ -31,40 +33,55 @@ public class MainSceneController implements SceneFeatureGate {
 
     @FXML
     private TextField inputUser;
-    
+
     @FXML
     private Label labelWarning;
-    
 
-    @FXML private BookSceneController bookSceneController;
-    @FXML private PrintMediaSceneController printMediaSceneController;
-    @FXML private StudentSceneController studentSceneController;
+    @FXML
+    private BookSceneController bookSceneController;
+    @FXML
+    private PrintMediaSceneController printMediaSceneController;
+    @FXML
+    private StudentSceneController studentSceneController;
 
     private UserDAO userDAO = new UserDAO();
     private User logUser;
 
     @FXML
     void btnLogin(ActionEvent event) {
-    	logUser = userDAO.getUserfromUsername(inputUser.getText());
-    	if( logUser != null && inputPassword.getText().equals(logUser.getPassword()) ) {
-    		contentPane.setVisible(true);
-    		loginPane.setVisible(false);
-    		main.setWindowSize();
+        logUser = userDAO.getUserfromUsername(inputUser.getText());
+        if (logUser != null && inputPassword.getText().equals(logUser.getPassword())) {
+            contentPane.setVisible(true);
+            loginPane.setVisible(false);
+            main.setWindowSize();
 
-    		Integer type = logUser.getType();
+            Integer type = logUser.getType();
 
-    		this.setFeatureFor(type);
-    		bookSceneController.setFeatureFor(type);
-    		printMediaSceneController.setFeatureFor(type);
+            this.setFeatureFor(type);
+            bookSceneController.setFeatureFor(type);
+            printMediaSceneController.setFeatureFor(type);
 
-    	} else {
-    		labelWarning.setText("Tên đăng nhập hoặc mật khẩu không đúng");
-    		labelWarning.setFont(new Font("Calibri", 14));
-    		labelWarning.setStyle("-fx-text-fill: #ff0000;");
-    	}
-    	logUser = null;
+        } else {
+            labelWarning.setText("Tên đăng nhập hoặc mật khẩu không đúng");
+            labelWarning.setFont(new Font("Calibri", 14));
+            labelWarning.setStyle("-fx-text-fill: #ff0000;");
+        }
+        logUser = null;
     }
 
+    @FXML
+    void onPasswordKeyPressed(KeyEvent event) {
+        if (event.getCode() == KeyCode.ENTER) {
+            btnLogin(new ActionEvent());
+        }
+    }
+    
+    @FXML
+    void onUsernameKeyPressed(KeyEvent event) {
+        if (event.getCode() == KeyCode.ENTER) {
+            btnLogin(new ActionEvent());
+        }
+    }
 
     private Main main;
 
@@ -93,5 +110,10 @@ public class MainSceneController implements SceneFeatureGate {
 			tabPane.getTabs().remove(tabStudent);
 		}
 	}
+	
+	@FXML
+    public void initialize() {
+        labelWarning.setStyle("-fx-text-fill: #ffffff;");
+    }
 
 }

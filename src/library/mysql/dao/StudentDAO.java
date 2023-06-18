@@ -54,22 +54,17 @@ public class StudentDAO {
 
 	public boolean addStudent(String StudentID, String Name, String ClassName, String Username, String Password, boolean Gender,
             String Email, String Phone, String Address, boolean FineStatus, int Fine) {
+		String userstd = userDAO.addUserStudent(Username, Password);
+		
 		try {
-			 String usersSql = "INSERT INTO Users (Username, Password, Type) VALUES (?, ?, 3)";
-			 PreparedStatement users_pstmt = DatabaseLayer.prepareStatement(usersSql);
-			 users_pstmt.setString(1, Username);
-			 users_pstmt.setString(2, Password);
-			 users_pstmt.executeUpdate();
-			 users_pstmt.close();
-
-			 String studentSql = "INSERT INTO Students (StudentID, Name, ClassName, Username, Gender, Email, Phone, FineStatus, Fine) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+			 String studentSql = "INSERT INTO Students (StudentID, Name, ClassName, Username, Gender, Email, Phone, Address, FineStatus, Fine) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 			 PreparedStatement student_pstmt = DatabaseLayer.prepareStatement(studentSql);
 
 			 student_pstmt.setString(1, StudentID);
 			 student_pstmt.setString(2, Name);
 			 student_pstmt.setString(3, ClassName);
 			 
-			 student_pstmt.setString(4, Username);
+			 student_pstmt.setString(4, userstd);
 
 			 student_pstmt.setBoolean(5, Gender);
 			 student_pstmt.setString(6, Email);
@@ -81,6 +76,8 @@ public class StudentDAO {
 			 
 			 student_pstmt.executeUpdate();
 			 student_pstmt.close();
+			 
+			 System.out.println("Added student.");
 
 		} catch (Exception e) {
 			 System.out.println(e);
@@ -130,6 +127,43 @@ public class StudentDAO {
 	        return false;
 	    }
 	    return true;
+	}
+	
+	public boolean updateStudent(Student std) {
+		try {
+            String sql = "UPDATE Students "
+            		+ "SET "
+            		+ "Name = ?, "
+            		+ "Gender = ?, "
+            		+ "Address = ?, "
+            		+ "Email = ?, "
+            		+ "Phone = ?, "
+            		+ "ClassName = ?, "
+            		+ "Fine = ?, "
+            		+ "FineStatus = ? "
+            		+ "WHERE StudentID = ?";
+
+            PreparedStatement pstmt = DatabaseLayer.prepareStatement(sql);
+            pstmt.setString(1, std.getName());
+            pstmt.setBoolean(2, std.getGender());
+            pstmt.setString(3, std.getAddress());
+            pstmt.setString(4, std.getEmail());
+            pstmt.setString(5, std.getPhone());
+            pstmt.setString(6, std.getClassName());
+            pstmt.setInt(7, std.getFine());
+            pstmt.setBoolean(8, std.isFineStatus());
+            pstmt.setString(9, std.getStudentID());
+
+            pstmt.executeUpdate();
+            pstmt.close();
+
+            System.out.println("Updated student.");
+        } catch (Exception e) {
+            System.out.println(e);
+            return false;
+        }
+		
+		return true;
 	}
 
 }

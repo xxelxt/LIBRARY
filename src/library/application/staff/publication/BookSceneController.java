@@ -4,6 +4,9 @@ import java.net.URL;
 import java.sql.Date;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -14,6 +17,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.TableView;
@@ -25,6 +29,9 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.util.StringConverter;
+import javafx.util.converter.IntegerStringConverter;
+
 import library.application.staff.interfac.SceneFeatureGate;
 import library.mysql.dao.AuthorDAO;
 import library.mysql.dao.BookDAO;
@@ -108,6 +115,39 @@ public class BookSceneController implements Initializable, SceneFeatureGate {
     	int lastIndex = booksTableView.getItems().size() - 1;
     	booksTableView.scrollTo(lastIndex);
     }
+    
+    private <T> void setupEditableColumn(TableColumn<Books, T> column, StringConverter<T> converter, BiConsumer<Books, T> updateAction) {
+        column.setCellFactory(TextFieldTableCell.forTableColumn(converter));
+
+        column.setOnEditCommit(event -> {
+            if (btnEdit.isSelected()) {
+                TableCell<Books, T> cell = event.getTablePosition().getTableColumn().getCellFactory().call(column);
+                if (cell != null) {
+                    cell.commitEdit(event.getNewValue());
+                }
+
+                Books book = event.getRowValue();
+                updateAction.accept(book, event.getNewValue());
+
+                bookDAO.updateBook(book); // Call the bookDAO method to update the book in the database
+            }
+        });
+
+        column.setOnEditStart(event -> {
+            if (!btnEdit.isSelected()) {
+                TableColumn.CellEditEvent<Books, T> cellEditEvent = (TableColumn.CellEditEvent<Books, T>) event;
+                TableView<Books> tableView = cellEditEvent.getTableView();
+                tableView.edit(tableView.getSelectionModel().getSelectedIndex(), column);
+            }
+        });
+
+        column.setOnEditCancel(event -> {
+            TableCell<Books, T> cell = event.getTablePosition().getTableColumn().getCellFactory().call(column);
+            if (cell != null) {
+                cell.cancelEdit();
+            }
+        });
+    }
 
     private void editableCols(){
         colTitle.setCellFactory(TextFieldTableCell.forTableColumn());
@@ -115,6 +155,77 @@ public class BookSceneController implements Initializable, SceneFeatureGate {
         colAuthors.setCellFactory(TextFieldTableCell.forTableColumn());
         colPublisher.setCellFactory(TextFieldTableCell.forTableColumn());
         colCategory.setCellFactory(TextFieldTableCell.forTableColumn());
+
+        setupEditableColumn(colReissue, new IntegerStringConverter(), Books::setReissue);
+        setupEditableColumn(colQuantity, new IntegerStringConverter(), Books::setQuantity);
+        
+//        // EDIT REISSUE
+//        colReissue.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
+//
+//        colReissue.setOnEditCommit(event -> {
+//            if (btnEdit.isSelected()) {
+//                TableCell<Books, Integer> cell = event.getTablePosition().getTableColumn().getCellFactory().call(colReissue);
+//                if (cell != null) {
+//                    cell.commitEdit(event.getNewValue());
+//                }
+//
+//                Books book = event.getRowValue();
+//                book.setReissue(event.getNewValue()); // Update the reissue value in the Books object
+//
+//                bookDAO.updateBook(book); // Call the bookDAO method to update the book in the database
+//            }
+//        });
+//
+//        colReissue.setOnEditStart(event -> {
+//            if (!btnEdit.isSelected()) {
+//                TableColumn.CellEditEvent<Books, Integer> cellEditEvent = (TableColumn.CellEditEvent<Books, Integer>) event;
+//                TableView<Books> tableView = cellEditEvent.getTableView();
+//                TableColumn<Books, Integer> column = cellEditEvent.getTableColumn();
+//                tableView.edit(tableView.getSelectionModel().getSelectedIndex(), column);
+//            }
+//        });
+//
+//        // Additional event handler for colReissue
+//        colReissue.setOnEditCancel(event -> {
+//            TableCell<Books, Integer> cell = event.getTablePosition().getTableColumn().getCellFactory().call(colReissue);
+//            if (cell != null) {
+//                cell.cancelEdit();
+//            }
+//        });
+//        
+//        // EDIT QUANTITY
+//        colQuantity.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
+//        
+//        colQuantity.setOnEditCommit(event -> {
+//            if (btnEdit.isSelected()) {
+//                TableCell<Books, Integer> cell = event.getTablePosition().getTableColumn().getCellFactory().call(colQuantity);
+//                if (cell != null) {
+//                    cell.commitEdit(event.getNewValue());
+//                }
+//
+//                Books book = event.getRowValue();
+//                book.setQuantity(event.getNewValue()); // Update the quantity value in the Books object
+//
+//                bookDAO.updateBook(book); // Call the bookDAO method to update the book in the database
+//            }
+//        });
+//
+//        colQuantity.setOnEditStart(event -> {
+//            if (!btnEdit.isSelected()) {
+//                TableColumn.CellEditEvent<Books, Integer> cellEditEvent = (TableColumn.CellEditEvent<Books, Integer>) event;
+//                TableView<Books> tableView = cellEditEvent.getTableView();
+//                TableColumn<Books, Integer> column = cellEditEvent.getTableColumn();
+//                tableView.edit(tableView.getSelectionModel().getSelectedIndex(), column);
+//            }
+//        });
+//
+//        // Additional event handler for colQuantity
+//        colQuantity.setOnEditCancel(event -> {
+//            TableCell<Books, Integer> cell = event.getTablePosition().getTableColumn().getCellFactory().call(colQuantity);
+//            if (cell != null) {
+//                cell.cancelEdit();
+//            }
+//        });
 
 //        colPublicationDate.setCellFactory(TextFieldTableCell.forTableColumn());
 //        colQuantity.setCellValueFactory(new PropertyValueFactory<>("quantity"));

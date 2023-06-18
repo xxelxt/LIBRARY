@@ -9,6 +9,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -18,11 +19,14 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import library.mysql.dao.StudentDAO;
+import library.publication.Books;
 import library.publication.Publication;
 import library.user.Student;
 
@@ -114,12 +118,43 @@ public class StudentSceneController implements Initializable {
     	int lastIndex = studentTableView.getItems().size() - 1;
     	studentTableView.scrollTo(lastIndex);
     }
+    
+    private void editableCols(){
+        colName.setCellFactory(TextFieldTableCell.forTableColumn());
+        colEmail.setCellFactory(TextFieldTableCell.forTableColumn());
+        colPhoneNum.setCellFactory(TextFieldTableCell.forTableColumn());
+        colAddress.setCellFactory(TextFieldTableCell.forTableColumn());
+        colClass.setCellFactory(TextFieldTableCell.forTableColumn());
+        
+//        colGender.setCellFactory(TextFieldTableCell.forTableColumn());
+//        colFineStatus.setCellFactory(TextFieldTableCell.forTableColumn());
+//        colFine.setCellFactory(TextFieldTableCell.forTableColumn());
+
+        EventHandler<CellEditEvent<Student, String>> commonHandler = e -> {
+        	Student std = e.getTableView().getItems().get(e.getTablePosition().getRow());
+        	TableColumn<Student, String> col = e.getTableColumn();
+        	if (col == colName) { std.setName(e.getNewValue()); }
+        	else if (col == colEmail) { std.setEmail(e.getNewValue()); }
+        	else if (col == colPhoneNum) { std.setPhone(e.getNewValue()); }
+        	else if (col == colAddress) { std.setAddress(e.getNewValue()); }
+        	else if (col == colClass) { std.setClassName(e.getNewValue()); }
+
+        	studentDAO.updateStudent(std);
+        };
+
+        colName.setOnEditCommit(commonHandler);
+        colEmail.setOnEditCommit(commonHandler);
+        colPhoneNum.setOnEditCommit(commonHandler);
+        colAddress.setOnEditCommit(commonHandler);
+        colClass.setOnEditCommit(commonHandler);
+    }
 
     @Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
         System.out.println("Student controller initialized");
         // Add a default row
 		refresh();
+		editableCols();
 
         // Bind the ObservableList to the TableView
         studentTableView.setItems(data);
@@ -195,7 +230,11 @@ public class StudentSceneController implements Initializable {
 
     @FXML
     void btnActionEditStudent(ActionEvent event) {
-
+    	if (btnEdit.isSelected()) {
+    		studentTableView.setEditable(true);
+    	} else {
+    		studentTableView.setEditable(false);
+    	}
     }
 
     @FXML

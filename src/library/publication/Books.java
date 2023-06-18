@@ -56,7 +56,7 @@ public class Books extends Publication {
 		return this.Reissue;
 	}
 
-	public void setReIssue(int Reissue) {
+	public void setReissue(int Reissue) {
 		this.Reissue = Reissue;
 	}
 

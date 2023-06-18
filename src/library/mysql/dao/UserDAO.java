@@ -56,4 +56,19 @@ public class UserDAO {
 
         return password;
 	}
+
+	public String addUserStudent(String username, String password) {
+		try {
+			 String usersSql = "INSERT INTO Users (Username, Password, Type) VALUES (?, ?, 3)";
+			 PreparedStatement users_pstmt = DatabaseLayer.prepareStatement(usersSql);
+			 users_pstmt.setString(1, username);
+			 users_pstmt.setString(2, password);
+			 users_pstmt.executeUpdate();
+			 users_pstmt.close();
+
+		} catch (Exception e) {
+			 System.out.println(e);
+		}
+		return username;
+	}
 }

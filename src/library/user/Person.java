@@ -32,7 +32,7 @@ public abstract class Person {
 	public void setName(String name) {
 		Name = name;
 	}
-	public boolean isGender() {
+	public boolean getGender() {
 		return Gender;
 	}
 	public void setGender(boolean gender) {

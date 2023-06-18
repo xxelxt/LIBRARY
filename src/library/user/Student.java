@@ -47,7 +47,7 @@ public class Student extends Person {
 		FineStatus = fineStatus;
 	}
 
-	public double getFine() {
+	public int getFine() {
 		return Fine;
 	}
 
