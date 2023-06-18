@@ -3,11 +3,19 @@ package library.user;
 public class Student extends Person {
 	private String StudentID;
 	private String ClassName;
-	private boolean FineStatus = false;
-	private double Fine = 0;
+	private boolean FineStatus;
+	private int Fine;
+	
+	public String getUsername() {
+	    return this.getAccount().getUsername();
+	}
+	
+	public String getPassword() {
+	    return this.getAccount().getPassword();
+	}
 
-	public Student(String name, boolean gender, String address, String email, String phone, User account,
-			String studentID, String className, boolean fineStatus, double fine) {
+	public Student(String studentID, String name, String className, boolean gender, String email, String phone, String address, 
+			 boolean fineStatus, int fine, User account) {
 		super(name, gender, address, email, phone, account);
 		StudentID = studentID;
 		ClassName = className;
@@ -32,7 +40,7 @@ public class Student extends Person {
 	}
 
 	public boolean isFineStatus() {
-		return FineStatus;
+		return this.FineStatus;
 	}
 
 	public void setFineStatus(boolean fineStatus) {
@@ -43,7 +51,7 @@ public class Student extends Person {
 		return Fine;
 	}
 
-	public void setFine(double fine) {
+	public void setFine(int fine) {
 		Fine = fine;
 	}
 }

@@ -3,10 +3,13 @@ package library.application.staff.add;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
+import library.mysql.dao.StudentDAO;
 
 public class AddStudentController {
 
@@ -17,10 +20,10 @@ public class AddStudentController {
     private URL location;
 
     @FXML
-    private ComboBox<?> comboboxFineStatus;
+    private ComboBox<String> comboboxFineStatus;
 
     @FXML
-    private ComboBox<?> comboboxGender;
+    private ComboBox<String> comboboxGender;
 
     @FXML
     private TextField fieldAddress;
@@ -49,11 +52,10 @@ public class AddStudentController {
     @FXML
     private TextField fieldUsername;
 
-    @FXML
-    void btnAddStudent(ActionEvent event) {
-
-    }
-
+    private ObservableList<String> genderItems = FXCollections.observableArrayList("Nam", "Nữ");
+    
+    private ObservableList<String> fineItems = FXCollections.observableArrayList("Không bị phạt", "Bị phạt");
+    
     @FXML
     void initialize() {
         assert comboboxFineStatus != null : "fx:id=\"comboboxFineStatus\" was not injected: check your FXML file 'AddStudent.fxml'.";
@@ -68,6 +70,53 @@ public class AddStudentController {
         assert fieldStudentID != null : "fx:id=\"fieldStudentID\" was not injected: check your FXML file 'AddStudent.fxml'.";
         assert fieldUsername != null : "fx:id=\"fieldUsername\" was not injected: check your FXML file 'AddStudent.fxml'.";
 
+        comboboxGender.setItems(genderItems);
+        comboboxGender.setValue("Nữ");
+        
+        comboboxFineStatus.setItems(fineItems);
+        comboboxFineStatus.setValue("Không bị phạt");
+        
+        fieldFine.setText("0");
+    }
+
+    @FXML
+    void btnAddStudent(ActionEvent event) {
+        StudentDAO studentDAO = new StudentDAO();
+
+        String gender = comboboxGender.getValue();
+        boolean isFemale = gender.equals("Nữ");
+        
+        String finestatus = comboboxFineStatus.getValue();
+        boolean isFined = finestatus.equals("Bị phạt");
+
+        studentDAO.addStudent(
+            fieldStudentID.getText(),
+            fieldName.getText(),
+            fieldClass.getText(),
+            fieldUsername.getText(),
+            fieldPassword.getText(),
+            isFemale,
+            fieldEmail.getText(),
+            fieldPhoneNum.getText(),
+            fieldAddress.getText(),
+            isFined,
+            Integer.parseInt(fieldFine.getText())
+        );
+
+        clearTextField();
+    }
+
+
+    void clearTextField() {
+    	fieldStudentID.clear();
+    	fieldName.clear();
+    	fieldClass.clear();
+    	fieldUsername.clear();
+    	fieldPassword.clear();
+    	fieldEmail.clear();
+    	fieldPhoneNum.clear();
+    	fieldAddress.clear();
+    	fieldFine.setText("0");
     }
 
 }

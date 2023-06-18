@@ -88,8 +88,6 @@ public class BookSceneController implements Initializable, SceneFeatureGate {
 
     private ObservableList<Books> data;
     
-    
-    
     private AuthorDAO authorDAO = new AuthorDAO();
     private BookDAO bookDAO = new BookDAO();
 
@@ -145,9 +143,9 @@ public class BookSceneController implements Initializable, SceneFeatureGate {
 
 //        colReissue.setCellFactory(new IntegerSpinnerCell);
 //        colReissue.setOnEditCommit(e-> {
-////        	Books book = e.getTableView().getItems().get(e.getTablePosition().getRow());
-////        	book.setTitle(e.getNewValue());
-////        	bookDAO.updateBook(book);
+//        	Books book = e.getTableView().getItems().get(e.getTablePosition().getRow());
+//        	book.setTitle(e.getNewValue());
+//			bookDAO.updateBook(book);
 //        });
     }
 
@@ -163,6 +161,12 @@ public class BookSceneController implements Initializable, SceneFeatureGate {
         
         comboBox.setItems(comboBoxItems);
         comboBox.setValue("Tên sách");
+        
+        fieldSearch.textProperty().addListener((observable, oldValue, newValue) -> {
+            String searchText = newValue;
+            String searchOption = comboBox.getValue();
+            SearchData(searchText, searchOption);
+        });
 
         // Bind the columns to the corresponding properties in MyDataModel
         colID.setCellValueFactory(new PropertyValueFactory<>("publicationID"));
@@ -226,34 +230,52 @@ public class BookSceneController implements Initializable, SceneFeatureGate {
     }
     
     private void SearchData(String searchText, String searchOption) {
-        FilteredList<Books> filteredList = new FilteredList<>(data);
+        if (searchText.isEmpty()) {
+            // If the search text is empty, revert to the original unfiltered list
+            booksTableView.setItems(data);
+        } else {
+            // Apply filtering based on the search text and option
+            FilteredList<Books> filteredList = new FilteredList<>(data);
 
-        filteredList.setPredicate(book -> {
-            if (searchText == null || searchText.isEmpty()) {
-                return true;
-            }
-            
-        	String originalText = "";
-        	switch (searchOption) {
-        		case "ID":			originalText = Integer.toString(book.getPublicationID()); break;
-    	        case "Tên sách":	originalText = book.getTitle(); break;
-    	        case "Tác giả":		originalText = book.getAuthors(); break;	
-    	        case "Quốc gia":	originalText = book.getCountry(); break;
-    	        case "Thể loại":	originalText = book.getCategory(); break;
-        	}
-        	
-        	if (originalText != "") {
-                if (searchOption.equals("ID")) {
-    	            return originalText.startsWith(searchText);
-                } else {
-                	return originalText.toLowerCase().contains(searchText.toLowerCase());
+            filteredList.setPredicate(book -> {
+                String originalText = "";
+                switch (searchOption) {
+                    case "ID":
+                        originalText = Integer.toString(book.getPublicationID());
+                        break;
+
+                    case "Tên sách":
+                        originalText = book.getTitle();
+                        break;
+
+                    case "Tác giả":
+                        originalText = book.getAuthors();
+                        break;
+
+                    case "Quốc gia":
+                        originalText = book.getCountry();
+                        break;
+
+                    case "Thể loại":
+                        originalText = book.getCategory();
+                        break;
                 }
-        	}
-        	return false;
-        });
 
-        booksTableView.setItems(filteredList);
+                if (!originalText.isEmpty()) {
+                    if (searchOption.equals("ID")) {
+                        return originalText.startsWith(searchText);
+                    } else {
+                        return originalText.toLowerCase().contains(searchText.toLowerCase());
+                    }
+                }
+
+                return false;
+            });
+
+            booksTableView.setItems(filteredList);
+        }
     }
+
 
     @FXML
     private Button btnAdd;

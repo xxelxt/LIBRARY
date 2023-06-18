@@ -17,27 +17,29 @@ public class StudentDAO {
         List<Student> students = new ArrayList<>();
 
         try {
-            String sql = "SELECT Name, Gender, Address, Email, Phone, Username, StudentID, ClassName, FineStatus, Fine " +
-                         "FROM Students";
+            String sql = "SELECT StudentID, Name, ClassName, Gender, Email, Phone, Address, FineStatus, Fine, S.Username, U.Password "
+            		+ "FROM Students S "
+            		+ "INNER JOIN Users U ON S.Username = U.Username";
 
             PreparedStatement pstmt = DatabaseLayer.prepareStatement(sql);
             ResultSet rs = pstmt.executeQuery();
 
             while (rs.next()) {
-            	User user = userDAO.getUserfromUsername(rs.getString(6));
+            	User user = userDAO.getUserfromUsername(rs.getString(10));
 
             	Student student = new Student(
             			rs.getString(1),
-            			rs.getBoolean(2),
+            			rs.getString(2),
             			rs.getString(3),
-            			rs.getString(4),
+            			rs.getBoolean(4),
             			rs.getString(5),
-            			user,
+            			rs.getString(6),
             			rs.getString(7),
-            			rs.getString(8),
-            			rs.getBoolean(9),
-            			rs.getDouble(10)
+            			rs.getBoolean(8),
+            			rs.getInt(9),
+            			user	
             	);
+            	
                 students.add(student);
             }
 
@@ -50,32 +52,33 @@ public class StudentDAO {
         return students;
     }
 
-	public boolean addStudent(String Username, String Password, String StudentID, String Name, boolean Gender,
-            String Address, String Email, String Phone, String ClassName, double Fine, boolean FineStatus) {
+	public boolean addStudent(String StudentID, String Name, String ClassName, String Username, String Password, boolean Gender,
+            String Email, String Phone, String Address, boolean FineStatus, int Fine) {
 		try {
-			 String usersSql = "INSERT INTO Users (Username, Password) VALUES (?, ?)";
+			 String usersSql = "INSERT INTO Users (Username, Password, Type) VALUES (?, ?, 3)";
 			 PreparedStatement users_pstmt = DatabaseLayer.prepareStatement(usersSql);
 			 users_pstmt.setString(1, Username);
 			 users_pstmt.setString(2, Password);
 			 users_pstmt.executeUpdate();
 			 users_pstmt.close();
 
-			 String studentSql = "INSERT INTO Students VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+			 String studentSql = "INSERT INTO Students (StudentID, Name, ClassName, Username, Gender, Email, Phone, FineStatus, Fine) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 			 PreparedStatement student_pstmt = DatabaseLayer.prepareStatement(studentSql);
 
 			 student_pstmt.setString(1, StudentID);
-			 student_pstmt.setString(2, Username);
-			 student_pstmt.setString(3, Name);
+			 student_pstmt.setString(2, Name);
+			 student_pstmt.setString(3, ClassName);
+			 
+			 student_pstmt.setString(4, Username);
 
-			 student_pstmt.setBoolean(4, Gender);
-			 student_pstmt.setString(5, Address);
+			 student_pstmt.setBoolean(5, Gender);
 			 student_pstmt.setString(6, Email);
 			 student_pstmt.setString(7, Phone);
 
-			 student_pstmt.setString(8, ClassName);
-			 student_pstmt.setDouble(9, Fine);
-			 student_pstmt.setBoolean(10, FineStatus);
-
+			 student_pstmt.setString(8, Address);
+			 student_pstmt.setBoolean(9, FineStatus);
+			 student_pstmt.setInt(10, Fine);
+			 
 			 student_pstmt.executeUpdate();
 			 student_pstmt.close();
 

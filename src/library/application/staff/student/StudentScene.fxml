@@ -6,10 +6,10 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-
 
 <AnchorPane minHeight="0.0" minWidth="0.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="library.application.staff.student.StudentSceneController">
    <children>
@@ -17,12 +17,14 @@
          <children>
             <HBox alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="484.0" spacing="10.0" VBox.vgrow="NEVER">
                <children>
-                  <Button mnemonicParsing="false" onAction="#btnAddStudent" text="Thêm" />
-                  <Button mnemonicParsing="false" onAction="#btnEditStudent" text="Sửa" />
-                  <Button mnemonicParsing="false" onAction="#btnDeleteStudent" text="Xóa" />
-                  <Button mnemonicParsing="false" onAction="#btnBorrowHistory" text="Xem lịch sử mượn" />
-                  <TextField fx:id="fieldSearch" prefHeight="26.0" prefWidth="406.0" HBox.hgrow="ALWAYS" />
-                  <ComboBox fx:id="comboBox" prefHeight="25.0" prefWidth="150.0" HBox.hgrow="ALWAYS" />
+                  <Button fx:id="btnAdd" mnemonicParsing="false" onAction="#btnActionAddStudent" text="Thêm" />
+                  <ToggleButton fx:id="btnEdit" mnemonicParsing="false" onAction="#btnActionEditStudent" text="Sửa" />
+                  <Button fx:id="btnDelete" mnemonicParsing="false" onAction="#btnActionDeleteStudent" text="Xóa">
+                     <HBox.margin>
+                        <Insets right="20.0" />
+                     </HBox.margin></Button>
+                  <TextField fx:id="fieldSearch" onKeyPressed="#inputSearch" prefHeight="26.0" prefWidth="406.0" HBox.hgrow="ALWAYS" />
+                  <ComboBox fx:id="comboBox" prefHeight="25.0" prefWidth="150.0" promptText="Thuộc tính tìm kiếm" HBox.hgrow="ALWAYS" />
                </children>
                <opaqueInsets>
                   <Insets />
@@ -42,6 +44,8 @@
                   <TableColumn fx:id="colAddress" prefWidth="116.0" text="Địa chỉ" />
                   <TableColumn fx:id="colFineStatus" prefWidth="108.0" text="Tình trạng phạt" />
                   <TableColumn fx:id="colFine" prefWidth="89.0" text="Số tiền phạt" />
+                  <TableColumn fx:id="colUsername" prefWidth="85.0" text="Tên đăng nhập" />
+                  <TableColumn fx:id="colPassword" prefWidth="85.0" text="Mật khẩu" />
                </columns>
                <columnResizePolicy>
                   <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
@@ -49,6 +53,12 @@
             </TableView>
          </children>
       </VBox>
+      <AnchorPane fx:id="paneAdd" layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <fx:include fx:id="addStudentScene" source="../add/AddStudent.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+            <Button mnemonicParsing="false" onAction="#btnActionReturn" text="Quay lại" />
+         </children>
+      </AnchorPane>
    </children>
    <padding>
       <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />

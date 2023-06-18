@@ -5,22 +5,25 @@ import java.sql.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import library.mysql.dao.StudentDAO;
+import library.publication.Publication;
 import library.user.Student;
 
 public class StudentSceneController implements Initializable {
@@ -54,18 +57,33 @@ public class StudentSceneController implements Initializable {
 
     @FXML
     private TableColumn<Student, String> colName;
+    
+    @FXML
+    private TableColumn<Student, String> colPassword;
 
     @FXML
     private TableColumn<Student, String> colPhoneNum;
 
     @FXML
     private TableColumn<Student, String> colStudentID;
+    
+    @FXML
+    private TableColumn<Student, String> colUsername;
 
     @FXML
     private ComboBox<String> comboBox;
 
     @FXML
     private TextField fieldSearch;
+    
+    @FXML
+    private Button btnAdd;
+
+    @FXML
+    private Button btnDelete;
+
+    @FXML
+    private ToggleButton btnEdit;
 
     @FXML
     private AnchorPane paneAdd;
@@ -75,7 +93,7 @@ public class StudentSceneController implements Initializable {
 
     private ObservableList<Student> data;
 
-    private ObservableList<String> items = FXCollections.observableArrayList("Mã sinh viên", "Tên sinh viên", "Lớp");
+    private ObservableList<String> items = FXCollections.observableArrayList("Mã sinh viên", "Tên sinh viên", "Lớp", "Số điện thoại");
 
     private StudentDAO studentDAO = new StudentDAO();
 
@@ -111,14 +129,11 @@ public class StudentSceneController implements Initializable {
         comboBox.setPromptText("Thuộc tính tìm kiếm");
         comboBox.setItems(items);
         comboBox.setValue("Mã sinh viên");
-
-        fieldSearch.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                String searchText = newValue;
-                String searchOption = comboBox.getValue();
-                // SearchData(searchText, searchOption);
-            }
+        
+        fieldSearch.textProperty().addListener((observable, oldValue, newValue) -> {
+            String searchText = newValue;
+            String searchOption = comboBox.getValue();
+            SearchData(searchText, searchOption);
         });
 
         // Bind the columns to the corresponding properties in MyDataModel
@@ -132,41 +147,109 @@ public class StudentSceneController implements Initializable {
         colAddress.setCellValueFactory(new PropertyValueFactory<>("address"));
         colFineStatus.setCellValueFactory(new PropertyValueFactory<>("fineStatus"));
         colFine.setCellValueFactory(new PropertyValueFactory<>("fine"));
+        
+        colUsername.setCellValueFactory(new PropertyValueFactory<>("username"));
+        colPassword.setCellValueFactory(new PropertyValueFactory<>("password"));
 
         colGender.setCellFactory(col -> new TableCell<>() {
             @Override
             protected void updateItem(Boolean item, boolean empty) {
                 super.updateItem(item, empty) ;
-                setText(empty ? null : item ? "Nam" : "Nữ" );
+                setText(empty ? null : item ? "Nữ" : "Nam" );
+            }
+        });
+        
+        colFineStatus.setCellFactory(col -> new TableCell<>() {
+            @Override
+            protected void updateItem(Boolean item, boolean empty) {
+                super.updateItem(item, empty) ;
+                setText(empty ? null : item ? "Bị phạt" : "Không bị phạt" );
             }
         });
 	}
 
 	Date now = new Date(new java.util.Date().getTime());
 
+	@FXML
+    void btnActionAddStudent(ActionEvent event) {
+		paneMain.setVisible(false);
+    	paneAdd.setVisible(true);
+    }
+
     @FXML
-    void btnAddStudent(ActionEvent event) {
+    void btnActionDeleteStudent(ActionEvent event) {
+    	Integer selectedIndex = studentTableView.getSelectionModel().getSelectedIndex();
+    	Student selectedRow = studentTableView.getSelectionModel().getSelectedItem();
+    	
+    	if (selectedRow != null) {
+	    	studentDAO.deleteStudent(selectedRow.getStudentID());
+	    	this.refresh();
+	    	
+	        if (selectedIndex >= 0 && selectedIndex < data.size()) {
+	        	studentTableView.getSelectionModel().select(selectedIndex);
+	        } 
+    	} else {
+    		studentTableView.getSelectionModel().clearSelection();
+        }
+    }
+
+    @FXML
+    void btnActionEditStudent(ActionEvent event) {
 
     }
 
     @FXML
-    void btnBorrowHistory(ActionEvent event) {
+    void inputSearch(KeyEvent event) {
+        String searchText = fieldSearch.getText();
+        String searchOption = comboBox.getValue();
+        SearchData(searchText, searchOption);
+    }
+    
+    private void SearchData(String searchText, String searchOption) {
+        if (searchText.isEmpty()) {
+            // If the search text is empty, revert to the original unfiltered list
+            studentTableView.setItems(data);
+        } else {
+            // Apply filtering based on the search text and option
+            FilteredList<Student> filteredList = new FilteredList<>(data);
 
+            filteredList.setPredicate(student -> {
+                String originalText = "";
+                switch (searchOption) {
+                    case "Mã sinh viên":
+                        originalText = student.getStudentID();
+                        break;
+
+                    case "Tên sinh viên":
+                        originalText = student.getName();
+                        break;
+
+                    case "Lớp":
+                        originalText = student.getClassName();
+                        break;
+
+                    case "Số điện thoại":
+                        originalText = student.getPhone();
+                        break;
+                }
+
+                if (!originalText.isEmpty()) {
+                    return originalText.toLowerCase().contains(searchText.toLowerCase());
+                }
+
+                return false;
+            });
+
+            studentTableView.setItems(filteredList);
+        }
     }
 
-    @FXML
-    void btnDeleteStudent(ActionEvent event) {
-
-    }
 
     @FXML
-    void btnEditStudent(ActionEvent event) {
-
-    }
-
-    @FXML
-    void btnReturn(ActionEvent event) {
-
+    void btnActionReturn(ActionEvent event) {
+    	paneMain.setVisible(true);
+    	paneAdd.setVisible(false);
+    	this.refresh();
     }
 
 }

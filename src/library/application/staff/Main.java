@@ -19,8 +19,8 @@ public class Main extends Application {
 	}
 
 	public void setWindowSize() {
-		primaryStage.setWidth(1200);
-		primaryStage.setHeight(800);
+		primaryStage.setWidth(1275);
+		primaryStage.setHeight(850);
 		primaryStage.centerOnScreen();
 	}
 

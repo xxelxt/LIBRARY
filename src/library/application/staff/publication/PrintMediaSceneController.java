@@ -9,6 +9,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -17,14 +18,15 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import library.application.staff.interfac.SceneFeatureGate;
 import library.mysql.dao.PrintMediaDAO;
-import library.publication.Books;
 import library.publication.PrintMedia;
 import library.publication.Publication;
 
@@ -35,7 +37,6 @@ public class PrintMediaSceneController implements Initializable, SceneFeatureGat
 
     @FXML
     private URL location;
-    
     
     // Table
     @FXML
@@ -99,18 +100,45 @@ public class PrintMediaSceneController implements Initializable, SceneFeatureGat
     	int lastIndex = printMediaTableView.getItems().size() - 1;
     	printMediaTableView.scrollTo(lastIndex);
     }
+    
+    private void editableCols(){
+        colTitle.setCellFactory(TextFieldTableCell.forTableColumn());
+        colCountry.setCellFactory(TextFieldTableCell.forTableColumn());
+        colPrintType.setCellFactory(TextFieldTableCell.forTableColumn());
+
+//        colQuantity.setCellValueFactory(new PropertyValueFactory<>("quantity"));
+
+        EventHandler<CellEditEvent<PrintMedia, String>> commonHandler = e -> {
+        	PrintMedia pm = e.getTableView().getItems().get(e.getTablePosition().getRow());
+        	TableColumn<PrintMedia, String> col = e.getTableColumn();
+        	if (col == colTitle) { pm.setTitle(e.getNewValue()); }
+        	else if (col == colCountry) { pm.setCountry(e.getNewValue()); }
+        	else if (col == colPrintType) { pm.setPrintType(e.getNewValue()); }
+        };
+
+        colTitle.setOnEditCommit(commonHandler);
+        colCountry.setOnEditCommit(commonHandler);
+        colPrintType.setOnEditCommit(commonHandler);
+    }
 
     @Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
         System.out.println("Print media controller initialized");
         // Add a default row
 		refresh();
+		editableCols();
 
         // Bind the ObservableList to the TableView
 		printMediaTableView.setItems(data);
 
         comboBox.setItems(comboBoxItems);
         comboBox.setValue("Tên ấn phẩm");
+        
+        fieldSearch.textProperty().addListener((observable, oldValue, newValue) -> {
+            String searchText = newValue;
+            String searchOption = comboBox.getValue();
+            SearchData(searchText, searchOption);
+        });
 
         // Bind the columns to the corresponding properties in MyDataModel
         colID.setCellValueFactory(new PropertyValueFactory<>("publicationID"));
@@ -158,8 +186,11 @@ public class PrintMediaSceneController implements Initializable, SceneFeatureGat
     
     @FXML
     void btnActionEditPrintMedia(ActionEvent event) {
-
-    	
+    	if (btnEdit.isSelected()) {
+    		printMediaTableView.setEditable(true);
+    	} else {
+    		printMediaTableView.setEditable(false);
+    	}
     }
     
     @FXML
@@ -170,33 +201,48 @@ public class PrintMediaSceneController implements Initializable, SceneFeatureGat
     }
     
     private void SearchData(String searchText, String searchOption) {
-        FilteredList<PrintMedia> filteredList = new FilteredList<>(data);
+        if (searchText.isEmpty()) {
+            // If the search text is empty, revert to the original unfiltered list
+            printMediaTableView.setItems(data);
+        } else {
+            // Apply filtering based on the search text and option
+            FilteredList<PrintMedia> filteredList = new FilteredList<>(data);
 
-        filteredList.setPredicate(printMedia -> {
-            if (searchText == null || searchText.isEmpty()) {
-                return true;
-            }
-            
-        	String originalText = "";
-        	switch (searchOption) {
-        		case "ID":				originalText = Integer.toString(printMedia.getPublicationID()); break;
-    	        case "Tên ấn phẩm":		originalText = printMedia.getTitle(); break;
-    	        case "Loại ấn phẩm":	originalText = printMedia.getPrintType(); break;	
-    	        case "Quốc gia":		originalText = printMedia.getCountry(); break;
-        	}
-        	
-        	if (originalText != "") {
-                if (searchOption.equals("ID")) {
-    	            return originalText.startsWith(searchText);
-                } else {
-                	return originalText.toLowerCase().contains(searchText.toLowerCase());
+            filteredList.setPredicate(printMedia -> {
+                String originalText = "";
+                switch (searchOption) {
+                    case "ID":
+                        originalText = Integer.toString(printMedia.getPublicationID());
+                        break;
+
+                    case "Tên ấn phẩm":
+                        originalText = printMedia.getTitle();
+                        break;
+
+                    case "Loại ấn phẩm":
+                        originalText = printMedia.getPrintType();
+                        break;
+
+                    case "Quốc gia":
+                        originalText = printMedia.getCountry();
+                        break;
                 }
-        	}
-        	return false;
-        });
 
-        printMediaTableView.setItems(filteredList);
+                if (!originalText.isEmpty()) {
+                    if (searchOption.equals("ID")) {
+                        return originalText.startsWith(searchText);
+                    } else {
+                        return originalText.toLowerCase().contains(searchText.toLowerCase());
+                    }
+                }
+
+                return false;
+            });
+
+            printMediaTableView.setItems(filteredList);
+        }
     }
+
 
     @FXML
     private Button btnAdd;
@@ -212,7 +258,6 @@ public class PrintMediaSceneController implements Initializable, SceneFeatureGat
 
 	@Override
 	public void setFeatureFor(Integer user) {
-		// TODO Auto-generated method stub
 		if (user == CLERK) {
 			hboxFeature.getChildren().remove(btnAdd);
 			hboxFeature.getChildren().remove(btnEdit);
