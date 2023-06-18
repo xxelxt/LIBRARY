@@ -19,6 +19,7 @@ public class Main extends Application {
 	}
 
 	public void setWindowSize() {
+		primaryStage.setMaximized(false);
 		primaryStage.setWidth(1275);
 		primaryStage.setHeight(850);
 		primaryStage.centerOnScreen();
@@ -59,7 +60,6 @@ public class Main extends Application {
 	        primaryStage.getIcons().add(icon);
 
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

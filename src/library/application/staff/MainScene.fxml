@@ -94,7 +94,7 @@
             </VBox>
          </children>
       </AnchorPane>
-      <BorderPane fx:id="contentPane" maxHeight="-Infinity" maxWidth="-Infinity" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <BorderPane fx:id="contentPane" maxHeight="-Infinity" maxWidth="-Infinity" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <center>
             <TabPane fx:id="tabPane" side="LEFT" tabClosingPolicy="UNAVAILABLE" tabMaxHeight="100.0" tabMaxWidth="80.0" tabMinHeight="100.0" tabMinWidth="80.0">
               <tabs>
