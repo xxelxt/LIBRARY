@@ -7,6 +7,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import library.mysql.DatabaseLayer;
 
@@ -27,8 +28,12 @@ public class Main extends Application {
 
 	public void restart() {
 		try {
+			// Font customFont = Font.loadFont(getClass().getResourceAsStream("SVN-Poppins-Regular.ttf"), 18);
+			
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("MainScene.fxml"));
 			Parent root = loader.load();
+			// root.setStyle("-fx-font-family: '" + customFont.getName() + "'; -fx-font-size: 16px;");
+			
 			MainSceneController controller = loader.getController();
 			controller.setMain(this);
 

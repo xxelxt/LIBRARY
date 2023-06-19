@@ -35,13 +35,13 @@
             </HBox>
             <TableView fx:id="staffTableView" prefHeight="561.0" prefWidth="870.0" VBox.vgrow="ALWAYS">
                <columns>
-                  <TableColumn fx:id="colStaffID" prefWidth="96.0" text="Mã nhân viên" />
-                  <TableColumn fx:id="colName" prefWidth="113.0" text="Họ tên" />
-                  <TableColumn fx:id="colGender" prefWidth="61.0" text="Giới tính" />
-                  <TableColumn fx:id="colEmail" prefWidth="85.0" text="Email" />
-                  <TableColumn fx:id="colPhoneNum" prefWidth="97.0" text="Số điện thoại" />
-                  <TableColumn fx:id="colAddress" prefWidth="116.0" text="Địa chỉ" />
-                  <TableColumn fx:id="colPosition" prefWidth="116.0" text="Chức vụ" />
+                  <TableColumn fx:id="colStaffID" prefWidth="78.0" text="Mã nhân viên" />
+                  <TableColumn fx:id="colName" prefWidth="148.0" text="Họ tên" />
+                  <TableColumn fx:id="colGender" prefWidth="78.0" text="Giới tính" />
+                  <TableColumn fx:id="colEmail" prefWidth="122.0" text="Email" />
+                  <TableColumn fx:id="colPhoneNum" prefWidth="103.0" text="Số điện thoại" />
+                  <TableColumn fx:id="colAddress" prefWidth="109.0" text="Địa chỉ" />
+                  <TableColumn fx:id="colPosition" prefWidth="89.0" text="Chức vụ" />
                   <TableColumn fx:id="colUsername" prefWidth="85.0" text="Tên đăng nhập" />
                   <TableColumn fx:id="colPassword" prefWidth="85.0" text="Mật khẩu" />
                </columns>

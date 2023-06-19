@@ -2,8 +2,6 @@ package library.application.staff.publication;
 
 import java.net.URL;
 import java.sql.Date;
-import java.text.SimpleDateFormat;
-import java.time.Instant;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -248,51 +246,6 @@ public class BookSceneController implements Initializable, SceneFeatureGate {
             };
         });
 
-        colPublicationDate.setOnEditCommit(event -> {
-            if (btnEdit.isSelected()) {
-                TableCell<Books, Date> cell = event.getTablePosition().getTableColumn().getCellFactory().call(colPublicationDate);
-                if (cell != null) {
-                    cell.commitEdit(event.getNewValue());
-                }
-
-                Books book = event.getRowValue();
-                Date date = event.getNewValue();
-                Instant instant = date.toInstant();
-                java.util.Date utilDate = java.util.Date.from(instant);
-
-                // Convert the date to the desired format "yyyy-MM-dd"
-                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                String formattedDate = dateFormat.format(utilDate);
-
-                book.setReleaseDate(java.sql.Date.valueOf(formattedDate));
-
-                // Call the bookDAO method to update the book in the database
-                bookDAO.updateBook(book);
-
-                // Refresh the table view to reflect the updated data
-                booksTableView.refresh();
-            }
-        });
-
-
-
-        colPublicationDate.setOnEditStart(event -> {
-            if (!btnEdit.isSelected()) {
-                TableColumn.CellEditEvent<Books, Date> cellEditEvent = event;
-                TableView<Books> tableView = cellEditEvent.getTableView();
-                TableColumn<Books, Date> column = cellEditEvent.getTableColumn();
-                tableView.edit(tableView.getSelectionModel().getSelectedIndex(), column);
-            }
-        });
-
-        // Additional event handler for colPublicationDate
-        colPublicationDate.setOnEditCancel(event -> {
-            TableCell<Books, Date> cell = event.getTablePosition().getTableColumn().getCellFactory().call(colPublicationDate);
-            if (cell != null) {
-                cell.cancelEdit();
-            }
-        });
-
         EventHandler<CellEditEvent<Books, String>> commonHandler = e -> {
         	Books book = e.getTableView().getItems().get(e.getTablePosition().getRow());
         	TableColumn<Books, String> col = e.getTableColumn();
@@ -313,6 +266,38 @@ public class BookSceneController implements Initializable, SceneFeatureGate {
         colAuthors.setOnEditCommit(commonHandler);
         colPublisher.setOnEditCommit(commonHandler);
         colCategory.setOnEditCommit(commonHandler);
+        colPublicationDate.setOnEditCommit(event -> {
+            if (btnEdit.isSelected()) {
+                TableCell<Books, Date> cell = event.getTablePosition().getTableColumn().getCellFactory().call(colPublicationDate);
+                if (cell != null) {
+                    cell.commitEdit(event.getNewValue());
+                }
+
+                Books book = event.getRowValue();
+                Date date = event.getNewValue();
+                book.setReleaseDate(date);
+
+                bookDAO.updateBook(book);
+
+                this.refresh();
+            }
+        });
+
+        colPublicationDate.setOnEditStart(event -> {
+            if (!btnEdit.isSelected()) {
+                TableColumn.CellEditEvent<Books, Date> cellEditEvent = event;
+                TableView<Books> tableView = cellEditEvent.getTableView();
+                TableColumn<Books, Date> column = cellEditEvent.getTableColumn();
+                tableView.edit(tableView.getSelectionModel().getSelectedIndex(), column);
+            }
+        });
+
+        colPublicationDate.setOnEditCancel(event -> {
+            TableCell<Books, Date> cell = event.getTablePosition().getTableColumn().getCellFactory().call(colPublicationDate);
+            if (cell != null) {
+                cell.cancelEdit();
+            }
+        });
 
 //        colReissue.setCellFactory(new IntegerSpinnerCell);
 //        colReissue.setOnEditCommit(e-> {

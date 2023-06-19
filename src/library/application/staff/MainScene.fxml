@@ -149,7 +149,7 @@
                         </AnchorPane>
                      </content>
                   </Tab>
-                  <Tab fx:id="tabClerk" text="Nhân viên">
+                  <Tab fx:id="tabStaff" text="Nhân viên">
                      <content>
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                            <children>
@@ -161,15 +161,27 @@
                         </AnchorPane>
                      </content>
                   </Tab>
-                  <Tab text="Thông tin">
+                  <Tab fx:id="tabStudentInfo" text="Thông tin sinh viên">
                      <content>
                         <AnchorPane>
                            <children>
                               <AnchorPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                  <children>
-                                    <fx:include source="info/InfoScene.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                    <fx:include fx:id="studentInfoScene" source="info/StudentInfoScene.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                  </children>
                               </AnchorPane>
+                           </children>
+                        </AnchorPane>
+                     </content>
+                  </Tab>
+                  <Tab fx:id="tabStaffInfo" text="Thông tin nhân viên">
+                     <content>
+                        <AnchorPane>
+                           <children>
+                              <AnchorPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                 <children>
+                                    <fx:include fx:id="staffInfoScene" source="info/StaffInfoScene.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                 </children></AnchorPane>
                            </children>
                         </AnchorPane>
                      </content>

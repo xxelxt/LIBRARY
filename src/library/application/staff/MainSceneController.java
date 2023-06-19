@@ -113,16 +113,26 @@ public class MainSceneController implements SceneFeatureGate {
     private Tab tabStudent;
 
     @FXML
-    private Tab tabClerk;
+    private Tab tabStaff;
+    
+    @FXML
+    private Tab tabStaffInfo;
+    
+    @FXML
+    private Tab tabStudentInfo;
 
 	@Override
 	public void setFeatureFor(Integer user) {
 		if (user == STUDENT) {
 			tabPane.getTabs().remove(tabBorrow);
 			tabPane.getTabs().remove(tabStudent);
-			tabPane.getTabs().remove(tabClerk);
+			tabPane.getTabs().remove(tabStaff);
+			tabPane.getTabs().remove(tabStaffInfo);
 		} else if (user == CLERK) {
-			tabPane.getTabs().remove(tabClerk);
+			tabPane.getTabs().remove(tabStaff);
+			tabPane.getTabs().remove(tabStudentInfo);
+		} else if (user == LIBRARIAN) {
+			tabPane.getTabs().remove(tabStudentInfo);
 		}
 	}
 
