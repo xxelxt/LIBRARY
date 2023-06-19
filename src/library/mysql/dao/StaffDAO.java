@@ -7,7 +7,6 @@ import java.util.List;
 
 import library.mysql.DatabaseLayer;
 import library.user.Staff;
-import library.user.Student;
 import library.user.User;
 
 public class StaffDAO {
@@ -128,35 +127,29 @@ public class StaffDAO {
 	    return true;
 	}
 
-	public boolean updateStudent(Student std) {
+	public boolean updateStaff(Staff stf) {
 		try {
-            String sql = "UPDATE Students "
+            String sql = "UPDATE Staff "
             		+ "SET "
             		+ "Name = ?, "
             		+ "Gender = ?, "
             		+ "Address = ?, "
             		+ "Email = ?, "
-            		+ "Phone = ?, "
-            		+ "ClassName = ?, "
-            		+ "Fine = ?, "
-            		+ "FineStatus = ? "
-            		+ "WHERE StudentID = ?";
+            		+ "Phone = ? "
+            		+ "WHERE StaffID = ?";
 
             PreparedStatement pstmt = DatabaseLayer.prepareStatement(sql);
-            pstmt.setString(1, std.getName());
-            pstmt.setBoolean(2, std.getGender());
-            pstmt.setString(3, std.getAddress());
-            pstmt.setString(4, std.getEmail());
-            pstmt.setString(5, std.getPhone());
-            pstmt.setString(6, std.getClassName());
-            pstmt.setInt(7, std.getFine());
-            pstmt.setBoolean(8, std.isFineStatus());
-            pstmt.setString(9, std.getStudentID());
+            pstmt.setString(1, stf.getName());
+            pstmt.setBoolean(2, stf.getGender());
+            pstmt.setString(3, stf.getAddress());
+            pstmt.setString(4, stf.getEmail());
+            pstmt.setString(5, stf.getPhone());
+            pstmt.setInt(6, stf.getStaffID());
 
             pstmt.executeUpdate();
             pstmt.close();
 
-            System.out.println("Updated student.");
+            System.out.println("Updated staff.");
         } catch (Exception e) {
             System.out.println(e);
             return false;

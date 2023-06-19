@@ -9,6 +9,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -18,15 +19,14 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import library.mysql.dao.StaffDAO;
-import library.mysql.dao.StudentDAO;
-import library.publication.Books;
 import library.user.Staff;
-import library.user.Student;
 
 public class StaffSceneController implements Initializable {
 
@@ -110,12 +110,37 @@ public class StaffSceneController implements Initializable {
     	staffTableView.scrollTo(lastIndex);
     }
     
+    private void editableCols(){
+        colName.setCellFactory(TextFieldTableCell.forTableColumn());
+        colEmail.setCellFactory(TextFieldTableCell.forTableColumn());
+        colPhoneNum.setCellFactory(TextFieldTableCell.forTableColumn());
+        colAddress.setCellFactory(TextFieldTableCell.forTableColumn());
+
+//        colGender.setCellFactory(TextFieldTableCell.forTableColumn());
+
+        EventHandler<CellEditEvent<Staff, String>> commonHandler = e -> {
+        	Staff stf = e.getTableView().getItems().get(e.getTablePosition().getRow());
+        	TableColumn<Staff, String> col = e.getTableColumn();
+        	if (col == colName) { stf.setName(e.getNewValue()); }
+        	else if (col == colEmail) { stf.setEmail(e.getNewValue()); }
+        	else if (col == colPhoneNum) { stf.setPhone(e.getNewValue()); }
+        	else if (col == colAddress) { stf.setAddress(e.getNewValue()); }
+
+        	staffDAO.updateStaff(stf);
+        };
+
+        colName.setOnEditCommit(commonHandler);
+        colEmail.setOnEditCommit(commonHandler);
+        colPhoneNum.setOnEditCommit(commonHandler);
+        colAddress.setOnEditCommit(commonHandler);
+    }
+    
     @Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
         System.out.println("Staff controller initialized");
         // Add a default row
 		refresh();
-		// editableCols();
+		editableCols();
 
         // Bind the ObservableList to the TableView
         staffTableView.setItems(data);
@@ -181,7 +206,11 @@ public class StaffSceneController implements Initializable {
 
     @FXML
     void btnActionEditStaff(ActionEvent event) {
-    	
+    	if (btnEdit.isSelected()) {
+    		staffTableView.setEditable(true);
+    	} else {
+    		staffTableView.setEditable(false);
+    	}
     }
 
     @FXML

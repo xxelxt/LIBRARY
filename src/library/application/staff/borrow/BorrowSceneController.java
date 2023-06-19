@@ -2,10 +2,9 @@ package library.application.staff.borrow;
 
 import java.net.URL;
 import java.sql.Date;
-import java.text.SimpleDateFormat;
-import java.time.Instant;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.function.BiConsumer;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -16,8 +15,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.ContentDisplay;
-import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -29,10 +26,10 @@ import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.util.StringConverter;
 import javafx.util.converter.IntegerStringConverter;
 import library.central.Borrow;
 import library.mysql.dao.BorrowDAO;
-import library.publication.Books;
 import library.publication.Publication;
 
 public class BorrowSceneController implements Initializable {
@@ -119,13 +116,63 @@ public class BorrowSceneController implements Initializable {
     	int lastIndex = borrowTableView.getItems().size() - 1;
     	borrowTableView.scrollTo(lastIndex);
     }
+    
+    private <T> void setupEditableColumn(TableColumn<Borrow, T> column, StringConverter<T> converter, BiConsumer<Borrow, T> updateAction) {
+        column.setCellFactory(TextFieldTableCell.forTableColumn(converter));
+
+        column.setOnEditCommit(event -> {
+            if (btnEdit.isSelected()) {
+                TableCell<Borrow, T> cell = event.getTablePosition().getTableColumn().getCellFactory().call(column);
+                if (cell != null) {
+                    cell.commitEdit(event.getNewValue());
+                }
+
+                Borrow borrow = event.getRowValue();
+                updateAction.accept(borrow, event.getNewValue());
+
+                borrowDAO.updateBorrow(borrow);
+                this.refresh();            }
+        });
+
+        column.setOnEditStart(event -> {
+            if (!btnEdit.isSelected()) {
+                TableColumn.CellEditEvent<Borrow, T> cellEditEvent = event;
+                TableView<Borrow> tableView = cellEditEvent.getTableView();
+                tableView.edit(tableView.getSelectionModel().getSelectedIndex(), column);
+            }
+        });
+
+        column.setOnEditCancel(event -> {
+            TableCell<Borrow, T> cell = event.getTablePosition().getTableColumn().getCellFactory().call(column);
+            if (cell != null) {
+                cell.cancelEdit();
+            }
+        });
+    }
+    
+    private void editableCols(){
+        colStudentID.setCellFactory(TextFieldTableCell.forTableColumn());
+        
+        setupEditableColumn(colPublicationID, new IntegerStringConverter(), Borrow::setPublicationID);
+        setupEditableColumn(colBorrowQuantity, new IntegerStringConverter(), Borrow::setBorrowQuantity);
+
+        EventHandler<CellEditEvent<Borrow, String>> commonHandler = e -> {
+        	Borrow borrow = e.getTableView().getItems().get(e.getTablePosition().getRow());
+        	TableColumn<Borrow, String> col = e.getTableColumn();
+        	if (col == colStudentID) { borrow.setStudentID(e.getNewValue()); }
+
+        	borrowDAO.updateBorrow(borrow);
+        };
+
+        colStudentID.setOnEditCommit(commonHandler);
+    }
 
     @Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
         System.out.println("Borrow controller initialized");
         // Add a default row
 		refresh();
-		// editableCols();
+		editableCols();
 
         // Bind the ObservableList to the TableView
         borrowTableView.setItems(data);
@@ -199,7 +246,11 @@ public class BorrowSceneController implements Initializable {
 
     @FXML
     void btnActionEditBorrow(ActionEvent event) {
-
+    	if (btnEdit.isSelected()) {
+    		borrowTableView.setEditable(true);
+    	} else {
+    		borrowTableView.setEditable(false);
+    	}
     }
 
     @FXML

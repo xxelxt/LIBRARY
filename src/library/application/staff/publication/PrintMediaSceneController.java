@@ -117,7 +117,8 @@ public class PrintMediaSceneController implements Initializable, SceneFeatureGat
                 PrintMedia pm = event.getRowValue();
                 updateAction.accept(pm, event.getNewValue());
 
-                pmDAO.updatePrintMedia(pm); // Call the bookDAO method to update the book in the database
+                pmDAO.updatePrintMedia(pm);
+                this.refresh();
             }
         });
 

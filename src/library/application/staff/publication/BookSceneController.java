@@ -131,7 +131,8 @@ public class BookSceneController implements Initializable, SceneFeatureGate {
                 Books book = event.getRowValue();
                 updateAction.accept(book, event.getNewValue());
 
-                bookDAO.updateBook(book); // Call the bookDAO method to update the book in the database
+                bookDAO.updateBook(book);
+                this.refresh();
             }
         });
 

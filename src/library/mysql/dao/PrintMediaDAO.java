@@ -26,8 +26,6 @@ public class PrintMediaDAO {
             ResultSet rs = pstmt.executeQuery();
 
             while (rs.next()) {
-            	Integer publicationID = rs.getInt("PublicationID");
-
                 PrintMedia PM = new PrintMedia(
                 		rs.getInt(1),
                 		rs.getString(2),
