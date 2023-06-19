@@ -57,12 +57,13 @@ public class UserDAO {
         return password;
 	}
 
-	public String addUserStudent(String username, String password) {
+	public String addUser(String username, String password, int type) {
 		try {
-			 String usersSql = "INSERT INTO Users (Username, Password, Type) VALUES (?, ?, 3)";
+			 String usersSql = "INSERT INTO Users (Username, Password, Type) VALUES (?, ?, ?)";
 			 PreparedStatement users_pstmt = DatabaseLayer.prepareStatement(usersSql);
 			 users_pstmt.setString(1, username);
 			 users_pstmt.setString(2, password);
+			 users_pstmt.setInt(3, type);
 			 users_pstmt.executeUpdate();
 			 users_pstmt.close();
 

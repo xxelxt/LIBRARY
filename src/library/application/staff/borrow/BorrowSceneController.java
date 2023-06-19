@@ -2,27 +2,37 @@ package library.application.staff.borrow;
 
 import java.net.URL;
 import java.sql.Date;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.List;
 import java.util.ResourceBundle;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.ContentDisplay;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.util.converter.IntegerStringConverter;
 import library.central.Borrow;
 import library.mysql.dao.BorrowDAO;
+import library.publication.Books;
 import library.publication.Publication;
 
 public class BorrowSceneController implements Initializable {
@@ -79,9 +89,6 @@ public class BorrowSceneController implements Initializable {
     private ComboBox<String> comboBox;
 
     @FXML
-    private ComboBox<String> comboBoxReturned;
-
-    @FXML
     private TextField fieldSearch;
 
     @FXML
@@ -92,8 +99,7 @@ public class BorrowSceneController implements Initializable {
 
     private ObservableList<Borrow> data;
 
-    private ObservableList<String> items = FXCollections.observableArrayList("Mã mượn", "Mã sinh viên");
-    private ObservableList<String> returnedItems = FXCollections.observableArrayList("Tất cả", "Đã trả", "Chưa trả");
+    private ObservableList<String> items = FXCollections.observableArrayList("Mã mượn", "Mã sinh viên", "Tình trạng trả");
 
     private BorrowDAO borrowDAO = new BorrowDAO();
 
@@ -101,7 +107,6 @@ public class BorrowSceneController implements Initializable {
         data = FXCollections.observableArrayList();
 
         List<Borrow> allBorrow = borrowDAO.loadAllBorrow();
-		System.out.println(allBorrow);
 
 	    for (Borrow borrow : allBorrow){
 	    	data.add(borrow);
@@ -131,15 +136,11 @@ public class BorrowSceneController implements Initializable {
         comboBox.setItems(items);
         comboBox.setValue("Mã sinh viên");
 
-        comboBoxReturned.setPromptText("Thuộc tính tìm kiếm");
-        comboBoxReturned.setItems(returnedItems);
-        comboBoxReturned.setValue("Tất cả");
-
-//        fieldSearch.textProperty().addListener((observable, oldValue, newValue) -> {
-//            String searchText = newValue;
-//            String searchOption = comboBox.getValue();
-//            SearchData(searchText, searchOption);
-//        });
+        fieldSearch.textProperty().addListener((observable, oldValue, newValue) -> {
+            String searchText = newValue;
+            String searchOption = comboBox.getValue();
+            SearchData(searchText, searchOption);
+        });
 
         // Bind the columns to the corresponding properties in MyDataModel
         colID.setCellValueFactory(new PropertyValueFactory<>("borrowID"));
@@ -212,7 +213,46 @@ public class BorrowSceneController implements Initializable {
     void inputSearch(KeyEvent event) {
     	String searchText = fieldSearch.getText();
         String searchOption = comboBox.getValue();
-        // SearchData(searchText, searchOption);
+        SearchData(searchText, searchOption);
+    }
+    
+    private void SearchData(String searchText, String searchOption) {
+        if (searchText.isEmpty()) {
+            // If the search text is empty, revert to the original unfiltered list
+            borrowTableView.setItems(data);
+        } else {
+            // Apply filtering based on the search text and option
+            FilteredList<Borrow> filteredList = new FilteredList<>(data);
+
+            filteredList.setPredicate(borrow -> {
+                String originalText = "";
+                switch (searchOption) {
+                    case "Mã mượn":
+                        originalText = Integer.toString(borrow.getBorrowID());
+                        break;
+
+                    case "Mã sinh viên":
+                        originalText = borrow.getStudentID();
+                        break;
+
+                    case "Tình trạng trả":
+                    	originalText = borrow.isReturnedStatus() ? "Đã trả" : "Chưa trả";
+                        break;
+                }
+
+                if (!originalText.isEmpty()) {
+                    if (searchOption.equals("Mã mượn")) {
+                        return originalText.startsWith(searchText);
+                    } else {
+                        return originalText.toLowerCase().contains(searchText.toLowerCase());
+                    }
+                }
+
+                return false;
+            });
+
+            borrowTableView.setItems(filteredList);
+        }
     }
 
 }

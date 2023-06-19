@@ -12,9 +12,11 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Font;
+import library.application.staff.borrow.BorrowSceneController;
 import library.application.staff.interfac.SceneFeatureGate;
 import library.application.staff.publication.BookSceneController;
 import library.application.staff.publication.PrintMediaSceneController;
+import library.application.staff.staff.StaffSceneController;
 import library.application.staff.student.StudentSceneController;
 import library.mysql.dao.UserDAO;
 import library.user.User;
@@ -38,10 +40,18 @@ public class MainSceneController implements SceneFeatureGate {
 
     @FXML
     private BookSceneController bookSceneController;
+    
     @FXML
     private PrintMediaSceneController printMediaSceneController;
+    
     @FXML
     private StudentSceneController studentSceneController;
+    
+    @FXML
+    private BorrowSceneController borrowSceneController;
+    
+    @FXML
+    private StaffSceneController staffSceneController;
 
     private UserDAO userDAO = new UserDAO();
     private User logUser;
@@ -101,12 +111,18 @@ public class MainSceneController implements SceneFeatureGate {
 
     @FXML
     private Tab tabStudent;
+    
+    @FXML
+    private Tab tabClerk;
 
 	@Override
 	public void setFeatureFor(Integer user) {
 		if (user == STUDENT) {
 			tabPane.getTabs().remove(tabBorrow);
 			tabPane.getTabs().remove(tabStudent);
+			tabPane.getTabs().remove(tabClerk);
+		} else if (user == CLERK) {
+			tabPane.getTabs().remove(tabClerk);
 		}
 	}
 

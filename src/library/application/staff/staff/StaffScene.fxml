@@ -11,15 +11,15 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane minHeight="0.0" minWidth="0.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="library.application.staff.borrow.BorrowSceneController">
+<AnchorPane minHeight="0.0" minWidth="0.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="library.application.staff.staff.StaffSceneController">
    <children>
       <VBox fx:id="paneMain" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <HBox alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="484.0" spacing="10.0" VBox.vgrow="NEVER">
                <children>
-                  <Button fx:id="btnAdd" mnemonicParsing="false" onAction="#btnActionAddBorrow" text="Thêm" />
-                  <ToggleButton fx:id="btnEdit" mnemonicParsing="false" onAction="#btnActionEditBorrow" text="Sửa" />
-                  <Button fx:id="btnDelete" mnemonicParsing="false" onAction="#btnActionDeleteBorrow" text="Xóa">
+                  <Button fx:id="btnAdd" mnemonicParsing="false" onAction="#btnActionAddStaff" text="Thêm" />
+                  <ToggleButton fx:id="btnEdit" mnemonicParsing="false" onAction="#btnActionEditStaff" text="Sửa" />
+                  <Button fx:id="btnDelete" mnemonicParsing="false" onAction="#btnActionDeleteStaff" text="Xóa">
                      <HBox.margin>
                         <Insets right="20.0" />
                      </HBox.margin></Button>
@@ -33,28 +33,27 @@
                   <Insets bottom="15.0" />
                </VBox.margin>
             </HBox>
-            <TableView fx:id="borrowTableView" prefHeight="561.0" prefWidth="870.0" VBox.vgrow="ALWAYS">
+            <TableView fx:id="staffTableView" prefHeight="561.0" prefWidth="870.0" VBox.vgrow="ALWAYS">
+               <columns>
+                  <TableColumn fx:id="colStaffID" prefWidth="96.0" text="Mã nhân viên" />
+                  <TableColumn fx:id="colName" prefWidth="113.0" text="Họ tên" />
+                  <TableColumn fx:id="colGender" prefWidth="61.0" text="Giới tính" />
+                  <TableColumn fx:id="colEmail" prefWidth="85.0" text="Email" />
+                  <TableColumn fx:id="colPhoneNum" prefWidth="97.0" text="Số điện thoại" />
+                  <TableColumn fx:id="colAddress" prefWidth="116.0" text="Địa chỉ" />
+                  <TableColumn fx:id="colPosition" prefWidth="116.0" text="Chức vụ" />
+                  <TableColumn fx:id="colUsername" prefWidth="85.0" text="Tên đăng nhập" />
+                  <TableColumn fx:id="colPassword" prefWidth="85.0" text="Mật khẩu" />
+               </columns>
                <columnResizePolicy>
                   <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                </columnResizePolicy>
-               <columns>
-                  <TableColumn fx:id="colID" prefWidth="40.0" text="ID" />
-                  <TableColumn fx:id="colStudentID" prefWidth="116.0" text="Mã sinh viên" />
-                  <TableColumn fx:id="colPublicationID" prefWidth="66.0" text="Mã ấn phẩm" />
-                  <TableColumn fx:id="colPublicationTitle" prefWidth="117.0" text="Tên ấn phẩm" />
-                  <TableColumn fx:id="colBorrowQuantity" prefWidth="102.0" text="Số lượng mượn" />
-                  <TableColumn fx:id="colStartDate" prefWidth="97.0" text="Ngày mượn" />
-                  <TableColumn fx:id="colDueDate" prefWidth="86.0" text="Ngày hạn" />
-                  <TableColumn fx:id="colReturnedDate" prefWidth="77.0" text="Ngày trả" />
-                  <TableColumn fx:id="colFineStatus" prefWidth="116.0" text="Tình trạng phạt" />
-                  <TableColumn fx:id="colReturnedStatus" prefWidth="116.0" text="Tình trạng trả" />
-               </columns>
             </TableView>
          </children>
       </VBox>
       <AnchorPane fx:id="paneAdd" layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <fx:include fx:id="addBorrowScene" source="../add/AddBorrow.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+            <fx:include fx:id="addStaffScene" source="../add/AddStaff.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
             <Button mnemonicParsing="false" onAction="#btnActionReturn" text="Quay lại" />
          </children>
       </AnchorPane>

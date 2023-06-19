@@ -149,6 +149,18 @@
                         </AnchorPane>
                      </content>
                   </Tab>
+                  <Tab fx:id="tabClerk" text="Nhân viên">
+                     <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <AnchorPane prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                 <children>
+                                    <fx:include fx:id="staffScene" source="staff/StaffScene.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                 </children></AnchorPane>
+                           </children>
+                        </AnchorPane>
+                     </content>
+                  </Tab>
                   <Tab text="Thông tin">
                      <content>
                         <AnchorPane>
@@ -168,9 +180,9 @@
          <top>
             <MenuBar BorderPane.alignment="CENTER">
               <menus>
-                <Menu mnemonicParsing="false" text="Cài đặt">
+                <Menu mnemonicParsing="false" text=".  .  .">
                      <items>
-                        <MenuItem mnemonicParsing="false" onAction="#mainLogOut" text="Log out" />
+                        <MenuItem mnemonicParsing="false" onAction="#mainLogOut" text="Đăng xuất" />
                      </items>
                   </Menu>
               </menus>

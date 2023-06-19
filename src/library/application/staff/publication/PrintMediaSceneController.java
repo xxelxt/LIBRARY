@@ -91,7 +91,6 @@ public class PrintMediaSceneController implements Initializable, SceneFeatureGat
         data = FXCollections.observableArrayList();
 
         List<PrintMedia> allPM = pmDAO.loadAllPrintMedias();
-		System.out.println(allPM);
 
 	    for (PrintMedia pm : allPM){
 	    	data.add(pm);
@@ -145,8 +144,6 @@ public class PrintMediaSceneController implements Initializable, SceneFeatureGat
 
         setupEditableColumn(colReleaseNumber, new IntegerStringConverter(), PrintMedia::setReleaseNumber);
         setupEditableColumn(colQuantity, new IntegerStringConverter(), PrintMedia::setQuantity);
-
-//        colQuantity.setCellValueFactory(new PropertyValueFactory<>("quantity"));
 
         EventHandler<CellEditEvent<PrintMedia, String>> commonHandler = e -> {
         	PrintMedia pm = e.getTableView().getItems().get(e.getTablePosition().getRow());

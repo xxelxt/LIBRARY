@@ -105,7 +105,6 @@ public class BookSceneController implements Initializable, SceneFeatureGate {
         data = FXCollections.observableArrayList();
 
         List<Books> allBooks = bookDAO.loadAllBooks();
-		System.out.println(allBooks);
 
 	    for (Books book: allBooks){
 	    	data.add(book);
@@ -448,7 +447,6 @@ public class BookSceneController implements Initializable, SceneFeatureGate {
             booksTableView.setItems(filteredList);
         }
     }
-
 
     @FXML
     private Button btnAdd;
