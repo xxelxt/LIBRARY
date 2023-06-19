@@ -40,16 +40,16 @@ public class MainSceneController implements SceneFeatureGate {
 
     @FXML
     private BookSceneController bookSceneController;
-    
+
     @FXML
     private PrintMediaSceneController printMediaSceneController;
-    
+
     @FXML
     private StudentSceneController studentSceneController;
-    
+
     @FXML
     private BorrowSceneController borrowSceneController;
-    
+
     @FXML
     private StaffSceneController staffSceneController;
 
@@ -111,7 +111,7 @@ public class MainSceneController implements SceneFeatureGate {
 
     @FXML
     private Tab tabStudent;
-    
+
     @FXML
     private Tab tabClerk;
 

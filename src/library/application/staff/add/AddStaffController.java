@@ -42,7 +42,7 @@ public class AddStaffController {
 
     @FXML
     private TextField fieldUsername;
-    
+
     private ObservableList<String> genderItems = FXCollections.observableArrayList("Nam", "Nữ");
 
     private ObservableList<String> posItems = FXCollections.observableArrayList("Thủ thư", "Nhân viên");
@@ -69,7 +69,7 @@ public class AddStaffController {
         comboboxPosition.setItems(posItems);
         comboboxPosition.setValue("Nhân viên");
     }
-    
+
     @FXML
     void btnAddStaff(ActionEvent event) {
         StaffDAO staffDAO = new StaffDAO();
@@ -90,7 +90,7 @@ public class AddStaffController {
 
         clearTextField();
     }
-    
+
     void clearTextField() {
     	fieldName.clear();
     	fieldUsername.clear();

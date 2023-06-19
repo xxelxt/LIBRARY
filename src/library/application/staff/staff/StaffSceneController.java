@@ -16,10 +16,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
-import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.input.KeyEvent;
@@ -71,7 +71,7 @@ public class StaffSceneController implements Initializable {
 
     @FXML
     private TextField fieldSearch;
-    
+
     @FXML
     private Button btnAdd;
 
@@ -86,13 +86,13 @@ public class StaffSceneController implements Initializable {
 
     @FXML
     private VBox paneMain;
-    
+
     private ObservableList<Staff> data;
 
     private ObservableList<String> items = FXCollections.observableArrayList("Mã nhân viên", "Tên nhân viên", "Số điện thoại");
 
     private StaffDAO staffDAO = new StaffDAO();
-    
+
     public void refresh() {
         data = FXCollections.observableArrayList();
 
@@ -104,12 +104,12 @@ public class StaffSceneController implements Initializable {
 
 	    staffTableView.setItems(data);
     }
-    
+
     public void scrollToLast() {
     	int lastIndex = staffTableView.getItems().size() - 1;
     	staffTableView.scrollTo(lastIndex);
     }
-    
+
     private void editableCols(){
         colName.setCellFactory(TextFieldTableCell.forTableColumn());
         colEmail.setCellFactory(TextFieldTableCell.forTableColumn());
@@ -134,7 +134,7 @@ public class StaffSceneController implements Initializable {
         colPhoneNum.setOnEditCommit(commonHandler);
         colAddress.setOnEditCommit(commonHandler);
     }
-    
+
     @Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
         System.out.println("Staff controller initialized");
@@ -226,7 +226,7 @@ public class StaffSceneController implements Initializable {
         String searchOption = comboBox.getValue();
         SearchData(searchText, searchOption);
     }
-    
+
     private void SearchData(String searchText, String searchOption) {
         if (searchText.isEmpty()) {
             // If the search text is empty, revert to the original unfiltered list

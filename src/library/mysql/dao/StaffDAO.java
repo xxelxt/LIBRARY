@@ -56,7 +56,7 @@ public class StaffDAO {
 		if (Position.equals("Thủ thư")) {
 			userstf = userDAO.addUser(Username, Password, 1);
 		} else userstf = userDAO.addUser(Username, Password, 2);
-				
+
 		try {
 			 String studentSql = "INSERT INTO Staff (Name, Username, Gender, Email, Phone, Address, Position) VALUES (?, ?, ?, ?, ?, ?, ?)";
 			 PreparedStatement student_pstmt = DatabaseLayer.prepareStatement(studentSql);
@@ -64,7 +64,7 @@ public class StaffDAO {
 			 student_pstmt.setString(1, Name);
 			 student_pstmt.setString(2, userstf);
 			 student_pstmt.setBoolean(3, Gender);
-			 
+
 			 student_pstmt.setString(4, Email);
 			 student_pstmt.setString(5, Phone);
 			 student_pstmt.setString(6, Address);

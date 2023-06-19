@@ -10,7 +10,7 @@ public class Staff extends Person {
 		StaffID = staffID;
 		Position = position;
 	}
-	
+
 	public String getUsername() {
 	    return this.getAccount().getUsername();
 	}

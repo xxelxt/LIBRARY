@@ -95,7 +95,7 @@ public class BorrowDAO {
 	    }
 	    return true;
 	}
-	
+
 	public boolean updateBorrow(Borrow borrow) {
 		try {
             String sql = "UPDATE Borrow "
@@ -114,15 +114,15 @@ public class BorrowDAO {
             pstmt.setString(1, borrow.getStudentID());
             pstmt.setInt(2, borrow.getPublicationID());
             pstmt.setInt(3, borrow.getBorrowQuantity());
-            
+
             pstmt.setDate(4, borrow.getStartDate());
             pstmt.setDate(5, borrow.getDueDate());
             pstmt.setDate(6, borrow.getReturnedDate());
-            
+
             pstmt.setBoolean(7, borrow.isFineStatus());
             pstmt.setBoolean(8, borrow.isReturnedStatus());
             pstmt.setInt(9, borrow.getBorrowID());
-            
+
             pstmt.executeUpdate();
             pstmt.close();
 
@@ -134,6 +134,6 @@ public class BorrowDAO {
 
 		return true;
 	}
-	
-	
+
+
 }

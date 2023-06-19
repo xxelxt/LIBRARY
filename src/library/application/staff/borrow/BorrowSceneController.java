@@ -17,10 +17,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
-import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.input.KeyEvent;
@@ -116,7 +116,7 @@ public class BorrowSceneController implements Initializable {
     	int lastIndex = borrowTableView.getItems().size() - 1;
     	borrowTableView.scrollTo(lastIndex);
     }
-    
+
     private <T> void setupEditableColumn(TableColumn<Borrow, T> column, StringConverter<T> converter, BiConsumer<Borrow, T> updateAction) {
         column.setCellFactory(TextFieldTableCell.forTableColumn(converter));
 
@@ -149,10 +149,10 @@ public class BorrowSceneController implements Initializable {
             }
         });
     }
-    
+
     private void editableCols(){
         colStudentID.setCellFactory(TextFieldTableCell.forTableColumn());
-        
+
         setupEditableColumn(colPublicationID, new IntegerStringConverter(), Borrow::setPublicationID);
         setupEditableColumn(colBorrowQuantity, new IntegerStringConverter(), Borrow::setBorrowQuantity);
 
@@ -266,7 +266,7 @@ public class BorrowSceneController implements Initializable {
         String searchOption = comboBox.getValue();
         SearchData(searchText, searchOption);
     }
-    
+
     private void SearchData(String searchText, String searchOption) {
         if (searchText.isEmpty()) {
             // If the search text is empty, revert to the original unfiltered list
