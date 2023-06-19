@@ -53,9 +53,9 @@ public class AddStudentController {
     private TextField fieldUsername;
 
     private ObservableList<String> genderItems = FXCollections.observableArrayList("Nam", "Nữ");
-    
+
     private ObservableList<String> fineItems = FXCollections.observableArrayList("Không bị phạt", "Bị phạt");
-    
+
     @FXML
     void initialize() {
         assert comboboxFineStatus != null : "fx:id=\"comboboxFineStatus\" was not injected: check your FXML file 'AddStudent.fxml'.";
@@ -72,10 +72,10 @@ public class AddStudentController {
 
         comboboxGender.setItems(genderItems);
         comboboxGender.setValue("Nữ");
-        
+
         comboboxFineStatus.setItems(fineItems);
         comboboxFineStatus.setValue("Không bị phạt");
-        
+
         fieldFine.setText("0");
     }
 
@@ -85,7 +85,7 @@ public class AddStudentController {
 
         String gender = comboboxGender.getValue();
         boolean isFemale = gender.equals("Nữ");
-        
+
         String finestatus = comboboxFineStatus.getValue();
         boolean isFined = finestatus.equals("Bị phạt");
 

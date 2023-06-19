@@ -12,7 +12,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Font;
-
 import library.application.staff.interfac.SceneFeatureGate;
 import library.application.staff.publication.BookSceneController;
 import library.application.staff.publication.PrintMediaSceneController;
@@ -75,7 +74,7 @@ public class MainSceneController implements SceneFeatureGate {
             btnLogin(new ActionEvent());
         }
     }
-    
+
     @FXML
     void onUsernameKeyPressed(KeyEvent event) {
         if (event.getCode() == KeyCode.ENTER) {
@@ -110,7 +109,7 @@ public class MainSceneController implements SceneFeatureGate {
 			tabPane.getTabs().remove(tabStudent);
 		}
 	}
-	
+
 	@FXML
     public void initialize() {
         labelWarning.setStyle("-fx-text-fill: #ffffff;");

@@ -55,7 +55,7 @@ public class Main extends Application {
 			DatabaseLayer.getConnection();
 			this.primaryStage = primaryStage;
 			this.restart();
-			
+
 	        Image icon = new Image(getClass().getResourceAsStream("icon.png"));
 	        primaryStage.getIcons().add(icon);
 

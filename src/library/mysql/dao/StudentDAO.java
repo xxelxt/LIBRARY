@@ -37,9 +37,9 @@ public class StudentDAO {
             			rs.getString(7),
             			rs.getBoolean(8),
             			rs.getInt(9),
-            			user	
+            			user
             	);
-            	
+
                 students.add(student);
             }
 
@@ -55,7 +55,7 @@ public class StudentDAO {
 	public boolean addStudent(String StudentID, String Name, String ClassName, String Username, String Password, boolean Gender,
             String Email, String Phone, String Address, boolean FineStatus, int Fine) {
 		String userstd = userDAO.addUserStudent(Username, Password);
-		
+
 		try {
 			 String studentSql = "INSERT INTO Students (StudentID, Name, ClassName, Username, Gender, Email, Phone, Address, FineStatus, Fine) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 			 PreparedStatement student_pstmt = DatabaseLayer.prepareStatement(studentSql);
@@ -63,7 +63,7 @@ public class StudentDAO {
 			 student_pstmt.setString(1, StudentID);
 			 student_pstmt.setString(2, Name);
 			 student_pstmt.setString(3, ClassName);
-			 
+
 			 student_pstmt.setString(4, userstd);
 
 			 student_pstmt.setBoolean(5, Gender);
@@ -73,10 +73,10 @@ public class StudentDAO {
 			 student_pstmt.setString(8, Address);
 			 student_pstmt.setBoolean(9, FineStatus);
 			 student_pstmt.setInt(10, Fine);
-			 
+
 			 student_pstmt.executeUpdate();
 			 student_pstmt.close();
-			 
+
 			 System.out.println("Added student.");
 
 		} catch (Exception e) {
@@ -122,13 +122,15 @@ public class StudentDAO {
 	        deleteUsersStmt.executeUpdate();
 	        deleteUsersStmt.close();
 
+	        System.out.println("Deleted student and user account.");
+
 	    } catch (Exception e) {
 	        System.out.println(e);
 	        return false;
 	    }
 	    return true;
 	}
-	
+
 	public boolean updateStudent(Student std) {
 		try {
             String sql = "UPDATE Students "
@@ -162,7 +164,7 @@ public class StudentDAO {
             System.out.println(e);
             return false;
         }
-		
+
 		return true;
 	}
 

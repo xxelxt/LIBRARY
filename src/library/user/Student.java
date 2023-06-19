@@ -5,16 +5,16 @@ public class Student extends Person {
 	private String ClassName;
 	private boolean FineStatus;
 	private int Fine;
-	
+
 	public String getUsername() {
 	    return this.getAccount().getUsername();
 	}
-	
+
 	public String getPassword() {
 	    return this.getAccount().getPassword();
 	}
 
-	public Student(String studentID, String name, String className, boolean gender, String email, String phone, String address, 
+	public Student(String studentID, String name, String className, boolean gender, String email, String phone, String address,
 			 boolean fineStatus, int fine, User account) {
 		super(name, gender, address, email, phone, account);
 		StudentID = studentID;

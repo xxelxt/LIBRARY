@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import library.mysql.DatabaseLayer;
-import library.publication.Books;
 import library.publication.PrintMedia;
 
 public class PrintMediaDAO {
@@ -71,7 +70,7 @@ public class PrintMediaDAO {
         }
         return true;
     }
-	
+
 	public boolean updatePrintMedia(PrintMedia pm) {
     	try {
             String sql = "UPDATE Publications P "

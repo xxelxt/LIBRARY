@@ -56,4 +56,26 @@ public class PublicationDAO {
         }
         return true;
     }
+
+    public String getTitlebyPublicationID(Integer publicationID) {
+    	String title = "";
+    	try {
+    		String sql = "SELECT Title FROM Publication WHERE PublicationID = ?";
+            PreparedStatement pstmt = DatabaseLayer.prepareStatement(sql);
+            pstmt.setInt(1, publicationID);
+
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                title = rs.getString(1);
+            }
+            rs.close();
+            pstmt.close();
+
+        } catch (Exception e) {
+            System.out.println(e);
+    	}
+
+    	return title;
+    }
 }

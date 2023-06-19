@@ -1,16 +1,31 @@
 package library.application.staff.borrow;
 
 import java.net.URL;
+import java.sql.Date;
+import java.util.List;
 import java.util.ResourceBundle;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleButton;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
+import library.central.Borrow;
+import library.mysql.dao.BorrowDAO;
+import library.publication.Publication;
 
-public class BorrowSceneController {
+public class BorrowSceneController implements Initializable {
 
     @FXML
     private ResourceBundle resources;
@@ -19,110 +34,185 @@ public class BorrowSceneController {
     private URL location;
 
     @FXML
-    private TableView<?> borrowTableView;
+    private TableView<Borrow> borrowTableView;
 
     @FXML
-    private Button buttonBook;
+    private Button btnAdd;
 
     @FXML
-    private Button buttonBorrow;
+    private Button btnDelete;
 
     @FXML
-    private Button buttonInfo;
+    private ToggleButton btnEdit;
 
     @FXML
-    private Button buttonLogOut;
+    private TableColumn<Borrow, Integer> colBorrowQuantity;
 
     @FXML
-    private Button buttonPrintMedia;
+    private TableColumn<Borrow, Date> colDueDate;
 
     @FXML
-    private Button buttonStudent;
+    private TableColumn<Borrow, Boolean> colFineStatus;
 
     @FXML
-    private TableColumn<?, ?> colBorrowQuantity;
+    private TableColumn<Borrow, Integer> colID;
 
     @FXML
-    private TableColumn<?, ?> colDueDate;
+    private TableColumn<Borrow, Integer> colPublicationID;
 
     @FXML
-    private TableColumn<?, ?> colFineStatus;
+    private TableColumn<Publication, String> colPublicationTitle;
 
     @FXML
-    private TableColumn<?, ?> colID;
+    private TableColumn<Borrow, Date> colReturnedDate;
 
     @FXML
-    private TableColumn<?, ?> colPublicationID;
+    private TableColumn<Borrow, Boolean> colReturnedStatus;
 
     @FXML
-    private TableColumn<?, ?> colPublicationTitle;
+    private TableColumn<Borrow, Date> colStartDate;
 
     @FXML
-    private TableColumn<?, ?> colReturnedDate;
+    private TableColumn<Borrow, String> colStudentID;
 
     @FXML
-    private TableColumn<?, ?> colReturnedStatus;
+    private ComboBox<String> comboBox;
 
     @FXML
-    private TableColumn<?, ?> colStartDate;
-
-    @FXML
-    private TableColumn<?, ?> colStudentID;
+    private ComboBox<String> comboBoxReturned;
 
     @FXML
     private TextField fieldSearch;
 
     @FXML
-    void btnAddBorrow(ActionEvent event) {
+    private AnchorPane paneAdd;
+
+    @FXML
+    private VBox paneMain;
+
+    private ObservableList<Borrow> data;
+
+    private ObservableList<String> items = FXCollections.observableArrayList("Mã mượn", "Mã sinh viên");
+    private ObservableList<String> returnedItems = FXCollections.observableArrayList("Tất cả", "Đã trả", "Chưa trả");
+
+    private BorrowDAO borrowDAO = new BorrowDAO();
+
+    public void refresh() {
+        data = FXCollections.observableArrayList();
+
+        List<Borrow> allBorrow = borrowDAO.loadAllBorrow();
+		System.out.println(allBorrow);
+
+	    for (Borrow borrow : allBorrow){
+	    	data.add(borrow);
+	    }
+
+	    borrowTableView.setItems(data);
+    }
+
+    public void scrollToLast() {
+    	int lastIndex = borrowTableView.getItems().size() - 1;
+    	borrowTableView.scrollTo(lastIndex);
+    }
+
+    @Override
+	public void initialize(URL arg0, ResourceBundle arg1) {
+        System.out.println("Borrow controller initialized");
+        // Add a default row
+		refresh();
+		// editableCols();
+
+        // Bind the ObservableList to the TableView
+        borrowTableView.setItems(data);
+
+        fieldSearch.setPromptText("Thông tin tìm kiếm");
+
+        comboBox.setPromptText("Thuộc tính tìm kiếm");
+        comboBox.setItems(items);
+        comboBox.setValue("Mã sinh viên");
+
+        comboBoxReturned.setPromptText("Thuộc tính tìm kiếm");
+        comboBoxReturned.setItems(returnedItems);
+        comboBoxReturned.setValue("Tất cả");
+
+//        fieldSearch.textProperty().addListener((observable, oldValue, newValue) -> {
+//            String searchText = newValue;
+//            String searchOption = comboBox.getValue();
+//            SearchData(searchText, searchOption);
+//        });
+
+        // Bind the columns to the corresponding properties in MyDataModel
+        colID.setCellValueFactory(new PropertyValueFactory<>("borrowID"));
+        colStudentID.setCellValueFactory(new PropertyValueFactory<>("studentID"));
+        colPublicationID.setCellValueFactory(new PropertyValueFactory<>("publicationID"));
+        colPublicationTitle.setCellValueFactory(new PropertyValueFactory<>("title"));
+        colBorrowQuantity.setCellValueFactory(new PropertyValueFactory<>("borrowQuantity"));
+
+        colStartDate.setCellValueFactory(new PropertyValueFactory<>("startDate"));
+        colDueDate.setCellValueFactory(new PropertyValueFactory<>("dueDate"));
+        colReturnedDate.setCellValueFactory(new PropertyValueFactory<>("returnedDate"));
+        colFineStatus.setCellValueFactory(new PropertyValueFactory<>("fineStatus"));
+        colReturnedStatus.setCellValueFactory(new PropertyValueFactory<>("returnedStatus"));
+
+        colFineStatus.setCellFactory(col -> new TableCell<>() {
+            @Override
+            protected void updateItem(Boolean item, boolean empty) {
+                super.updateItem(item, empty) ;
+                setText(empty ? null : item ? "Bị phạt" : "Không bị phạt" );
+            }
+        });
+
+        colReturnedStatus.setCellFactory(col -> new TableCell<>() {
+            @Override
+            protected void updateItem(Boolean item, boolean empty) {
+                super.updateItem(item, empty) ;
+                setText(empty ? null : item ? "Đã trả" : "Chưa trả" );
+            }
+        });
+	}
+
+	Date now = new Date(new java.util.Date().getTime());
+
+    @FXML
+    void btnActionAddBorrow(ActionEvent event) {
+    	paneMain.setVisible(false);
+    	paneAdd.setVisible(true);
+    }
+
+    @FXML
+    void btnActionDeleteBorrow(ActionEvent event) {
+    	Integer selectedIndex = borrowTableView.getSelectionModel().getSelectedIndex();
+    	Borrow selectedRow = borrowTableView.getSelectionModel().getSelectedItem();
+
+    	if (selectedRow != null) {
+	    	borrowDAO.deleteBorrow(selectedRow.getBorrowID());
+	    	this.refresh();
+
+	        if (selectedIndex >= 0 && selectedIndex < data.size()) {
+	        	borrowTableView.getSelectionModel().select(selectedIndex);
+	        }
+    	} else {
+    		borrowTableView.getSelectionModel().clearSelection();
+        }
+    }
+
+    @FXML
+    void btnActionEditBorrow(ActionEvent event) {
 
     }
 
     @FXML
-    void btnDeleteBorrow(ActionEvent event) {
-
+    void btnActionReturn(ActionEvent event) {
+    	paneMain.setVisible(true);
+    	paneAdd.setVisible(false);
+    	this.refresh();
     }
 
     @FXML
-    void btnEditBorrow(ActionEvent event) {
-
-    }
-
-    @FXML
-    void btnNotReturn(ActionEvent event) {
-
-    }
-
-    @FXML
-    void btnReturned(ActionEvent event) {
-
-    }
-
-    @FXML
-    void btnSearch(ActionEvent event) {
-
-    }
-
-    @FXML
-    void initialize() {
-        assert borrowTableView != null : "fx:id=\"borrowTableView\" was not injected: check your FXML file 'BorrowScene.fxml'.";
-        assert buttonBook != null : "fx:id=\"buttonBook\" was not injected: check your FXML file 'BorrowScene.fxml'.";
-        assert buttonBorrow != null : "fx:id=\"buttonBorrow\" was not injected: check your FXML file 'BorrowScene.fxml'.";
-        assert buttonInfo != null : "fx:id=\"buttonInfo\" was not injected: check your FXML file 'BorrowScene.fxml'.";
-        assert buttonLogOut != null : "fx:id=\"buttonLogOut\" was not injected: check your FXML file 'BorrowScene.fxml'.";
-        assert buttonPrintMedia != null : "fx:id=\"buttonPrintMedia\" was not injected: check your FXML file 'BorrowScene.fxml'.";
-        assert buttonStudent != null : "fx:id=\"buttonStudent\" was not injected: check your FXML file 'BorrowScene.fxml'.";
-        assert colBorrowQuantity != null : "fx:id=\"colBorrowQuantity\" was not injected: check your FXML file 'BorrowScene.fxml'.";
-        assert colDueDate != null : "fx:id=\"colDueDate\" was not injected: check your FXML file 'BorrowScene.fxml'.";
-        assert colFineStatus != null : "fx:id=\"colFineStatus\" was not injected: check your FXML file 'BorrowScene.fxml'.";
-        assert colID != null : "fx:id=\"colID\" was not injected: check your FXML file 'BorrowScene.fxml'.";
-        assert colPublicationID != null : "fx:id=\"colPublicationID\" was not injected: check your FXML file 'BorrowScene.fxml'.";
-        assert colPublicationTitle != null : "fx:id=\"colPublicationTitle\" was not injected: check your FXML file 'BorrowScene.fxml'.";
-        assert colReturnedDate != null : "fx:id=\"colReturnedDate\" was not injected: check your FXML file 'BorrowScene.fxml'.";
-        assert colReturnedStatus != null : "fx:id=\"colReturnedStatus\" was not injected: check your FXML file 'BorrowScene.fxml'.";
-        assert colStartDate != null : "fx:id=\"colStartDate\" was not injected: check your FXML file 'BorrowScene.fxml'.";
-        assert colStudentID != null : "fx:id=\"colStudentID\" was not injected: check your FXML file 'BorrowScene.fxml'.";
-        assert fieldSearch != null : "fx:id=\"fieldSearch\" was not injected: check your FXML file 'BorrowScene.fxml'.";
-
+    void inputSearch(KeyEvent event) {
+    	String searchText = fieldSearch.getText();
+        String searchOption = comboBox.getValue();
+        // SearchData(searchText, searchOption);
     }
 
 }

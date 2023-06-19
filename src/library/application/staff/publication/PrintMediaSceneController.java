@@ -17,10 +17,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
-import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.input.KeyEvent;
@@ -31,7 +31,6 @@ import javafx.util.StringConverter;
 import javafx.util.converter.IntegerStringConverter;
 import library.application.staff.interfac.SceneFeatureGate;
 import library.mysql.dao.PrintMediaDAO;
-import library.publication.Books;
 import library.publication.PrintMedia;
 import library.publication.Publication;
 
@@ -42,7 +41,7 @@ public class PrintMediaSceneController implements Initializable, SceneFeatureGat
 
     @FXML
     private URL location;
-    
+
     // Table
     @FXML
     private TableView<PrintMedia> printMediaTableView;
@@ -71,21 +70,21 @@ public class PrintMediaSceneController implements Initializable, SceneFeatureGat
     // Searching
     @FXML
     private ComboBox<String> comboBox;
-    
+
     @FXML
     private TextField fieldSearch;
 
     private ObservableList<String> comboBoxItems = FXCollections.observableArrayList("ID", "Tên ẩn phẩm", "Loại ấn phẩm", "Quốc gia");
-    
+
     // PANES & DATA
     @FXML
     private VBox paneMain;
-    
+
     @FXML
     private AnchorPane paneAdd;
-    
+
     private ObservableList<PrintMedia> data;
-    
+
     private PrintMediaDAO pmDAO = new PrintMediaDAO();
 
     public void refresh() {
@@ -97,7 +96,7 @@ public class PrintMediaSceneController implements Initializable, SceneFeatureGat
 	    for (PrintMedia pm : allPM){
 	    	data.add(pm);
 	    }
-	    
+
 	    printMediaTableView.setItems(data);
     }
 
@@ -105,7 +104,7 @@ public class PrintMediaSceneController implements Initializable, SceneFeatureGat
     	int lastIndex = printMediaTableView.getItems().size() - 1;
     	printMediaTableView.scrollTo(lastIndex);
     }
-    
+
     private <T> void setupEditableColumn(TableColumn<PrintMedia, T> column, StringConverter<T> converter, BiConsumer<PrintMedia, T> updateAction) {
         column.setCellFactory(TextFieldTableCell.forTableColumn(converter));
 
@@ -125,7 +124,7 @@ public class PrintMediaSceneController implements Initializable, SceneFeatureGat
 
         column.setOnEditStart(event -> {
             if (!btnEdit.isSelected()) {
-                TableColumn.CellEditEvent<PrintMedia, T> cellEditEvent = (TableColumn.CellEditEvent<PrintMedia, T>) event;
+                TableColumn.CellEditEvent<PrintMedia, T> cellEditEvent = event;
                 TableView<PrintMedia> tableView = cellEditEvent.getTableView();
                 tableView.edit(tableView.getSelectionModel().getSelectedIndex(), column);
             }
@@ -138,7 +137,7 @@ public class PrintMediaSceneController implements Initializable, SceneFeatureGat
             }
         });
     }
-    
+
     private void editableCols(){
         colTitle.setCellFactory(TextFieldTableCell.forTableColumn());
         colCountry.setCellFactory(TextFieldTableCell.forTableColumn());
@@ -155,10 +154,10 @@ public class PrintMediaSceneController implements Initializable, SceneFeatureGat
         	if (col == colTitle) { pm.setTitle(e.getNewValue()); }
         	else if (col == colCountry) { pm.setCountry(e.getNewValue()); }
         	else if (col == colPrintType) { pm.setPrintType(e.getNewValue()); }
-        	
+
         	pmDAO.updatePrintMedia(pm);
         };
-        
+
         colTitle.setOnEditCommit(commonHandler);
         colCountry.setOnEditCommit(commonHandler);
         colPrintType.setOnEditCommit(commonHandler);
@@ -176,7 +175,7 @@ public class PrintMediaSceneController implements Initializable, SceneFeatureGat
 
         comboBox.setItems(comboBoxItems);
         comboBox.setValue("Tên ấn phẩm");
-        
+
         fieldSearch.textProperty().addListener((observable, oldValue, newValue) -> {
             String searchText = newValue;
             String searchOption = comboBox.getValue();
@@ -195,13 +194,13 @@ public class PrintMediaSceneController implements Initializable, SceneFeatureGat
 	}
 
 	Date now = new Date(new java.util.Date().getTime());
-	
+
     @FXML
     void btnActionAddPrintMedia(ActionEvent event) {
     	paneMain.setVisible(false);
     	paneAdd.setVisible(true);
     }
-    
+
     @FXML
     void btnActionReturn(ActionEvent event) {
     	paneMain.setVisible(true);
@@ -213,20 +212,20 @@ public class PrintMediaSceneController implements Initializable, SceneFeatureGat
     void btnActionDeletePrintMedia(ActionEvent event) {
     	Integer selectedIndex = printMediaTableView.getSelectionModel().getSelectedIndex();
     	Publication selectedRow = printMediaTableView.getSelectionModel().getSelectedItem();
-    	
+
     	if (selectedRow != null) {
 	    	pmDAO.deletePrintMedia(selectedRow.getPublicationID());
 	    	this.refresh();
-	    	
+
 	        if (selectedIndex >= 0 && selectedIndex < data.size()) {
 	        	printMediaTableView.getSelectionModel().select(selectedIndex);
-	        } 
+	        }
     	} else {
     		printMediaTableView.getSelectionModel().clearSelection();
         }
     }
-    
-    
+
+
     @FXML
     void btnActionEditPrintMedia(ActionEvent event) {
     	if (btnEdit.isSelected()) {
@@ -235,14 +234,14 @@ public class PrintMediaSceneController implements Initializable, SceneFeatureGat
     		printMediaTableView.setEditable(false);
     	}
     }
-    
+
     @FXML
     void inputSearch(KeyEvent event) {
         String searchText = fieldSearch.getText();
         String searchOption = comboBox.getValue();
         SearchData(searchText, searchOption);
     }
-    
+
     private void SearchData(String searchText, String searchOption) {
         if (searchText.isEmpty()) {
             // If the search text is empty, revert to the original unfiltered list
@@ -289,13 +288,13 @@ public class PrintMediaSceneController implements Initializable, SceneFeatureGat
 
     @FXML
     private Button btnAdd;
-    
+
     @FXML
     private Button btnDelete;
 
     @FXML
     private ToggleButton btnEdit;
-    
+
     @FXML
     private HBox hboxFeature;
 

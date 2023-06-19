@@ -28,7 +28,7 @@ public class InfoSceneController {
 
     @FXML
     private TextField fieldUsername;
-    
+
     private User currentUser;
 
     public void setCurrentUser(User currentUser) {

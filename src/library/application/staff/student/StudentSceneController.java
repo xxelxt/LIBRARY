@@ -16,18 +16,16 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
-import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import library.mysql.dao.StudentDAO;
-import library.publication.Books;
-import library.publication.Publication;
 import library.user.Student;
 
 public class StudentSceneController implements Initializable {
@@ -51,7 +49,7 @@ public class StudentSceneController implements Initializable {
     private TableColumn<Student, String> colEmail;
 
     @FXML
-    private TableColumn<Student, Double> colFine;
+    private TableColumn<Student, Integer> colFine;
 
     @FXML
     private TableColumn<Student, Boolean> colFineStatus;
@@ -61,7 +59,7 @@ public class StudentSceneController implements Initializable {
 
     @FXML
     private TableColumn<Student, String> colName;
-    
+
     @FXML
     private TableColumn<Student, String> colPassword;
 
@@ -70,7 +68,7 @@ public class StudentSceneController implements Initializable {
 
     @FXML
     private TableColumn<Student, String> colStudentID;
-    
+
     @FXML
     private TableColumn<Student, String> colUsername;
 
@@ -78,8 +76,11 @@ public class StudentSceneController implements Initializable {
     private ComboBox<String> comboBox;
 
     @FXML
+    private ComboBox<String> comboBoxFine;
+
+    @FXML
     private TextField fieldSearch;
-    
+
     @FXML
     private Button btnAdd;
 
@@ -98,6 +99,7 @@ public class StudentSceneController implements Initializable {
     private ObservableList<Student> data;
 
     private ObservableList<String> items = FXCollections.observableArrayList("Mã sinh viên", "Tên sinh viên", "Lớp", "Số điện thoại");
+    private ObservableList<String> fineItems = FXCollections.observableArrayList("Tất cả", "Không bị phạt", "Bị phạt");
 
     private StudentDAO studentDAO = new StudentDAO();
 
@@ -118,14 +120,14 @@ public class StudentSceneController implements Initializable {
     	int lastIndex = studentTableView.getItems().size() - 1;
     	studentTableView.scrollTo(lastIndex);
     }
-    
+
     private void editableCols(){
         colName.setCellFactory(TextFieldTableCell.forTableColumn());
         colEmail.setCellFactory(TextFieldTableCell.forTableColumn());
         colPhoneNum.setCellFactory(TextFieldTableCell.forTableColumn());
         colAddress.setCellFactory(TextFieldTableCell.forTableColumn());
         colClass.setCellFactory(TextFieldTableCell.forTableColumn());
-        
+
 //        colGender.setCellFactory(TextFieldTableCell.forTableColumn());
 //        colFineStatus.setCellFactory(TextFieldTableCell.forTableColumn());
 //        colFine.setCellFactory(TextFieldTableCell.forTableColumn());
@@ -164,7 +166,11 @@ public class StudentSceneController implements Initializable {
         comboBox.setPromptText("Thuộc tính tìm kiếm");
         comboBox.setItems(items);
         comboBox.setValue("Mã sinh viên");
-        
+
+        comboBoxFine.setPromptText("Thuộc tính tìm kiếm");
+        comboBoxFine.setItems(fineItems);
+        comboBoxFine.setValue("Tất cả");
+
         fieldSearch.textProperty().addListener((observable, oldValue, newValue) -> {
             String searchText = newValue;
             String searchOption = comboBox.getValue();
@@ -182,7 +188,7 @@ public class StudentSceneController implements Initializable {
         colAddress.setCellValueFactory(new PropertyValueFactory<>("address"));
         colFineStatus.setCellValueFactory(new PropertyValueFactory<>("fineStatus"));
         colFine.setCellValueFactory(new PropertyValueFactory<>("fine"));
-        
+
         colUsername.setCellValueFactory(new PropertyValueFactory<>("username"));
         colPassword.setCellValueFactory(new PropertyValueFactory<>("password"));
 
@@ -193,7 +199,7 @@ public class StudentSceneController implements Initializable {
                 setText(empty ? null : item ? "Nữ" : "Nam" );
             }
         });
-        
+
         colFineStatus.setCellFactory(col -> new TableCell<>() {
             @Override
             protected void updateItem(Boolean item, boolean empty) {
@@ -215,14 +221,14 @@ public class StudentSceneController implements Initializable {
     void btnActionDeleteStudent(ActionEvent event) {
     	Integer selectedIndex = studentTableView.getSelectionModel().getSelectedIndex();
     	Student selectedRow = studentTableView.getSelectionModel().getSelectedItem();
-    	
+
     	if (selectedRow != null) {
 	    	studentDAO.deleteStudent(selectedRow.getStudentID());
 	    	this.refresh();
-	    	
+
 	        if (selectedIndex >= 0 && selectedIndex < data.size()) {
 	        	studentTableView.getSelectionModel().select(selectedIndex);
-	        } 
+	        }
     	} else {
     		studentTableView.getSelectionModel().clearSelection();
         }
@@ -243,7 +249,7 @@ public class StudentSceneController implements Initializable {
         String searchOption = comboBox.getValue();
         SearchData(searchText, searchOption);
     }
-    
+
     private void SearchData(String searchText, String searchOption) {
         if (searchText.isEmpty()) {
             // If the search text is empty, revert to the original unfiltered list

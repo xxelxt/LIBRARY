@@ -25,6 +25,7 @@
                      </HBox.margin></Button>
                   <TextField fx:id="fieldSearch" onKeyPressed="#inputSearch" prefHeight="26.0" prefWidth="406.0" HBox.hgrow="ALWAYS" />
                   <ComboBox fx:id="comboBox" prefHeight="25.0" prefWidth="150.0" promptText="Thuộc tính tìm kiếm" HBox.hgrow="ALWAYS" />
+                  <ComboBox fx:id="comboBoxFine" prefHeight="25.0" prefWidth="150.0" promptText="Thuộc tính tìm kiếm" />
                </children>
                <opaqueInsets>
                   <Insets />

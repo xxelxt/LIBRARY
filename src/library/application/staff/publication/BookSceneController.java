@@ -2,11 +2,13 @@ package library.application.staff.publication;
 
 import java.net.URL;
 import java.sql.Date;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
-import java.util.function.Function;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -17,6 +19,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.ContentDisplay;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellEditEvent;
@@ -31,7 +35,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.util.StringConverter;
 import javafx.util.converter.IntegerStringConverter;
-
 import library.application.staff.interfac.SceneFeatureGate;
 import library.mysql.dao.AuthorDAO;
 import library.mysql.dao.BookDAO;
@@ -76,16 +79,16 @@ public class BookSceneController implements Initializable, SceneFeatureGate {
 
     @FXML
     private TableColumn<Books, Integer> colReissue;
-    
+
     // Searching
     @FXML
     private ComboBox<String> comboBox;
-    
+
     @FXML
     private TextField fieldSearch;
-    
+
     private ObservableList<String> comboBoxItems = FXCollections.observableArrayList("ID", "Tên sách", "Tác giả", "Quốc gia", "Thể loại");
-    
+
     // PANES & DATA
     @FXML
     private VBox paneMain;
@@ -94,7 +97,7 @@ public class BookSceneController implements Initializable, SceneFeatureGate {
     private AnchorPane paneAdd;
 
     private ObservableList<Books> data;
-    
+
     private AuthorDAO authorDAO = new AuthorDAO();
     private BookDAO bookDAO = new BookDAO();
 
@@ -115,7 +118,7 @@ public class BookSceneController implements Initializable, SceneFeatureGate {
     	int lastIndex = booksTableView.getItems().size() - 1;
     	booksTableView.scrollTo(lastIndex);
     }
-    
+
     private <T> void setupEditableColumn(TableColumn<Books, T> column, StringConverter<T> converter, BiConsumer<Books, T> updateAction) {
         column.setCellFactory(TextFieldTableCell.forTableColumn(converter));
 
@@ -135,7 +138,7 @@ public class BookSceneController implements Initializable, SceneFeatureGate {
 
         column.setOnEditStart(event -> {
             if (!btnEdit.isSelected()) {
-                TableColumn.CellEditEvent<Books, T> cellEditEvent = (TableColumn.CellEditEvent<Books, T>) event;
+                TableColumn.CellEditEvent<Books, T> cellEditEvent = event;
                 TableView<Books> tableView = cellEditEvent.getTableView();
                 tableView.edit(tableView.getSelectionModel().getSelectedIndex(), column);
             }
@@ -149,6 +152,38 @@ public class BookSceneController implements Initializable, SceneFeatureGate {
         });
     }
 
+    private StringConverter<LocalDate> getDateConverter() {
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        return new StringConverter<>() {
+            @Override
+            public String toString(LocalDate date) {
+                if (date != null) {
+                    return dateFormatter.format(date);
+                } else {
+                    return "";
+                }
+            }
+
+            @Override
+            public LocalDate fromString(String string) {
+                if (string != null && !string.isEmpty()) {
+                    return LocalDate.parse(string, dateFormatter);
+                } else {
+                    return null;
+                }
+            }
+        };
+    }
+
+    private Date getDateFromDatePicker(DatePicker datePicker) {
+        LocalDate localDate = datePicker.getValue();
+        if (localDate != null) {
+            return java.sql.Date.valueOf(localDate);
+        } else {
+            return null;
+        }
+    }
+
     private void editableCols(){
         colTitle.setCellFactory(TextFieldTableCell.forTableColumn());
         colCountry.setCellFactory(TextFieldTableCell.forTableColumn());
@@ -158,78 +193,105 @@ public class BookSceneController implements Initializable, SceneFeatureGate {
 
         setupEditableColumn(colReissue, new IntegerStringConverter(), Books::setReissue);
         setupEditableColumn(colQuantity, new IntegerStringConverter(), Books::setQuantity);
-        
-//        // EDIT REISSUE
-//        colReissue.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
-//
-//        colReissue.setOnEditCommit(event -> {
-//            if (btnEdit.isSelected()) {
-//                TableCell<Books, Integer> cell = event.getTablePosition().getTableColumn().getCellFactory().call(colReissue);
-//                if (cell != null) {
-//                    cell.commitEdit(event.getNewValue());
-//                }
-//
-//                Books book = event.getRowValue();
-//                book.setReissue(event.getNewValue()); // Update the reissue value in the Books object
-//
-//                bookDAO.updateBook(book); // Call the bookDAO method to update the book in the database
-//            }
-//        });
-//
-//        colReissue.setOnEditStart(event -> {
-//            if (!btnEdit.isSelected()) {
-//                TableColumn.CellEditEvent<Books, Integer> cellEditEvent = (TableColumn.CellEditEvent<Books, Integer>) event;
-//                TableView<Books> tableView = cellEditEvent.getTableView();
-//                TableColumn<Books, Integer> column = cellEditEvent.getTableColumn();
-//                tableView.edit(tableView.getSelectionModel().getSelectedIndex(), column);
-//            }
-//        });
-//
-//        // Additional event handler for colReissue
-//        colReissue.setOnEditCancel(event -> {
-//            TableCell<Books, Integer> cell = event.getTablePosition().getTableColumn().getCellFactory().call(colReissue);
-//            if (cell != null) {
-//                cell.cancelEdit();
-//            }
-//        });
-//        
-//        // EDIT QUANTITY
-//        colQuantity.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
-//        
-//        colQuantity.setOnEditCommit(event -> {
-//            if (btnEdit.isSelected()) {
-//                TableCell<Books, Integer> cell = event.getTablePosition().getTableColumn().getCellFactory().call(colQuantity);
-//                if (cell != null) {
-//                    cell.commitEdit(event.getNewValue());
-//                }
-//
-//                Books book = event.getRowValue();
-//                book.setQuantity(event.getNewValue()); // Update the quantity value in the Books object
-//
-//                bookDAO.updateBook(book); // Call the bookDAO method to update the book in the database
-//            }
-//        });
-//
-//        colQuantity.setOnEditStart(event -> {
-//            if (!btnEdit.isSelected()) {
-//                TableColumn.CellEditEvent<Books, Integer> cellEditEvent = (TableColumn.CellEditEvent<Books, Integer>) event;
-//                TableView<Books> tableView = cellEditEvent.getTableView();
-//                TableColumn<Books, Integer> column = cellEditEvent.getTableColumn();
-//                tableView.edit(tableView.getSelectionModel().getSelectedIndex(), column);
-//            }
-//        });
-//
-//        // Additional event handler for colQuantity
-//        colQuantity.setOnEditCancel(event -> {
-//            TableCell<Books, Integer> cell = event.getTablePosition().getTableColumn().getCellFactory().call(colQuantity);
-//            if (cell != null) {
-//                cell.cancelEdit();
-//            }
-//        });
 
-//        colPublicationDate.setCellFactory(TextFieldTableCell.forTableColumn());
-//        colQuantity.setCellValueFactory(new PropertyValueFactory<>("quantity"));
-//        colReissue.setCellValueFactory(new PropertyValueFactory<Books, Integer>("reissue"));
+     // EDIT RELEASE DATE
+        colPublicationDate.setCellFactory(column -> {
+            return new TableCell<>() {
+                private final DatePicker datePicker = new DatePicker();
+
+                {
+                    datePicker.setConverter(getDateConverter());
+                    datePicker.setOnAction(event -> {
+                        commitEdit(getDateFromDatePicker(datePicker));
+                    });
+
+                    // Show/hide the DatePicker based on the ToggleButton's state
+                    btnEdit.selectedProperty().addListener((obs, oldVal, newVal) -> {
+                        if (!newVal) {
+                            cancelEdit();
+                        }
+                        updateItem(getItem(), false);
+                    });
+                }
+
+                @Override
+                protected void updateItem(Date item, boolean empty) {
+                    super.updateItem(item, empty);
+
+                    if (empty || item == null) {
+                        setText(null);
+                        setGraphic(null);
+                    } else {
+                        if (btnEdit.isSelected()) {
+                            datePicker.setValue(item.toLocalDate());
+                            setGraphic(datePicker);
+                            setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+                        } else {
+                            setText(item.toString()); // Or any desired format for displaying the date
+                            setGraphic(null);
+                            setContentDisplay(ContentDisplay.TEXT_ONLY);
+                        }
+                    }
+                }
+
+                @Override
+                public void startEdit() {
+                    super.startEdit();
+                    setContentDisplay(ContentDisplay.TEXT_ONLY);
+                }
+
+                @Override
+                public void cancelEdit() {
+                    super.cancelEdit();
+                    setContentDisplay(ContentDisplay.TEXT_ONLY);
+                }
+            };
+        });
+
+        colPublicationDate.setOnEditCommit(event -> {
+            if (btnEdit.isSelected()) {
+                TableCell<Books, Date> cell = event.getTablePosition().getTableColumn().getCellFactory().call(colPublicationDate);
+                if (cell != null) {
+                    cell.commitEdit(event.getNewValue());
+                }
+
+                Books book = event.getRowValue();
+                Date date = event.getNewValue();
+                Instant instant = date.toInstant();
+                java.util.Date utilDate = java.util.Date.from(instant);
+
+                // Convert the date to the desired format "yyyy-MM-dd"
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                String formattedDate = dateFormat.format(utilDate);
+
+                book.setReleaseDate(java.sql.Date.valueOf(formattedDate));
+
+                // Call the bookDAO method to update the book in the database
+                bookDAO.updateBook(book);
+
+                // Refresh the table view to reflect the updated data
+                booksTableView.refresh();
+            }
+        });
+
+
+
+        colPublicationDate.setOnEditStart(event -> {
+            if (!btnEdit.isSelected()) {
+                TableColumn.CellEditEvent<Books, Date> cellEditEvent = event;
+                TableView<Books> tableView = cellEditEvent.getTableView();
+                TableColumn<Books, Date> column = cellEditEvent.getTableColumn();
+                tableView.edit(tableView.getSelectionModel().getSelectedIndex(), column);
+            }
+        });
+
+        // Additional event handler for colPublicationDate
+        colPublicationDate.setOnEditCancel(event -> {
+            TableCell<Books, Date> cell = event.getTablePosition().getTableColumn().getCellFactory().call(colPublicationDate);
+            if (cell != null) {
+                cell.cancelEdit();
+            }
+        });
 
         EventHandler<CellEditEvent<Books, String>> commonHandler = e -> {
         	Books book = e.getTableView().getItems().get(e.getTablePosition().getRow());
@@ -266,13 +328,13 @@ public class BookSceneController implements Initializable, SceneFeatureGate {
         // Add a default row
 		refresh();
 		editableCols();
-		
+
         // Bind the ObservableList to the TableView
         booksTableView.setItems(data);
-        
+
         comboBox.setItems(comboBoxItems);
         comboBox.setValue("Tên sách");
-        
+
         fieldSearch.textProperty().addListener((observable, oldValue, newValue) -> {
             String searchText = newValue;
             String searchOption = comboBox.getValue();
@@ -339,7 +401,7 @@ public class BookSceneController implements Initializable, SceneFeatureGate {
     		booksTableView.setEditable(false);
     	}
     }
-    
+
     private void SearchData(String searchText, String searchOption) {
         if (searchText.isEmpty()) {
             // If the search text is empty, revert to the original unfiltered list
