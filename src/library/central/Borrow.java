@@ -107,5 +107,13 @@ public class Borrow {
 	public void setReturnedStatus(boolean returnedStatus) {
 		ReturnedStatus = returnedStatus;
 	}
+	
+	// For table setCellValueFactory (automatic map string "fineStatusText" with the method below)
+	public String getFineStatusText() {
+		return (FineStatus ? "Bị phạt" : "Không");
+	}
 
+	public String getReturnedStatusText() {
+		return (ReturnedStatus ? "Đã trả" : "Chưa trả");
+	}
 }

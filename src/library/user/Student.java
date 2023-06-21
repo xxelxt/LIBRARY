@@ -47,8 +47,9 @@ public class Student extends Person {
 		FineStatus = fineStatus;
 	}
 	
+	// For table setColFactory (automatic map string "fineStatusText" with the method below)
 	public String getFineStatusText() {
-		return (FineStatus ? "Có" : "Không");
+		return (FineStatus ? "Bị phạt" : "Không");
 	}
 
 	public int getFine() {

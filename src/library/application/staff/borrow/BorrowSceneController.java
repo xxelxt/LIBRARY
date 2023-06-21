@@ -183,12 +183,6 @@ public class BorrowSceneController implements Initializable {
         comboBox.setItems(items);
         comboBox.setValue("Mã sinh viên");
 
-        fieldSearch.textProperty().addListener((observable, oldValue, newValue) -> {
-            String searchText = newValue;
-            String searchOption = comboBox.getValue();
-            SearchData(searchText, searchOption);
-        });
-
         // Bind the columns to the corresponding properties in MyDataModel
         colID.setCellValueFactory(new PropertyValueFactory<>("borrowID"));
         colStudentID.setCellValueFactory(new PropertyValueFactory<>("studentID"));
@@ -199,24 +193,8 @@ public class BorrowSceneController implements Initializable {
         colStartDate.setCellValueFactory(new PropertyValueFactory<>("startDate"));
         colDueDate.setCellValueFactory(new PropertyValueFactory<>("dueDate"));
         colReturnedDate.setCellValueFactory(new PropertyValueFactory<>("returnedDate"));
-        colFineStatus.setCellValueFactory(new PropertyValueFactory<>("fineStatus"));
-        colReturnedStatus.setCellValueFactory(new PropertyValueFactory<>("returnedStatus"));
-
-        colFineStatus.setCellFactory(col -> new TableCell<>() {
-            @Override
-            protected void updateItem(Boolean item, boolean empty) {
-                super.updateItem(item, empty) ;
-                setText(empty ? null : item ? "Bị phạt" : "Không bị phạt" );
-            }
-        });
-
-        colReturnedStatus.setCellFactory(col -> new TableCell<>() {
-            @Override
-            protected void updateItem(Boolean item, boolean empty) {
-                super.updateItem(item, empty) ;
-                setText(empty ? null : item ? "Đã trả" : "Chưa trả" );
-            }
-        });
+        colFineStatus.setCellValueFactory(new PropertyValueFactory<>("fineStatusText"));
+        colReturnedStatus.setCellValueFactory(new PropertyValueFactory<>("returnedStatusText"));
 	}
 
 	Date now = new Date(new java.util.Date().getTime());

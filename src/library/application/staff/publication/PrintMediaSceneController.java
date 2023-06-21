@@ -174,12 +174,6 @@ public class PrintMediaSceneController implements Initializable, SceneFeatureGat
         comboBox.setItems(comboBoxItems);
         comboBox.setValue("Tên ấn phẩm");
 
-        fieldSearch.textProperty().addListener((observable, oldValue, newValue) -> {
-            String searchText = newValue;
-            String searchOption = comboBox.getValue();
-            SearchData(searchText, searchOption);
-        });
-
         // Bind the columns to the corresponding properties in MyDataModel
         colID.setCellValueFactory(new PropertyValueFactory<>("publicationID"));
         colTitle.setCellValueFactory(new PropertyValueFactory<>("title"));

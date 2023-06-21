@@ -175,42 +175,20 @@ public class StudentSceneController implements Initializable {
         comboBoxFine.setItems(fineItems);
         comboBoxFine.setValue("Tất cả");
 
-        fieldSearch.textProperty().addListener((observable, oldValue, newValue) -> {
-            String searchText = newValue;
-            String searchOption = comboBox.getValue();
-            SearchData(searchText, searchOption);
-        });
-
         // Bind the columns to the corresponding properties in MyDataModel
         colStudentID.setCellValueFactory(new PropertyValueFactory<>("studentID"));
         colName.setCellValueFactory(new PropertyValueFactory<>("name"));
         colClass.setCellValueFactory(new PropertyValueFactory<>("className"));
-        colGender.setCellValueFactory(new PropertyValueFactory<>("gender"));
+        colGender.setCellValueFactory(new PropertyValueFactory<>("genderText"));
         colEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
 
         colPhoneNum.setCellValueFactory(new PropertyValueFactory<>("phone"));
         colAddress.setCellValueFactory(new PropertyValueFactory<>("address"));
-        colFineStatus.setCellValueFactory(new PropertyValueFactory<>("fineStatus"));
+        colFineStatus.setCellValueFactory(new PropertyValueFactory<>("fineStatusText"));
         colFine.setCellValueFactory(new PropertyValueFactory<>("fine"));
 
         colUsername.setCellValueFactory(new PropertyValueFactory<>("username"));
         colPassword.setCellValueFactory(new PropertyValueFactory<>("password"));
-
-        colGender.setCellFactory(col -> new TableCell<>() {
-            @Override
-            protected void updateItem(Boolean item, boolean empty) {
-                super.updateItem(item, empty) ;
-                setText(empty ? null : item ? "Nữ" : "Nam" );
-            }
-        });
-
-        colFineStatus.setCellFactory(col -> new TableCell<>() {
-            @Override
-            protected void updateItem(Boolean item, boolean empty) {
-                super.updateItem(item, empty) ;
-                setText(empty ? null : item ? "Bị phạt" : "Không bị phạt" );
-            }
-        });
 	}
 
 	Date now = new Date(new java.util.Date().getTime());
