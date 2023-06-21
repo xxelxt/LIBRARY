@@ -49,6 +49,42 @@ public class StaffDAO {
 
         return staffList;
     }
+	
+	public Staff loadStaff(String username) {
+		Staff staff = new Staff();
+        try {
+            String sql = "SELECT StaffID, Name, Gender, Email, Phone, Address, Position, S.Username, U.Password "
+            		+ "FROM Staff S "
+            		+ "INNER JOIN Users U ON S.Username = U.Username "
+            		+ "WHERE S.Username = ?";
+
+            PreparedStatement pstmt = DatabaseLayer.prepareStatement(sql);
+            pstmt.setString(1, username);
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+            	User user = userDAO.getUserfromUsername(rs.getString(8));
+
+            	staff = new Staff(
+            			rs.getInt(1),
+            			rs.getString(2),
+            			rs.getBoolean(3),
+            			rs.getString(4),
+            			rs.getString(5),
+            			rs.getString(6),
+            			rs.getString(7),
+            			user
+            	);
+            }
+
+            rs.close();
+            pstmt.close();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+
+        return staff;
+    }
 
 	public boolean addStaff(String Name, String Username, String Password, boolean Gender,
             String Email, String Phone, String Address, String Position) {

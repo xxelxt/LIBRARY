@@ -13,6 +13,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Font;
 import library.application.staff.borrow.BorrowSceneController;
+import library.application.staff.info.StaffInfoSceneController;
 import library.application.staff.interfac.SceneFeatureGate;
 import library.application.staff.publication.BookSceneController;
 import library.application.staff.publication.PrintMediaSceneController;
@@ -52,6 +53,13 @@ public class MainSceneController implements SceneFeatureGate {
 
     @FXML
     private StaffSceneController staffSceneController;
+    
+    @FXML
+    private StaffInfoSceneController staffInfoSceneController;
+    
+//    private void passUserNameToStaffInfoScene(String userName) {
+//        staffInfoSceneController.setUsername(userName);
+//    }
 
     private UserDAO userDAO = new UserDAO();
     private User logUser;
@@ -65,6 +73,7 @@ public class MainSceneController implements SceneFeatureGate {
             main.setWindowSize();
 
             Integer type = logUser.getType();
+            // passUserNameToStaffInfoScene(logUser.getUsername());
 
             this.setFeatureFor(type);
             bookSceneController.setFeatureFor(type);

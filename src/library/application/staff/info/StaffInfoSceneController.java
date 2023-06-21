@@ -7,7 +7,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 
-public class StaffInfoSceneController {
+public class StaffInfoSceneController /*implements Initializable*/ {
 
     @FXML
     private ResourceBundle resources;
@@ -37,11 +37,11 @@ public class StaffInfoSceneController {
     private TextField fieldPosition;
 
     @FXML
-    private TextField fieldStudentID;
+    private TextField fieldStaffID;
 
     @FXML
     private TextField fieldUsername;
-
+    
     @FXML
     void btnActionChangePassword(ActionEvent event) {
 
@@ -61,9 +61,8 @@ public class StaffInfoSceneController {
         assert fieldPassword != null : "fx:id=\"fieldPassword\" was not injected: check your FXML file 'StaffInfoScene.fxml'.";
         assert fieldPhone != null : "fx:id=\"fieldPhone\" was not injected: check your FXML file 'StaffInfoScene.fxml'.";
         assert fieldPosition != null : "fx:id=\"fieldPosition\" was not injected: check your FXML file 'StaffInfoScene.fxml'.";
-        assert fieldStudentID != null : "fx:id=\"fieldStudentID\" was not injected: check your FXML file 'StaffInfoScene.fxml'.";
+        assert fieldStaffID != null : "fx:id=\"fieldStudentID\" was not injected: check your FXML file 'StaffInfoScene.fxml'.";
         assert fieldUsername != null : "fx:id=\"fieldUsername\" was not injected: check your FXML file 'StaffInfoScene.fxml'.";
 
     }
-
 }

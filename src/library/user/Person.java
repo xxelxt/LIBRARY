@@ -15,6 +15,10 @@ public abstract class Person {
 	public void setAccount(User account) {
 		this.account = account;
 	}
+	
+	public Person() {
+		
+	}
 
 	public Person(String name, boolean gender, String address, String email, String phone, User account) {
 		super();

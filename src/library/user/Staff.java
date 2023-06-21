@@ -3,6 +3,10 @@ package library.user;
 public class Staff extends Person {
     private int StaffID;
     private String Position;
+    
+    public Staff() {
+    	
+    }
 
 	public Staff(int staffID, String name, boolean gender, String email, String phone, String address,
 			String position, User account) {
