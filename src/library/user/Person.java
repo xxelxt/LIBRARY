@@ -61,5 +61,7 @@ public abstract class Person {
 		Phone = phone;
 	}
 
-
+	public String getGenderText() {
+		return (Gender ? "Nữ" : "Nam" );
+	}
 }

@@ -126,7 +126,12 @@ public class StaffSceneController implements Initializable {
         	else if (col == colPhoneNum) { stf.setPhone(e.getNewValue()); }
         	else if (col == colAddress) { stf.setAddress(e.getNewValue()); }
 
-        	staffDAO.updateStaff(stf);
+        	try {
+				staffDAO.updateStaff(stf);
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
         };
 
         colName.setOnEditCommit(commonHandler);

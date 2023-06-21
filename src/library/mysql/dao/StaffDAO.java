@@ -50,21 +50,19 @@ public class StaffDAO {
         return staffList;
     }
 	
-	public Staff loadStaff(String username) {
-		Staff staff = new Staff();
+	public Staff loadStaff(User user) {
+		Staff staff = null;
         try {
-            String sql = "SELECT StaffID, Name, Gender, Email, Phone, Address, Position, S.Username, U.Password "
+            String sql = "SELECT StaffID, Name, Gender, Email, Phone, Address, Position "
             		+ "FROM Staff S "
             		+ "INNER JOIN Users U ON S.Username = U.Username "
             		+ "WHERE S.Username = ?";
 
             PreparedStatement pstmt = DatabaseLayer.prepareStatement(sql);
-            pstmt.setString(1, username);
+            pstmt.setString(1, user.getUsername());
             ResultSet rs = pstmt.executeQuery();
 
             while (rs.next()) {
-            	User user = userDAO.getUserfromUsername(rs.getString(8));
-
             	staff = new Staff(
             			rs.getInt(1),
             			rs.getString(2),
@@ -163,7 +161,7 @@ public class StaffDAO {
 	    return true;
 	}
 
-	public boolean updateStaff(Staff stf) {
+	public void updateStaff(Staff stf) throws Exception {
 		try {
             String sql = "UPDATE Staff "
             		+ "SET "
@@ -188,10 +186,8 @@ public class StaffDAO {
             System.out.println("Updated staff.");
         } catch (Exception e) {
             System.out.println(e);
-            return false;
+            throw e;
         }
-
-		return true;
 	}
 
 }

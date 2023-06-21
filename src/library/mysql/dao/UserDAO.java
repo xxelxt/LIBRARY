@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 import library.mysql.DatabaseLayer;
+import library.user.Student;
 import library.user.User;
 
 public class UserDAO {
@@ -64,6 +65,21 @@ public class UserDAO {
 			 users_pstmt.setString(1, username);
 			 users_pstmt.setString(2, password);
 			 users_pstmt.setInt(3, type);
+			 users_pstmt.executeUpdate();
+			 users_pstmt.close();
+
+		} catch (Exception e) {
+			 System.out.println(e);
+		}
+		return username;
+	}
+	
+	public String deleteUser(String username) {
+		try {
+			 String usersSql = "Delete FROM Users WHERE Username = ?";
+			 PreparedStatement users_pstmt = DatabaseLayer.prepareStatement(usersSql);
+			 users_pstmt.setString(1, username);
+
 			 users_pstmt.executeUpdate();
 			 users_pstmt.close();
 

@@ -14,11 +14,14 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Font;
 import library.application.staff.borrow.BorrowSceneController;
 import library.application.staff.info.StaffInfoSceneController;
+import library.application.staff.info.StudentInfoSceneController;
 import library.application.staff.interfac.SceneFeatureGate;
 import library.application.staff.publication.BookSceneController;
 import library.application.staff.publication.PrintMediaSceneController;
 import library.application.staff.staff.StaffSceneController;
 import library.application.staff.student.StudentSceneController;
+import library.mysql.dao.StaffDAO;
+import library.mysql.dao.StudentDAO;
 import library.mysql.dao.UserDAO;
 import library.user.User;
 
@@ -53,10 +56,13 @@ public class MainSceneController implements SceneFeatureGate {
 
     @FXML
     private StaffSceneController staffSceneController;
-    
+
+    @FXML
+    private StudentInfoSceneController studentInfoSceneController;
+
     @FXML
     private StaffInfoSceneController staffInfoSceneController;
-    
+
 //    private void passUserNameToStaffInfoScene(String userName) {
 //        staffInfoSceneController.setUsername(userName);
 //    }
@@ -78,7 +84,13 @@ public class MainSceneController implements SceneFeatureGate {
             this.setFeatureFor(type);
             bookSceneController.setFeatureFor(type);
             printMediaSceneController.setFeatureFor(type);
-
+            if (type == STUDENT) {
+            	StudentDAO studentDAO = new StudentDAO();
+    			studentInfoSceneController.setCurrentStudent(studentDAO.loadStudent(logUser));
+    		} else if (type == CLERK || type == LIBRARIAN) {
+    			StaffDAO staffDAO = new StaffDAO();
+    			staffInfoSceneController.setCurrentStaff(staffDAO.loadStaff(logUser));
+    		}
         } else {
             labelWarning.setText("Tên đăng nhập hoặc mật khẩu không đúng");
             labelWarning.setFont(new Font("Calibri", 14));
@@ -123,10 +135,10 @@ public class MainSceneController implements SceneFeatureGate {
 
     @FXML
     private Tab tabStaff;
-    
+
     @FXML
     private Tab tabStaffInfo;
-    
+
     @FXML
     private Tab tabStudentInfo;
 

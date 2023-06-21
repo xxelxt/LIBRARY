@@ -51,6 +51,43 @@ public class StudentDAO {
 
         return students;
     }
+	
+	public Student loadStudent(User user) {
+		Student student = null;
+
+        try {
+            String sql = "SELECT StudentID, Name, ClassName, Gender, Email, Phone, Address, FineStatus, Fine "
+            		+ "FROM Students S "
+            		+ "INNER JOIN Users U ON S.Username = U.Username "
+            		+ "WHERE S.Username = ?;";
+
+            PreparedStatement pstmt = DatabaseLayer.prepareStatement(sql);
+            pstmt.setString(1, user.getUsername());
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+            	student = new Student(
+            			rs.getString(1),
+            			rs.getString(2),
+            			rs.getString(3),
+            			rs.getBoolean(4),
+            			rs.getString(5),
+            			rs.getString(6),
+            			rs.getString(7),
+            			rs.getBoolean(8),
+            			rs.getInt(9),
+            			user
+            	);
+            }
+
+            rs.close();
+            pstmt.close();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+
+        return student;
+    }
 
 	public boolean addStudent(String StudentID, String Name, String ClassName, String Username, String Password, boolean Gender,
             String Email, String Phone, String Address, boolean FineStatus, int Fine) {
@@ -131,8 +168,9 @@ public class StudentDAO {
 	    return true;
 	}
 
-	public boolean updateStudent(Student std) {
+	public void updateStudent(Student std) throws Exception {
 		try {
+			
             String sql = "UPDATE Students "
             		+ "SET "
             		+ "Name = ?, "
@@ -162,10 +200,8 @@ public class StudentDAO {
             System.out.println("Updated student.");
         } catch (Exception e) {
             System.out.println(e);
-            return false;
+            throw e;
         }
-
-		return true;
 	}
 
 }

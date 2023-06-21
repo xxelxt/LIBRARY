@@ -46,6 +46,10 @@ public class Student extends Person {
 	public void setFineStatus(boolean fineStatus) {
 		FineStatus = fineStatus;
 	}
+	
+	public String getFineStatusText() {
+		return (FineStatus ? "Có" : "Không");
+	}
 
 	public int getFine() {
 		return Fine;

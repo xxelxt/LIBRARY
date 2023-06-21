@@ -140,7 +140,12 @@ public class StudentSceneController implements Initializable {
         	else if (col == colAddress) { std.setAddress(e.getNewValue()); }
         	else if (col == colClass) { std.setClassName(e.getNewValue()); }
 
-        	studentDAO.updateStudent(std);
+        	try {
+				studentDAO.updateStudent(std);
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				System.out.println(e1);
+			}
         };
 
         colName.setOnEditCommit(commonHandler);
