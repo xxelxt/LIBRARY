@@ -2,6 +2,8 @@ package library.application.staff.publication;
 
 import java.net.URL;
 import java.sql.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.function.BiConsumer;
@@ -15,6 +17,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellEditEvent;
@@ -30,7 +33,9 @@ import javafx.scene.layout.VBox;
 import javafx.util.StringConverter;
 import javafx.util.converter.IntegerStringConverter;
 import library.application.staff.interfac.SceneFeatureGate;
+import library.application.util.DatePickerTableCell;
 import library.mysql.dao.PrintMediaDAO;
+import library.publication.Books;
 import library.publication.PrintMedia;
 import library.publication.Publication;
 
@@ -137,6 +142,38 @@ public class PrintMediaSceneController implements Initializable, SceneFeatureGat
             }
         });
     }
+    
+    private StringConverter<LocalDate> getDateConverter() {
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        return new StringConverter<>() {
+            @Override
+            public String toString(LocalDate date) {
+                if (date != null) {
+                    return dateFormatter.format(date);
+                } else {
+                    return "";
+                }
+            }
+
+            @Override
+            public LocalDate fromString(String string) {
+                if (string != null && !string.isEmpty()) {
+                    return LocalDate.parse(string, dateFormatter);
+                } else {
+                    return null;
+                }
+            }
+        };
+    }
+
+    private Date getDateFromDatePicker(DatePicker datePicker) {
+        LocalDate localDate = datePicker.getValue();
+        if (localDate != null) {
+            return java.sql.Date.valueOf(localDate);
+        } else {
+            return null;
+        }
+    }
 
     private void editableCols(){
         colTitle.setCellFactory(TextFieldTableCell.forTableColumn());
@@ -146,6 +183,8 @@ public class PrintMediaSceneController implements Initializable, SceneFeatureGat
         setupEditableColumn(colReleaseNumber, new IntegerStringConverter(), PrintMedia::setReleaseNumber);
         setupEditableColumn(colQuantity, new IntegerStringConverter(), PrintMedia::setQuantity);
 
+        colPublicationDate.setCellFactory(col -> new DatePickerTableCell<PrintMedia>(col));
+        
         EventHandler<CellEditEvent<PrintMedia, String>> commonHandler = e -> {
         	PrintMedia pm = e.getTableView().getItems().get(e.getTablePosition().getRow());
         	TableColumn<PrintMedia, String> col = e.getTableColumn();
@@ -159,6 +198,15 @@ public class PrintMediaSceneController implements Initializable, SceneFeatureGat
         colTitle.setOnEditCommit(commonHandler);
         colCountry.setOnEditCommit(commonHandler);
         colPrintType.setOnEditCommit(commonHandler);
+        
+        colPublicationDate.setOnEditCommit(e -> {
+            if (btnEdit.isSelected()) {
+                PrintMedia pm = e.getRowValue();
+                pm.setReleaseDate(e.getNewValue());
+
+                pmDAO.updatePrintMedia(pm);
+            }
+        });
     }
 
     @Override
@@ -276,7 +324,6 @@ public class PrintMediaSceneController implements Initializable, SceneFeatureGat
             printMediaTableView.setItems(filteredList);
         }
     }
-
 
     @FXML
     private Button btnAdd;

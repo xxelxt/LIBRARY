@@ -122,7 +122,7 @@ public class StudentDAO {
 		}
 		return true;
 	}
-
+	
 	public boolean deleteStudent(String sID) {
 	    try {
 	        String usernameStudentSql = "SELECT Username FROM Students WHERE StudentID = ?";

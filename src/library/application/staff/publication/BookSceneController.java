@@ -194,59 +194,6 @@ public class BookSceneController implements Initializable, SceneFeatureGate {
         setupEditableColumn(colQuantity, new IntegerStringConverter(), Books::setQuantity);
 
         colPublicationDate.setCellFactory(col -> new DatePickerTableCell<Books>(col));
-//     // EDIT RELEASE DATE
-//        colPublicationDate.setCellFactory(column -> {
-//            return new TableCell<>() {
-//                private final DatePicker datePicker = new DatePicker();
-//
-//                {
-//                    datePicker.setConverter(getDateConverter());
-//                    datePicker.setOnAction(event -> {
-//                        commitEdit(getDateFromDatePicker(datePicker));
-//                    });
-//
-//                    // Show/hide the DatePicker based on the ToggleButton's state
-//                    btnEdit.selectedProperty().addListener((obs, oldVal, newVal) -> {
-//                        if (!newVal) {
-//                            cancelEdit();
-//                        }
-//                        updateItem(getItem(), false);
-//                    });
-//                }
-//
-//                @Override
-//                protected void updateItem(Date item, boolean empty) {
-//                    super.updateItem(item, empty);
-//
-//                    if (empty || item == null) {
-//                        setText(null);
-//                        setGraphic(null);
-//                    } else {
-//                        if (btnEdit.isSelected()) {
-//                            datePicker.setValue(item.toLocalDate());
-//                            setGraphic(datePicker);
-//                            setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-//                        } else {
-//                            setText(item.toString()); // Or any desired format for displaying the date
-//                            setGraphic(null);
-//                            setContentDisplay(ContentDisplay.TEXT_ONLY);
-//                        }
-//                    }
-//                }
-//
-//                @Override
-//                public void startEdit() {
-//                    super.startEdit();
-//                    setContentDisplay(ContentDisplay.TEXT_ONLY);
-//                }
-//
-//                @Override
-//                public void cancelEdit() {
-//                    super.cancelEdit();
-//                    setContentDisplay(ContentDisplay.TEXT_ONLY);
-//                }
-//            };
-//        });
 
         EventHandler<CellEditEvent<Books, String>> commonHandler = e -> {
         	Books book = e.getRowValue();
@@ -277,29 +224,6 @@ public class BookSceneController implements Initializable, SceneFeatureGate {
                 bookDAO.updateBook(book);
             }
         });
-
-//        colPublicationDate.setOnEditStart(event -> {
-//            if (!btnEdit.isSelected()) {
-//                TableColumn.CellEditEvent<Books, Date> cellEditEvent = event;
-//                TableView<Books> tableView = cellEditEvent.getTableView();
-//                TableColumn<Books, Date> column = cellEditEvent.getTableColumn();
-//                tableView.edit(tableView.getSelectionModel().getSelectedIndex(), column);
-//            }
-//        });
-//
-//        colPublicationDate.setOnEditCancel(event -> {
-//            TableCell<Books, Date> cell = event.getTablePosition().getTableColumn().getCellFactory().call(colPublicationDate);
-//            if (cell != null) {
-//                cell.cancelEdit();
-//            }
-//        });
-
-//        colReissue.setCellFactory(new IntegerSpinnerCell);
-//        colReissue.setOnEditCommit(e-> {
-//        	Books book = e.getTableView().getItems().get(e.getTablePosition().getRow());
-//        	book.setTitle(e.getNewValue());
-//			bookDAO.updateBook(book);
-//        });
     }
 
 	@Override

@@ -134,18 +134,6 @@ public class StaffDAO {
 	        rs.close();
 	        usernameStmt.close();
 
-	        String deleteStaffSql = "DELETE FROM Staff WHERE StaffID = ?";
-	        PreparedStatement deleteStmt = DatabaseLayer.prepareStatement(deleteStaffSql);
-	        deleteStmt.setInt(1, sID);
-
-	        int rowsAffected = deleteStmt.executeUpdate();
-	        deleteStmt.close();
-
-	        if (rowsAffected == 0) {
-	            System.out.println("No staff found with the provided ID.");
-	            return false;
-	        }
-
 	        String deleteUserSql = "DELETE FROM Users WHERE Username = ?";
 	        PreparedStatement deleteUsersStmt = DatabaseLayer.prepareStatement(deleteUserSql);
 	        deleteUsersStmt.setString(1, username);

@@ -2,6 +2,8 @@ package library.application.staff.borrow;
 
 import java.net.URL;
 import java.sql.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.function.BiConsumer;
@@ -15,6 +17,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellEditEvent;
@@ -23,13 +26,16 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.util.StringConverter;
 import javafx.util.converter.IntegerStringConverter;
+import library.application.util.DatePickerTableCell;
 import library.central.Borrow;
 import library.mysql.dao.BorrowDAO;
+import library.publication.PrintMedia;
 import library.publication.Publication;
 
 public class BorrowSceneController implements Initializable {
@@ -149,6 +155,46 @@ public class BorrowSceneController implements Initializable {
             }
         });
     }
+    
+    private StringConverter<LocalDate> getDateConverter() {
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        return new StringConverter<>() {
+            @Override
+            public String toString(LocalDate date) {
+                if (date != null) {
+                    return dateFormatter.format(date);
+                } else {
+                    return "";
+                }
+            }
+
+            @Override
+            public LocalDate fromString(String string) {
+                if (string != null && !string.isEmpty()) {
+                    return LocalDate.parse(string, dateFormatter);
+                } else {
+                    return null;
+                }
+            }
+        };
+    }
+
+    private Date getDateFromDatePicker(DatePicker datePicker) {
+        LocalDate localDate = datePicker.getValue();
+        if (localDate != null) {
+            return java.sql.Date.valueOf(localDate);
+        } else {
+            return null;
+        }
+    }
+    
+    private LocalDate getDateFromItem(Date item) {
+        if (item != null) {
+            return item.toLocalDate();
+        } else {
+            return null;
+        }
+    }
 
     private void editableCols(){
         colStudentID.setCellFactory(TextFieldTableCell.forTableColumn());
@@ -156,6 +202,68 @@ public class BorrowSceneController implements Initializable {
         setupEditableColumn(colPublicationID, new IntegerStringConverter(), Borrow::setPublicationID);
         setupEditableColumn(colBorrowQuantity, new IntegerStringConverter(), Borrow::setBorrowQuantity);
 
+        colStartDate.setCellFactory(col -> new DatePickerTableCell<Borrow>(col));
+        colDueDate.setCellFactory(col -> new DatePickerTableCell<Borrow>(col));
+//        colReturnedDate.setCellFactory(col -> new DatePickerTableCell<Borrow>(col));
+        
+//        colReturnedDate.setCellFactory(col -> {
+//            return new TableCell<Borrow, Date>() {
+//                private DatePicker datePicker;
+//
+//                @Override
+//                public void startEdit() {
+//                    if (!isEmpty() && getTableView().isEditable() && getTableColumn().isEditable()) {
+//                        super.startEdit();
+//
+//                        createDatePicker();
+//                        setText(null);
+//                        setGraphic(datePicker);
+//                        datePicker.requestFocus();
+//                    }
+//                }
+//
+//                @Override
+//                public void cancelEdit() {
+//                    super.cancelEdit();
+//
+//                    setText(getItem().toString());
+//                    setGraphic(null);
+//                }
+//
+//                @Override
+//                public void updateItem(Date item, boolean empty) {
+//                    super.updateItem(item, empty);
+//
+//                    if (empty || item == null) {
+//                        setText(null);
+//                        setGraphic(null);
+//                    } else {
+//                        setText(item.toString());
+//                        setGraphic(null);
+//                    }
+//                }
+//
+//                private void createDatePicker() {
+//                    datePicker = new DatePicker();
+//                    datePicker.setConverter(getDateConverter());
+//                    datePicker.setValue(getDateFromItem(getItem()));
+//                    datePicker.setMinWidth(this.getWidth() - this.getGraphicTextGap() * 2);
+//                    datePicker.setOnKeyPressed(t -> {
+//                        if (t.getCode() == KeyCode.ENTER || t.getCode() == KeyCode.TAB) {
+//                            commitEdit(getDateFromDatePicker(datePicker));
+//                        } else if (t.getCode() == KeyCode.ESCAPE) {
+//                            cancelEdit();
+//                        }
+//                    });
+//                    datePicker.focusedProperty().addListener((obs, wasFocused, isNowFocused) -> {
+//                        if (!isNowFocused) {
+//                            commitEdit(getDateFromDatePicker(datePicker));
+//                        }
+//                    });
+//                }
+//            };
+//        });
+        
         EventHandler<CellEditEvent<Borrow, String>> commonHandler = e -> {
         	Borrow borrow = e.getTableView().getItems().get(e.getTablePosition().getRow());
         	TableColumn<Borrow, String> col = e.getTableColumn();
@@ -165,6 +273,34 @@ public class BorrowSceneController implements Initializable {
         };
 
         colStudentID.setOnEditCommit(commonHandler);
+        colStartDate.setOnEditCommit(e -> {
+            if (btnEdit.isSelected()) {
+                Borrow borrow = e.getRowValue();
+                borrow.setStartDate(e.getNewValue());
+
+                borrowDAO.updateBorrow(borrow);
+            }
+        });
+        
+        colDueDate.setOnEditCommit(e -> {
+            if (btnEdit.isSelected()) {
+                Borrow borrow = e.getRowValue();
+                borrow.setDueDate(e.getNewValue());
+
+                borrowDAO.updateBorrow(borrow);
+            }
+        });
+        
+        // Unable to show datepicker if the colreturneddate is null
+        
+//        colReturnedDate.setOnEditCommit(e -> {
+//            if (btnEdit.isSelected()) {
+//                Borrow borrow = e.getRowValue();
+//                borrow.setReturnedDate(e.getNewValue());
+//
+//                borrowDAO.updateBorrow(borrow);
+//            }
+//        });
     }
 
     @Override
