@@ -123,7 +123,34 @@ public class StudentDAO {
 		return true;
 	}
 	
-	public boolean deleteStudent(String sID) {
+	public String getUsernamebyStudentID(String StudentID) {
+    	String username = "";
+    	try {
+    		String sql = "SELECT Username FROM Students WHERE StudentID = ?";
+            PreparedStatement pstmt = DatabaseLayer.prepareStatement(sql);
+            pstmt.setString(1, StudentID);
+
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                username = rs.getString(1);
+            }
+            rs.close();
+            pstmt.close();
+
+        } catch (Exception e) {
+            System.out.println(e);
+    	}
+
+    	return username;
+    }
+	
+
+    public boolean deleteStudent(String StudentID) {
+        return userDAO.deleteUser(getUsernamebyStudentID(StudentID));
+    }
+	
+	public boolean deleteStudent2(String sID) {
 	    try {
 	        String usernameStudentSql = "SELECT Username FROM Students WHERE StudentID = ?";
 	        PreparedStatement usernameStmt = DatabaseLayer.prepareStatement(usernameStudentSql);

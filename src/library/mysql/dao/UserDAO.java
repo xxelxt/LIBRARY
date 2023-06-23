@@ -74,7 +74,7 @@ public class UserDAO {
 		return username;
 	}
 	
-	public String deleteUser(String username) {
+	public boolean deleteUser(String username) {
 		try {
 			 String usersSql = "Delete FROM Users WHERE Username = ?";
 			 PreparedStatement users_pstmt = DatabaseLayer.prepareStatement(usersSql);
@@ -85,7 +85,8 @@ public class UserDAO {
 
 		} catch (Exception e) {
 			 System.out.println(e);
+			 return false;
 		}
-		return username;
+		return true;
 	}
 }

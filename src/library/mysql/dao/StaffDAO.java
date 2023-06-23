@@ -115,8 +115,34 @@ public class StaffDAO {
 		}
 		return true;
 	}
+	
+	public String getUsernamebyStaffID(Integer StaffID) {
+    	String username = "";
+    	try {
+    		String sql = "SELECT Username FROM Staff WHERE StaffID = ?";
+            PreparedStatement pstmt = DatabaseLayer.prepareStatement(sql);
+            pstmt.setInt(1, StaffID);
 
-	public boolean deleteStaff(Integer sID) {
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                username = rs.getString(1);
+            }
+            rs.close();
+            pstmt.close();
+
+        } catch (Exception e) {
+            System.out.println(e);
+    	}
+
+    	return username;
+    }
+	
+    public boolean deleteStaff(Integer StaffID) {
+        return userDAO.deleteUser(getUsernamebyStaffID(StaffID));
+    }
+
+	public boolean deleteStaff2(Integer sID) {
 	    try {
 	        String usernameStaffSql = "SELECT Username FROM Staff WHERE StaffID = ?";
 	        PreparedStatement usernameStmt = DatabaseLayer.prepareStatement(usernameStaffSql);
