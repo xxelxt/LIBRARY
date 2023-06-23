@@ -149,51 +149,6 @@ public class StudentDAO {
     public boolean deleteStudent(String StudentID) {
         return userDAO.deleteUser(getUsernamebyStudentID(StudentID));
     }
-	
-	public boolean deleteStudent2(String sID) {
-	    try {
-	        String usernameStudentSql = "SELECT Username FROM Students WHERE StudentID = ?";
-	        PreparedStatement usernameStmt = DatabaseLayer.prepareStatement(usernameStudentSql);
-	        usernameStmt.setString(1, sID);
-	        ResultSet rs = usernameStmt.executeQuery();
-
-	        if (!rs.next()) {
-	            System.out.println("Can't find student with ID: " + sID);
-	            rs.close();
-	            usernameStmt.close();
-	            return false;
-	        }
-
-	        String username = rs.getString("Username");
-	        rs.close();
-	        usernameStmt.close();
-
-	        String deleteStudentSql = "DELETE FROM Students WHERE StudentID = ?";
-	        PreparedStatement deleteStmt = DatabaseLayer.prepareStatement(deleteStudentSql);
-	        deleteStmt.setString(1, sID);
-
-	        int rowsAffected = deleteStmt.executeUpdate();
-	        deleteStmt.close();
-
-	        if (rowsAffected == 0) {
-	            System.out.println("No student found with the provided ID.");
-	            return false;
-	        }
-
-	        String deleteUserSql = "DELETE FROM Users WHERE Username = ?";
-	        PreparedStatement deleteUsersStmt = DatabaseLayer.prepareStatement(deleteUserSql);
-	        deleteUsersStmt.setString(1, username);
-	        deleteUsersStmt.executeUpdate();
-	        deleteUsersStmt.close();
-
-	        System.out.println("Deleted student and user account.");
-
-	    } catch (Exception e) {
-	        System.out.println(e);
-	        return false;
-	    }
-	    return true;
-	}
 
 	public void updateStudent(Student std) throws Exception {
 		try {

@@ -26,7 +26,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
@@ -35,7 +34,6 @@ import javafx.util.converter.IntegerStringConverter;
 import library.application.util.DatePickerTableCell;
 import library.central.Borrow;
 import library.mysql.dao.BorrowDAO;
-import library.publication.PrintMedia;
 import library.publication.Publication;
 
 public class BorrowSceneController implements Initializable {

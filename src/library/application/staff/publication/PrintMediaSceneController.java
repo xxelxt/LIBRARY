@@ -35,7 +35,6 @@ import javafx.util.converter.IntegerStringConverter;
 import library.application.staff.interfac.SceneFeatureGate;
 import library.application.util.DatePickerTableCell;
 import library.mysql.dao.PrintMediaDAO;
-import library.publication.Books;
 import library.publication.PrintMedia;
 import library.publication.Publication;
 

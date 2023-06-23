@@ -1,11 +1,9 @@
 package library.mysql.dao;
 
-
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 import library.mysql.DatabaseLayer;
-import library.user.Student;
 import library.user.User;
 
 public class UserDAO {
