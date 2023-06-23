@@ -3,17 +3,6 @@ package library.user;
 public class Staff extends Person {
     private int StaffID;
     private String Position;
-    
-    public Staff() {
-    	
-    }
-
-	public Staff(int staffID, String name, boolean gender, String email, String phone, String address,
-			String position, User account) {
-		super(name, gender, address, email, phone, account);
-		StaffID = staffID;
-		Position = position;
-	}
 
 	public String getUsername() {
 	    return this.getAccount().getUsername();
@@ -23,21 +12,26 @@ public class Staff extends Person {
 	    return this.getAccount().getPassword();
 	}
 
-	public int getStaffID() {
-		return StaffID;
+	public Staff(int StaffID, String Name, boolean Gender, String Email, String Phone, String Address,
+			String Position, User account) {
+		super(Name, Gender, Address, Email, Phone, account);
+		this.StaffID = StaffID;
+		this.Position = Position;
 	}
 
-	public void setStaffID(int staffID) {
-		StaffID = staffID;
+	public int getStaffID() {
+		return this.StaffID;
+	}
+
+	public void setStaffID(int StaffID) {
+		this.StaffID = StaffID;
 	}
 
 	public String getPosition() {
-		return Position;
+		return this.Position;
 	}
 
-	public void setPosition(String position) {
-		Position = position;
+	public void setPosition(String Position) {
+		this.Position = Position;
 	}
-
-
 }

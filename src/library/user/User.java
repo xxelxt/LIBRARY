@@ -5,30 +5,34 @@ public class User {
 	private String Password;
 	private Integer Type;
 
-	public User(String username, String password, Integer type) {
+	public User(String Username, String Password, Integer Type) {
 		super();
-		Username = username;
-		Password = password;
-		Type = type;
+		this.Username = Username;
+		this.Password = Password;
+		this.Type = Type;
 	}
 
 	public String getUsername() {
-		return Username;
+		return this.Username;
 	}
 
-	public void setUsername(String username) {
-		Username = username;
+	public void setUsername(String Username) {
+		this.Username = Username;
 	}
 
 	public String getPassword() {
-		return Password;
+		return this.Password;
 	}
 
-	public void setPassword(String password) {
-		Password = password;
+	public void setPassword(String Password) {
+		this.Password = Password;
 	}
 
 	public Integer getType() {
-		return Type;
+		return this.Type;
+	}
+
+	public void setType(Integer Type) {
+		this.Type = Type;
 	}
 }

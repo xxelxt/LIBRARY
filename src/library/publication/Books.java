@@ -10,24 +10,12 @@ public class Books extends Publication {
 	private int Reissue;
 	private String Publisher;
 
-	public Books() {
-		super();
-		this.Category = " ";
-		this.Reissue = -1;
-		this.Publisher = " ";
-	}
-
 	public Books(Integer BookID, String Title, ArrayList<String> Authors, Date ReleaseDate, String Country, int Quantity, String Category, int Reissue, String Publisher) {
 		super(BookID, Title, ReleaseDate, Country, Quantity);
 		this.Authors = Authors;
 		this.Category = Category;
 		this.Reissue = Reissue;
 		this.Publisher = Publisher;
-	}
-
-	public Books(String Title, ArrayList<String> Authors, Date ReleaseDate) {
-		super(Title, ReleaseDate);
-		this.Authors = Authors;
 	}
 
 	public String getAuthors() {

@@ -7,20 +7,8 @@ public class PrintMedia extends Publication {
 	private int ReleaseNumber;
 	private String PrintType;
 
-	public PrintMedia() {
-		super();
-		this.ReleaseNumber = -1;
-		this.PrintType = " ";
-	}
-
 	public PrintMedia(Integer MediaID, String Title, Date ReleaseDate, String Country, int Quantity, int ReleaseNumber, String PrintType) {
 		super(MediaID, Title, ReleaseDate, Country, Quantity);
-		this.ReleaseNumber = ReleaseNumber;
-		this.PrintType = PrintType;
-	}
-
-	public PrintMedia(String PublicationID, String Title, Date ReleaseDate, int ReleaseNumber, String PrintType) {
-		super(Title, ReleaseDate);
 		this.ReleaseNumber = ReleaseNumber;
 		this.PrintType = PrintType;
 	}
@@ -40,5 +28,4 @@ public class PrintMedia extends Publication {
 	public void setPrintType(String PrintType) {
 		this.PrintType = PrintType;
 	}
-
 }

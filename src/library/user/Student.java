@@ -14,49 +14,49 @@ public class Student extends Person {
 	    return this.getAccount().getPassword();
 	}
 
-	public Student(String studentID, String name, String className, boolean gender, String email, String phone, String address,
-			 boolean fineStatus, int fine, User account) {
-		super(name, gender, address, email, phone, account);
-		StudentID = studentID;
-		ClassName = className;
-		FineStatus = fineStatus;
-		Fine = fine;
+	public Student(String StudentID, String Name, String ClassName, boolean Gender, String Email, String Phone, String Address,
+			 boolean FineStatus, int Fine, User account) {
+		super(Name, Gender, Address, Email, Phone, account);
+		this.StudentID = StudentID;
+		this.ClassName = ClassName;
+		this.FineStatus = FineStatus;
+		this.Fine = Fine;
 	}
 
 	public String getStudentID() {
-		return StudentID;
+		return this.StudentID;
 	}
 
-	public void setStudentID(String studentID) {
-		StudentID = studentID;
+	public void setStudentID(String StudentID) {
+		this.StudentID = StudentID;
 	}
 
 	public String getClassName() {
-		return ClassName;
+		return this.ClassName;
 	}
 
-	public void setClassName(String className) {
-		ClassName = className;
+	public void setClassName(String ClassName) {
+		this.ClassName = ClassName;
 	}
 
 	public boolean isFineStatus() {
 		return this.FineStatus;
 	}
 
-	public void setFineStatus(boolean fineStatus) {
-		FineStatus = fineStatus;
+	public void setFineStatus(boolean FineStatus) {
+		this.FineStatus = FineStatus;
+	}
+
+	public int getFine() {
+		return this.Fine;
+	}
+
+	public void setFine(int Fine) {
+		this.Fine = Fine;
 	}
 	
 	// For table setColFactory (automatic map string "fineStatusText" with the method below)
 	public String getFineStatusText() {
-		return (FineStatus ? "Bị phạt" : "Không");
-	}
-
-	public int getFine() {
-		return Fine;
-	}
-
-	public void setFine(int fine) {
-		Fine = fine;
+		return (FineStatus ? "Bị phạt" : "Không bị phạt");
 	}
 }

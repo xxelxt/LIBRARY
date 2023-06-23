@@ -14,103 +14,103 @@ public class Borrow {
 	private boolean FineStatus;
 	private boolean ReturnedStatus;
 
-	public Borrow(int borrowID, String studentID, Integer publicationID, String title, int borrowQuantity,
-			Date startDate, Date dueDate, Date returnedDate, boolean fineStatus, boolean returnedStatus) {
-		BorrowID = borrowID;
-		StartDate = startDate;
-		DueDate = dueDate;
-		ReturnedDate = returnedDate;
-		StudentID = studentID;
-		PublicationID = publicationID;
-		Title = title;
-		BorrowQuantity = borrowQuantity;
-		FineStatus = fineStatus;
-		ReturnedStatus = returnedStatus;
+	public Borrow(int BorrowID, String StudentID, Integer PublicationID, String Title, int BorrowQuantity,
+			Date StartDate, Date DueDate, Date ReturnedDate, boolean FineStatus, boolean ReturnedStatus) {
+		this.BorrowID = BorrowID;
+		this.StudentID = StudentID;
+		this.PublicationID = PublicationID;
+		this.Title = Title;
+		this.BorrowQuantity = BorrowQuantity;
+		this.StartDate = StartDate;
+		this.DueDate = DueDate;
+		this.ReturnedDate = ReturnedDate;
+		this.FineStatus = FineStatus;
+		this.ReturnedStatus = ReturnedStatus;
 	}
 
 	public int getBorrowID() {
-		return BorrowID;
+		return this.BorrowID;
 	}
 
-	public void setBorrowID(int borrowID) {
-		BorrowID = borrowID;
-	}
-
-	public Date getStartDate() {
-		return StartDate;
-	}
-
-	public void setStartDate(Date startDate) {
-		StartDate = startDate;
-	}
-
-	public Date getDueDate() {
-		return DueDate;
-	}
-
-	public void setDueDate(Date dueDate) {
-		DueDate = dueDate;
-	}
-
-	public Date getReturnedDate() {
-		return ReturnedDate;
-	}
-
-	public void setReturnedDate(Date returnedDate) {
-		ReturnedDate = returnedDate;
+	public void setBorrowID(int BorrowID) {
+		this.BorrowID = BorrowID;
 	}
 
 	public String getStudentID() {
-		return StudentID;
+		return this.StudentID;
 	}
 
-	public void setStudentID(String studentID) {
-		StudentID = studentID;
+	public void setStudentID(String StudentID) {
+		this.StudentID = StudentID;
 	}
 
 	public Integer getPublicationID() {
-		return PublicationID;
+		return this.PublicationID;
 	}
 
-	public void setPublicationID(Integer publicationID) {
-		PublicationID = publicationID;
+	public void setPublicationID(Integer PublicationID) {
+		this.PublicationID = PublicationID;
 	}
 
 	public String getTitle() {
-		return Title;
+		return this.Title;
 	}
 
-	public void setTitle(String title) {
-		Title = title;
+	public void setTitle(String Title) {
+		this.Title = Title;
 	}
 
 	public int getBorrowQuantity() {
-		return BorrowQuantity;
+		return this.BorrowQuantity;
 	}
 
-	public void setBorrowQuantity(int borrowQuantity) {
-		BorrowQuantity = borrowQuantity;
+	public void setBorrowQuantity(int BorrowQuantity) {
+		this.BorrowQuantity = BorrowQuantity;
+	}
+
+	public Date getStartDate() {
+		return this.StartDate;
+	}
+
+	public void setStartDate(Date StartDate) {
+		this.StartDate = StartDate;
+	}
+
+	public Date getDueDate() {
+		return this.DueDate;
+	}
+
+	public void setDueDate(Date DueDate) {
+		this.DueDate = DueDate;
+	}
+
+	public Date getReturnedDate() {
+		return this.ReturnedDate;
+	}
+
+	public void setReturnedDate(Date ReturnedDate) {
+		this.ReturnedDate = ReturnedDate;
 	}
 
 	public boolean isFineStatus() {
-		return FineStatus;
+		return this.FineStatus;
 	}
 
-	public void setFineStatus(boolean fineStatus) {
-		FineStatus = fineStatus;
+	public void setFineStatus(boolean FineStatus) {
+		this.FineStatus = FineStatus;
 	}
 
 	public boolean isReturnedStatus() {
-		return ReturnedStatus;
+		return this.ReturnedStatus;
 	}
 
-	public void setReturnedStatus(boolean returnedStatus) {
-		ReturnedStatus = returnedStatus;
+	public void setReturnedStatus(boolean ReturnedStatus) {
+		this.ReturnedStatus = ReturnedStatus;
 	}
 	
 	// For table setCellValueFactory (automatic map string "fineStatusText" with the method below)
 	public String getFineStatusText() {
-		return (FineStatus ? "Bị phạt" : "Không");
+		return (FineStatus ? "Bị phạt" : "Không bị phạt");
 	}
 
 	public String getReturnedStatusText() {
