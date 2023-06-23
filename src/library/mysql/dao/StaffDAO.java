@@ -142,39 +142,6 @@ public class StaffDAO {
         return userDAO.deleteUser(getUsernamebyStaffID(StaffID));
     }
 
-	public boolean deleteStaff2(Integer sID) {
-	    try {
-	        String usernameStaffSql = "SELECT Username FROM Staff WHERE StaffID = ?";
-	        PreparedStatement usernameStmt = DatabaseLayer.prepareStatement(usernameStaffSql);
-	        usernameStmt.setInt(1, sID);
-	        ResultSet rs = usernameStmt.executeQuery();
-
-	        if (!rs.next()) {
-	            System.out.println("Can't find staff with ID: " + sID);
-	            rs.close();
-	            usernameStmt.close();
-	            return false;
-	        }
-
-	        String username = rs.getString("Username");
-	        rs.close();
-	        usernameStmt.close();
-
-	        String deleteUserSql = "DELETE FROM Users WHERE Username = ?";
-	        PreparedStatement deleteUsersStmt = DatabaseLayer.prepareStatement(deleteUserSql);
-	        deleteUsersStmt.setString(1, username);
-	        deleteUsersStmt.executeUpdate();
-	        deleteUsersStmt.close();
-
-	        System.out.println("Deleted staff and user account.");
-
-	    } catch (Exception e) {
-	        System.out.println(e);
-	        return false;
-	    }
-	    return true;
-	}
-
 	public void updateStaff(Staff stf) throws Exception {
 		try {
             String sql = "UPDATE Staff "
