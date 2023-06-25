@@ -83,8 +83,6 @@ public class DatePickerTableCell<T> extends TableCell<T, Date> {
 			System.out.println("IS NOOOOOOOOOOT");
 		} 
     }
-    
-
 
     @Override
     public void commitEdit(Date newValue) {
