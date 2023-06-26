@@ -135,7 +135,7 @@ public class BorrowDAO {
 		return true;
 	}
 	
-	public boolean updateBorrowFineStatus(int borrowID) {
+	public void updateBorrowFineStatus(int borrowID) throws Exception {
 		try {
             String sql = "UPDATE Borrow "
             		+ "SET FineStatus = TRUE "
@@ -147,12 +147,10 @@ public class BorrowDAO {
             pstmt.executeUpdate();
             pstmt.close();
 
-            System.out.println("Updated borrow fine status.");
+            System.out.println("Updated borrow fine status: " + borrowID);
         } catch (Exception e) {
             System.out.println(e);
-            return false;
+            throw e;
         }
-
-		return true;
 	}
 }

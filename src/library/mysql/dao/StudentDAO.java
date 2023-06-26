@@ -186,30 +186,11 @@ public class StudentDAO {
         }
 	}
 	
-	public void updateStudentFineStatus(String studentID) throws Exception {
-		try {
-            String sql = "UPDATE Students S "
-            		+ "JOIN Borrow B ON B.StudentID = S.StudentID "
-            		+ "SET S.FineStatus = TRUE "
-            		+ "WHERE B.FineStatus = TRUE AND S.StudentID = ?";
-
-            PreparedStatement pstmt = DatabaseLayer.prepareStatement(sql);
-            pstmt.setString(1, studentID);
-
-            pstmt.executeUpdate();
-            pstmt.close();
-
-            System.out.println("Updated student fine status.");
-        } catch (Exception e) {
-            System.out.println(e);
-            throw e;
-        }
-	}
-	
 	public void resetStudentFine() throws Exception {
 		try {
             String sql = "UPDATE Students "
-            		+ "SET FineStatus = FALSE AND Fine = 0";
+            		+ "SET FineStatus = FALSE, "
+            		+ "Fine = 0";
 
             PreparedStatement pstmt = DatabaseLayer.prepareStatement(sql);
 
@@ -223,20 +204,24 @@ public class StudentDAO {
         }
 	}
 	
-	public void updateStudentFine(String studentID) throws Exception {
+	public void updateStudentFine(String studentID, long daysDue) throws Exception {
 		try {
             String sql = "UPDATE Students S "
-            		+ "JOIN Borrow B ON B.StudentID = S.StudentID "
-            		+ "SET S.Fine = S.Fine + 50000 * (getDate() - B.DueDate) "
-            		+ "WHERE B.FineStatus = TRUE AND B.ReturnedStatus = FALSE AND S.StudentID = ?";
+            		+ "SET S.Fine = S.Fine + 50000 * ?, "
+            		+ "S.FineStatus = TRUE "
+            		+ "WHERE S.StudentID = ?";
 
             PreparedStatement pstmt = DatabaseLayer.prepareStatement(sql);
-            pstmt.setString(1, studentID);
 
+            pstmt.setLong(1, daysDue);
+            pstmt.setString(2, studentID);
+
+            System.out.println(pstmt.toString());
+            
             pstmt.executeUpdate();
             pstmt.close();
 
-            System.out.println("Updated student fine.");
+            System.out.println("Updated student fine: " + studentID);
         } catch (Exception e) {
             System.out.println(e);
             throw e;
