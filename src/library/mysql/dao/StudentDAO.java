@@ -205,5 +205,42 @@ public class StudentDAO {
             throw e;
         }
 	}
+	
+	public void resetStudentFine() throws Exception {
+		try {
+            String sql = "UPDATE Students "
+            		+ "SET FineStatus = FALSE AND Fine = 0";
+
+            PreparedStatement pstmt = DatabaseLayer.prepareStatement(sql);
+
+            pstmt.executeUpdate();
+            pstmt.close();
+
+            System.out.println("Reset student fine status.");
+        } catch (Exception e) {
+            System.out.println(e);
+            throw e;
+        }
+	}
+	
+	public void updateStudentFine(String studentID) throws Exception {
+		try {
+            String sql = "UPDATE Students S "
+            		+ "JOIN Borrow B ON B.StudentID = S.StudentID "
+            		+ "SET S.Fine = S.Fine + 50000 * (getDate() - B.DueDate) "
+            		+ "WHERE B.FineStatus = TRUE AND B.ReturnedStatus = FALSE AND S.StudentID = ?";
+
+            PreparedStatement pstmt = DatabaseLayer.prepareStatement(sql);
+            pstmt.setString(1, studentID);
+
+            pstmt.executeUpdate();
+            pstmt.close();
+
+            System.out.println("Updated student fine.");
+        } catch (Exception e) {
+            System.out.println(e);
+            throw e;
+        }
+	}
 
 }
