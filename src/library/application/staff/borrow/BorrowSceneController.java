@@ -112,15 +112,17 @@ public class BorrowSceneController implements Initializable {
     		LocalDate dueDate = borrow.getDueDate().toLocalDate();
     		long daysDifference = now.toEpochDay() - dueDate.toEpochDay();
     		
-    		if (daysDifference > 0){
-    			try {
-					borrowDAO.updateBorrowFineStatus(borrow.getBorrowID());
+			try {
+	    		if (daysDifference > 0){
+					borrowDAO.updateBorrowFineStatus(borrow.getBorrowID(), true);
 	    			studentDAO.updateStudentFine(borrow.getStudentID(), daysDifference);
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-    		}
+	    		} else {
+	    			borrowDAO.updateBorrowFineStatus(borrow.getBorrowID(), false);
+	    		}
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
     	}
     }
     

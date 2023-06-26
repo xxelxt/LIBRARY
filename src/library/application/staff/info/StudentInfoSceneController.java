@@ -3,6 +3,8 @@ package library.application.staff.info;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.BooleanProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.PasswordField;
@@ -11,6 +13,7 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.AnchorPane;
 import library.application.staff.borrow.BorrowHistorySceneController;
 import library.mysql.dao.StudentDAO;
+import library.mysql.dao.UserDAO;
 import library.user.Student;
 
 public class StudentInfoSceneController {
@@ -30,36 +33,6 @@ public class StudentInfoSceneController {
         fieldFine.setText(Integer.toString(currentStudent.getFine()));
         fieldUsername.setText(currentStudent.getUsername());
         fieldPassword.setText(currentStudent.getPassword());
-
-        setDisableAllAndPassword(true, true);
-	}
-
-	private void setDisableAllAndPassword(boolean all, boolean password) {
-        fieldStudentID.setDisable(true);
-        fieldName.setDisable(all);
-        fieldClass.setDisable(true);
-        fieldGender.setDisable(true);	// Deal with later
-        fieldEmail.setDisable(all);
-        fieldPhone.setDisable(all);
-        fieldAddress.setDisable(all);
-        fieldFineStatus.setDisable(true);
-        fieldFine.setDisable(true);
-        fieldUsername.setDisable(true);
-
-        fieldPassword.setDisable(password);
-
-        fieldStudentID.setEditable(false);
-        fieldName.setEditable(!all);
-        fieldClass.setEditable(false);
-        fieldGender.setEditable(false);
-        fieldEmail.setEditable(!all);
-        fieldPhone.setEditable(!all);
-        fieldAddress.setEditable(!all);
-        fieldFineStatus.setEditable(false);
-        fieldFine.setEditable(false);
-        fieldUsername.setEditable(false);
-
-        fieldPassword.setEditable(!password);
 	}
 
     @FXML
@@ -93,6 +66,9 @@ public class StudentInfoSceneController {
     private PasswordField fieldPassword;
 
     @FXML
+    private TextField fieldPasswordAlt;
+    
+    @FXML
     private TextField fieldPhone;
 
     @FXML
@@ -101,11 +77,9 @@ public class StudentInfoSceneController {
     @FXML
     private TextField fieldUsername;
 
+    
     @FXML
-    void btnActionChangePassword(ActionEvent event) {
-
-    	setDisableAllAndPassword(true, false);
-    }
+    private ToggleButton btnChangePassword;
 
     @FXML
     private ToggleButton btnEditInfo;
@@ -114,20 +88,33 @@ public class StudentInfoSceneController {
     private BorrowHistorySceneController borrowHistorySceneController;
 
     @FXML
+    void btnActionChangePassword(ActionEvent event) {
+    	if (!btnChangePassword.isSelected()) {
+    		currentStudent.getAccount().setPassword(fieldPassword.getText());
+
+    		try {
+    			UserDAO userDAO = new UserDAO();
+				userDAO.changePassword(currentStudent.getAccount());
+			} catch (Exception e) {
+				System.out.println(e);
+			}
+    	}
+    }
+
+    
+    @FXML
     void btnActionEditInfo(ActionEvent event) {
-    	if (btnEditInfo.isSelected()) {
-    		setDisableAllAndPassword(false, true);
-    	} else {
-    		setDisableAllAndPassword(true, true);
-//    		currentStudent.setStudentID(fieldStudentID.getText());
+    	if (!btnEditInfo.isSelected()) {
     		currentStudent.setName(fieldName.getText());
-    		currentStudent.setClassName(fieldClass.getText());
-            // currentStudent.setGender(fieldGender.getText());
     		currentStudent.setEmail(fieldEmail.getText());
     		currentStudent.setPhone(fieldPhone.getText());
     		currentStudent.setAddress(fieldAddress.getText());
-//            currentStudent.set(fieldFineStatus.getText());
-//            currentStudent.set(fieldFine.getText());
+    		
+//     		currentStudent.setClassName(fieldClass.getText());    		
+//    		currentStudent.setStudentID(fieldStudentID.getText());
+//			currentStudent.setGender(fieldGender.getText());
+//          currentStudent.set(fieldFineStatus.getText());
+//          currentStudent.set(fieldFine.getText());
 //  		currentStudent.getAccount().setUsername(fieldUsername.getText());
 
     		try {
@@ -152,6 +139,25 @@ public class StudentInfoSceneController {
         assert fieldPhone != null : "fx:id=\"fieldPhone\" was not injected: check your FXML file 'StudentInfoScene.fxml'.";
         assert fieldStudentID != null : "fx:id=\"fieldStudentID\" was not injected: check your FXML file 'StudentInfoScene.fxml'.";
         assert fieldUsername != null : "fx:id=\"fieldUsername\" was not injected: check your FXML file 'StudentInfoScene.fxml'.";
+        
+        BooleanProperty editable = btnEditInfo.selectedProperty();
+        
+        fieldName.editableProperty().bind(editable);
+        fieldEmail.editableProperty().bind(editable);
+        fieldPhone.editableProperty().bind(editable);
+        fieldAddress.editableProperty().bind(editable);
+        
+        fieldName.disableProperty().bind(editable.not());
+        fieldEmail.disableProperty().bind(editable.not());
+        fieldPhone.disableProperty().bind(editable.not());
+        fieldAddress.disableProperty().bind(editable.not());
+        
+        fieldPasswordAlt.visibleProperty().bind(btnChangePassword.selectedProperty());
+        fieldPassword.visibleProperty().bind(btnChangePassword.selectedProperty().not());
+        
+        // Bind textField to passwordField
+        Bindings.bindBidirectional(fieldPassword.textProperty(), fieldPasswordAlt.textProperty());
+        fieldPassword.setDisable(true);
     }
     
     @FXML

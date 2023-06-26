@@ -223,23 +223,38 @@ public class StudentSceneController implements Initializable {
     		studentTableView.setEditable(false);
     	}
     }
-
+    
+    @FXML
+    void comboBoxActionSearch(ActionEvent event) {
+    	startSearch();
+    }
+    
     @FXML
     void inputSearch(KeyEvent event) {
+    	startSearch();
+    }
+    
+    private void startSearch() {
         String searchText = fieldSearch.getText();
         String searchOption = comboBox.getValue();
-        SearchData(searchText, searchOption);
+        String searchFineStatus = comboBoxFine.getValue();
+
+        SearchData(searchText, searchOption, searchFineStatus);
     }
 
-    private void SearchData(String searchText, String searchOption) {
-        if (searchText.isEmpty()) {
-            // If the search text is empty, revert to the original unfiltered list
-            studentTableView.setItems(data);
-        } else {
+    private void SearchData(String searchText, String searchOption, String searchFineStatus) {
+//        if (searchText.isEmpty()) {
+//            // If the search text is empty, revert to the original unfiltered list
+//            studentTableView.setItems(data);
+//        } else {
             // Apply filtering based on the search text and option
             FilteredList<Student> filteredList = new FilteredList<>(data);
 
             filteredList.setPredicate(student -> {
+            	if (!searchFineStatus.equals("Tất cả") && !student.getFineStatusText().equals(searchFineStatus)) {
+            		return false;
+            	}
+            	
                 String originalText = "";
                 switch (searchOption) {
                     case "Mã sinh viên":
@@ -267,7 +282,7 @@ public class StudentSceneController implements Initializable {
             });
 
             studentTableView.setItems(filteredList);
-        }
+//        }
     }
 
 
