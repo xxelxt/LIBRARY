@@ -258,7 +258,7 @@ CREATE TABLE `publications` (
 
 LOCK TABLES `publications` WRITE;
 /*!40000 ALTER TABLE `publications` DISABLE KEYS */;
-INSERT INTO `publications` VALUES (1,'Ngôi thứ nhất số ít','2023-05-24','Nhật Bản',8),(2,'Vùng đất quỷ tha ma bắt','2023-03-27','Đài Loan',6),(3,'Tạp chí Ngân hàng','2023-06-14','Việt Nam',3),(4,'Tạp chí Giáo dục','2023-06-13','Việt Nam',1);
+INSERT INTO `publications` VALUES (1,'Ngôi thứ nhất số ít','2023-05-24','Nhật Bản',8),(2,'Vùng đất quỷ tha ma bắt','2023-03-27','Đài Loan',6),(3,'Tạp chí Ngân hàng','2023-06-14','Việt Nam',3),(4,'Tạp chí Giáo dục','2023-06-16','Việt Nam',1);
 /*!40000 ALTER TABLE `publications` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -358,7 +358,7 @@ CREATE TABLE `students` (
 
 LOCK TABLES `students` WRITE;
 /*!40000 ALTER TABLE `students` DISABLE KEYS */;
-INSERT INTO `students` VALUES ('24A4040001','student1','Nguyễn Văn A',_binary '\0','123 Đường Láng','24a4040001@hvnh.edu.vn','0123456789','K24QTKDA',0,_binary '\0'),('24A4040003','student3','Hoàng Thị C',_binary '','345 Đường Láng','24a4040003@hvnh.edu.vn','0123456787','K24QTKDB',0,_binary '\0');
+INSERT INTO `students` VALUES ('24A4040001','student1','Nguyễn Văn A',_binary '\0','123 Đường Láng','24a4040001@hvnh.edu.vn','0123456789','K24QTKDA',0,_binary '\0'),('24A4040003','student3','Hoàng Thị C',_binary '','345 Đường Láng','24a4040003@hvnh.edu.vn','0123456787','K24QTKDB',0,_binary '\0'),('24A4040006','student6','Nguyễn Văn E',_binary '\0','567 Đường Láng','24a4040006@hvnh.edu.vn','0123456785','K24QTKDC',200000,_binary '');
 /*!40000 ALTER TABLE `students` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -384,7 +384,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES ('clerk','2222222',2),('librarian','111111',1),('student1','111111',3),('student3','333333',3);
+INSERT INTO `users` VALUES ('clerk','2222222',2),('librarian','111111',1),('student1','111111',3),('student3','333333',3),('student6','666666',3);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -397,4 +397,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-06-23 19:08:33
+-- Dump completed on 2023-06-26 15:37:09

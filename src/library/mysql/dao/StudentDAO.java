@@ -185,5 +185,25 @@ public class StudentDAO {
             throw e;
         }
 	}
+	
+	public void updateStudentFineStatus(String studentID) throws Exception {
+		try {
+            String sql = "UPDATE Students S "
+            		+ "JOIN Borrow B ON B.StudentID = S.StudentID "
+            		+ "SET S.FineStatus = TRUE "
+            		+ "WHERE B.FineStatus = TRUE AND S.StudentID = ?";
+
+            PreparedStatement pstmt = DatabaseLayer.prepareStatement(sql);
+            pstmt.setString(1, studentID);
+
+            pstmt.executeUpdate();
+            pstmt.close();
+
+            System.out.println("Updated student fine status.");
+        } catch (Exception e) {
+            System.out.println(e);
+            throw e;
+        }
+	}
 
 }

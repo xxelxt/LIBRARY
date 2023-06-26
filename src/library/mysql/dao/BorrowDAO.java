@@ -134,6 +134,25 @@ public class BorrowDAO {
 
 		return true;
 	}
+	
+	public boolean updateBorrowFineStatus(int borrowID) {
+		try {
+            String sql = "UPDATE Borrow "
+            		+ "SET FineStatus = TRUE "
+            		+ "WHERE BorrowID = ?";
 
+            PreparedStatement pstmt = DatabaseLayer.prepareStatement(sql);
+            pstmt.setInt(1, borrowID);
 
+            pstmt.executeUpdate();
+            pstmt.close();
+
+            System.out.println("Updated borrow fine status.");
+        } catch (Exception e) {
+            System.out.println(e);
+            return false;
+        }
+
+		return true;
+	}
 }
