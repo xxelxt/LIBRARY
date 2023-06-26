@@ -104,7 +104,7 @@ public class StudentSceneController implements Initializable {
 
     public void refresh() {
         data = FXCollections.observableArrayList();
-
+        
         List<Student> allStudents = studentDAO.loadAllStudents();
 
 	    for (Student student : allStudents){

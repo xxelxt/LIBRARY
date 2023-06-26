@@ -34,6 +34,7 @@ import javafx.util.converter.IntegerStringConverter;
 import library.application.util.DatePickerTableCell;
 import library.central.Borrow;
 import library.mysql.dao.BorrowDAO;
+import library.mysql.dao.StudentDAO;
 import library.publication.Publication;
 
 public class BorrowSceneController implements Initializable {
@@ -98,19 +99,46 @@ public class BorrowSceneController implements Initializable {
     @FXML
     private VBox paneMain;
 
-    private ObservableList<Borrow> data;
+    private ObservableList<Borrow> data = FXCollections.observableArrayList();
 
     private ObservableList<String> items = FXCollections.observableArrayList("Mã mượn", "Mã sinh viên", "Tình trạng trả");
 
     private BorrowDAO borrowDAO = new BorrowDAO();
+    private StudentDAO studentDAO = new StudentDAO();
 
+    public void checkDateAndUpdateFine(Borrow borrow) {
+    	if (borrow.getReturnedDate() == null) {
+    		LocalDate now = LocalDate.now();
+    		LocalDate dueDate = borrow.getDueDate().toLocalDate();
+    		long daysDifference = now.toEpochDay() - dueDate.toEpochDay();
+    		
+    		if (daysDifference > 0){
+    			try {
+					borrowDAO.updateBorrowFineStatus(borrow.getBorrowID());
+	    			studentDAO.updateStudentFine(borrow.getStudentID(), daysDifference);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+    		}
+    	}
+    }
+    
     public void refresh() {
         data = FXCollections.observableArrayList();
 
         List<Borrow> allBorrow = borrowDAO.loadAllBorrow();
 
+        try {
+			studentDAO.resetStudentFine();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        
 	    for (Borrow borrow : allBorrow){
 	    	data.add(borrow);
+	    	checkDateAndUpdateFine(borrow);
 	    }
 
 	    borrowTableView.setItems(data);
@@ -154,45 +182,6 @@ public class BorrowSceneController implements Initializable {
         });
     }
     
-    private StringConverter<LocalDate> getDateConverter() {
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        return new StringConverter<>() {
-            @Override
-            public String toString(LocalDate date) {
-                if (date != null) {
-                    return dateFormatter.format(date);
-                } else {
-                    return "";
-                }
-            }
-
-            @Override
-            public LocalDate fromString(String string) {
-                if (string != null && !string.isEmpty()) {
-                    return LocalDate.parse(string, dateFormatter);
-                } else {
-                    return null;
-                }
-            }
-        };
-    }
-
-    private Date getDateFromDatePicker(DatePicker datePicker) {
-        LocalDate localDate = datePicker.getValue();
-        if (localDate != null) {
-            return java.sql.Date.valueOf(localDate);
-        } else {
-            return null;
-        }
-    }
-    
-    private LocalDate getDateFromItem(Date item) {
-        if (item != null) {
-            return item.toLocalDate();
-        } else {
-            return null;
-        }
-    }
 
     private void editableCols(){
         colStudentID.setCellFactory(TextFieldTableCell.forTableColumn());
@@ -305,7 +294,7 @@ public class BorrowSceneController implements Initializable {
 	public void initialize(URL arg0, ResourceBundle arg1) {
         System.out.println("Borrow controller initialized");
         // Add a default row
-		refresh();
+        refresh();
 		editableCols();
 
         // Bind the ObservableList to the TableView
