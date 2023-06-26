@@ -8,6 +8,7 @@
 <?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
@@ -33,14 +34,11 @@
                               <Font size="14.0" />
                            </font>
                         </ToggleButton>
-                        <Button mnemonicParsing="false" onAction="#btnActionChangePassword" text="Đổi mật khẩu">
-                           <HBox.margin>
-                              <Insets />
-                           </HBox.margin>
+                        <ToggleButton fx:id="btnChangePassword" layoutX="614.0" layoutY="20.0" mnemonicParsing="false" onAction="#btnActionChangePassword" text="Đổi mật khẩu">
                            <font>
                               <Font size="14.0" />
                            </font>
-                        </Button>
+                        </ToggleButton>
                      </children>
                      <opaqueInsets>
                         <Insets />
@@ -64,7 +62,7 @@
                                     <Font size="20.0" />
                                  </font>
                               </Label>
-                              <TextField fx:id="fieldStudentID" editable="false" prefHeight="26.0" prefWidth="250.0">
+                              <TextField fx:id="fieldStudentID" disable="true" editable="false" prefHeight="26.0" prefWidth="250.0">
                                  <font>
                                     <Font size="14.0" />
                                  </font>
@@ -104,7 +102,7 @@
                                     <Font size="20.0" />
                                  </font>
                               </Label>
-                              <TextField fx:id="fieldClass" editable="false" prefHeight="30.0" prefWidth="267.0">
+                              <TextField fx:id="fieldClass" disable="true" editable="false" prefHeight="30.0" prefWidth="267.0">
                                  <font>
                                     <Font size="14.0" />
                                  </font>
@@ -132,7 +130,7 @@
                               <Insets />
                            </HBox.margin>
                         </Label>
-                        <TextField fx:id="fieldUsername" editable="false" prefHeight="26.0" prefWidth="0.0" HBox.hgrow="ALWAYS">
+                        <TextField fx:id="fieldUsername" disable="true" editable="false" prefHeight="26.0" prefWidth="0.0" HBox.hgrow="ALWAYS">
                            <font>
                               <Font size="14.0" />
                            </font>
@@ -155,11 +153,20 @@
                               <Insets />
                            </HBox.margin>
                         </Label>
-                        <PasswordField fx:id="fieldPassword" editable="false" prefHeight="26.0" HBox.hgrow="ALWAYS">
-                           <font>
-                              <Font size="14.0" />
-                           </font>
-                        </PasswordField>
+                        <StackPane HBox.hgrow="ALWAYS">
+                           <children>
+                              <TextField fx:id="fieldPasswordAlt" visible="false">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </TextField>
+                              <PasswordField fx:id="fieldPassword" editable="false">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </PasswordField>
+                           </children>
+                        </StackPane>
                      </children>
                      <VBox.margin>
                         <Insets />
@@ -178,7 +185,7 @@
                               <Insets />
                            </HBox.margin>
                         </Label>
-                        <TextField fx:id="fieldGender" editable="false" prefHeight="26.0" prefWidth="656.0" HBox.hgrow="ALWAYS">
+                        <TextField fx:id="fieldGender" disable="true" editable="false" prefHeight="26.0" prefWidth="656.0" HBox.hgrow="ALWAYS">
                            <font>
                               <Font size="14.0" />
                            </font>
@@ -270,7 +277,7 @@
                               <Insets />
                            </HBox.margin>
                         </Label>
-                        <TextField fx:id="fieldFineStatus" editable="false" prefHeight="26.0" prefWidth="250.0" HBox.hgrow="ALWAYS">
+                        <TextField fx:id="fieldFineStatus" disable="true" editable="false" prefHeight="26.0" prefWidth="250.0" HBox.hgrow="ALWAYS">
                            <font>
                               <Font size="14.0" />
                            </font>
@@ -290,7 +297,7 @@
                               <Insets />
                            </HBox.margin>
                         </Label>
-                        <TextField fx:id="fieldFine" editable="false" prefHeight="26.0" prefWidth="250.0" HBox.hgrow="ALWAYS">
+                        <TextField fx:id="fieldFine" disable="true" editable="false" prefHeight="26.0" prefWidth="250.0" HBox.hgrow="ALWAYS">
                            <font>
                               <Font size="14.0" />
                            </font>

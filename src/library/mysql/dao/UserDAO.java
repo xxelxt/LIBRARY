@@ -88,15 +88,15 @@ public class UserDAO {
 		return true;
 	}
 	
-	public void updatePassword(String username, String password) throws Exception {
+	public void updatePassword(User user) throws Exception {
 		try {
             String sql = "UPDATE Users "
             		+ "SET Password = ? "
             		+ "WHERE Username = ?";
 
             PreparedStatement pstmt = DatabaseLayer.prepareStatement(sql);
-            pstmt.setString(1, password);
-            pstmt.setString(2, username);
+            pstmt.setString(1, user.getPassword());
+            pstmt.setString(2, user.getUsername());
 
             pstmt.executeUpdate();
             pstmt.close();
