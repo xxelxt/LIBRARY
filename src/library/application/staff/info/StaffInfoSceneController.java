@@ -3,12 +3,15 @@ package library.application.staff.info;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.BooleanProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import library.mysql.dao.StaffDAO;
+import library.mysql.dao.UserDAO;
 import library.user.Staff;
 
 public class StaffInfoSceneController /*implements Initializable*/ {
@@ -26,31 +29,6 @@ public class StaffInfoSceneController /*implements Initializable*/ {
         fieldPosition.setText(currentStaff.getPosition());
         fieldUsername.setText(currentStaff.getUsername());
         fieldPassword.setText(currentStaff.getPassword());
-
-        setDisableAllAndPassword(true, true);
-	}
-	private void setDisableAllAndPassword(boolean all, boolean password) {
-        fieldStaffID.setDisable(true);
-        fieldName.setDisable(all);
-        fieldGender.setDisable(true);	// Deal with later
-        fieldEmail.setDisable(all);
-        fieldPhone.setDisable(all);
-        fieldAddress.setDisable(all);
-        fieldPosition.setDisable(all);
-        fieldUsername.setDisable(true);
-
-        fieldPassword.setDisable(password);
-
-        fieldStaffID.setEditable(false);
-        fieldName.setEditable(!all);
-        fieldGender.setEditable(false);
-        fieldEmail.setEditable(!all);
-        fieldPhone.setEditable(!all);
-        fieldAddress.setEditable(!all);
-        fieldPosition.setEditable(!all);
-        fieldUsername.setEditable(false);
-
-        fieldPassword.setEditable(!password);
 	}
 
 	@FXML
@@ -75,6 +53,9 @@ public class StaffInfoSceneController /*implements Initializable*/ {
     private PasswordField fieldPassword;
 
     @FXML
+    private TextField fieldPasswordAlt;
+    
+    @FXML
     private TextField fieldPhone;
 
     @FXML
@@ -87,19 +68,29 @@ public class StaffInfoSceneController /*implements Initializable*/ {
     private TextField fieldUsername;
 
     @FXML
-    void btnActionChangePassword(ActionEvent event) {
-
-    }
-
+    private ToggleButton btnChangePassword;
+    
     @FXML
     private ToggleButton btnEditInfo;
 
+
+    @FXML
+    void btnActionChangePassword(ActionEvent event) {
+    	if (!btnChangePassword.isSelected()) {
+    		currentStaff.getAccount().setPassword(fieldPassword.getText());
+
+    		try {
+    			UserDAO userDAO = new UserDAO();
+				userDAO.changePassword(currentStaff.getAccount());
+			} catch (Exception e) {
+				System.out.println(e);
+			}
+    	}
+    }
+    
     @FXML
     void btnActionEditInfo(ActionEvent event) {
-    	if (btnEditInfo.isSelected()) {
-    		setDisableAllAndPassword(false, true);
-    	} else {
-    		setDisableAllAndPassword(true, true);
+    	if (!btnEditInfo.isSelected()) {
     		currentStaff.setName(fieldName.getText());
     		currentStaff.setEmail(fieldEmail.getText());
     		currentStaff.setPhone(fieldPhone.getText());
@@ -126,5 +117,23 @@ public class StaffInfoSceneController /*implements Initializable*/ {
         assert fieldStaffID != null : "fx:id=\"fieldStaffID\" was not injected: check your FXML file 'StaffInfoScene.fxml'.";
         assert fieldUsername != null : "fx:id=\"fieldUsername\" was not injected: check your FXML file 'StaffInfoScene.fxml'.";
 
+        BooleanProperty editable = btnEditInfo.selectedProperty();
+        
+        fieldName.editableProperty().bind(editable);
+        fieldEmail.editableProperty().bind(editable);
+        fieldPhone.editableProperty().bind(editable);
+        fieldAddress.editableProperty().bind(editable);
+        
+        fieldName.disableProperty().bind(editable.not());
+        fieldEmail.disableProperty().bind(editable.not());
+        fieldPhone.disableProperty().bind(editable.not());
+        fieldAddress.disableProperty().bind(editable.not());
+
+        fieldPasswordAlt.visibleProperty().bind(btnChangePassword.selectedProperty());
+        fieldPassword.visibleProperty().bind(btnChangePassword.selectedProperty().not());
+        
+        // Bind textField to passwordField
+        Bindings.bindBidirectional(fieldPassword.textProperty(), fieldPasswordAlt.textProperty());
+        fieldPassword.setDisable(true);
     }
 }
