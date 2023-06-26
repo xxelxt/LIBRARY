@@ -189,7 +189,8 @@ public class StudentDAO {
 	public void resetStudentFine() throws Exception {
 		try {
             String sql = "UPDATE Students "
-            		+ "SET FineStatus = FALSE AND Fine = 0";
+            		+ "SET FineStatus = FALSE, "
+            		+ "Fine = 0";
 
             PreparedStatement pstmt = DatabaseLayer.prepareStatement(sql);
 
@@ -206,14 +207,17 @@ public class StudentDAO {
 	public void updateStudentFine(String studentID, long daysDue) throws Exception {
 		try {
             String sql = "UPDATE Students S "
-            		+ "SET S.Fine = S.Fine + 50000 * ? "
-            		+ "AND S.FineStatus = TRUE "
+            		+ "SET S.Fine = S.Fine + 50000 * ?, "
+            		+ "S.FineStatus = TRUE "
             		+ "WHERE S.StudentID = ?";
 
             PreparedStatement pstmt = DatabaseLayer.prepareStatement(sql);
+
             pstmt.setLong(1, daysDue);
             pstmt.setString(2, studentID);
 
+            System.out.println(pstmt.toString());
+            
             pstmt.executeUpdate();
             pstmt.close();
 
