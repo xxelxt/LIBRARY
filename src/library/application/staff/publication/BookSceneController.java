@@ -173,15 +173,6 @@ public class BookSceneController implements Initializable, SceneFeatureGate {
         };
     }
 
-    private Date getDateFromDatePicker(DatePicker datePicker) {
-        LocalDate localDate = datePicker.getValue();
-        if (localDate != null) {
-            return java.sql.Date.valueOf(localDate);
-        } else {
-            return null;
-        }
-    }
-
     private void editableCols(){
         colTitle.setCellFactory(TextFieldTableCell.forTableColumn());
         colCountry.setCellFactory(TextFieldTableCell.forTableColumn());
@@ -199,11 +190,22 @@ public class BookSceneController implements Initializable, SceneFeatureGate {
         	TableColumn<Books, String> col = e.getTableColumn();
         	if (col == colTitle) { book.setTitle(e.getNewValue()); }
         	else if (col == colCountry) { book.setCountry(e.getNewValue()); }
-        	else if (col == colPublisher) { book.setPublisher(e.getNewValue()); }
         	else if (col == colCategory) { book.setCategory(e.getNewValue()); }
+        	else if (col == colPublisher) {
+        		try {
+        			String publisherName = e.getNewValue();
+        			book.setPublisher(publisherName);
+        			Integer publisherID = bookDAO.addPublisherWithCheck(publisherName);
+					bookDAO.updateBookPublisherID(book, publisherID);
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+        	}
 
         	if (col == colAuthors) {
         		authorDAO.addManyAuthorWithCheck(book.getPublicationID(), e.getNewValue());
+        		refresh();
         	} else {
             	bookDAO.updateBook(book);
         	}
@@ -231,6 +233,7 @@ public class BookSceneController implements Initializable, SceneFeatureGate {
         // Add a default row
 		refresh();
 		editableCols();
+		booksTableView.editableProperty().bind(btnEdit.selectedProperty());
 
         // Bind the ObservableList to the TableView
         booksTableView.setItems(data);
@@ -288,15 +291,6 @@ public class BookSceneController implements Initializable, SceneFeatureGate {
     	} else {
         	booksTableView.getSelectionModel().clearSelection();
         }
-    }
-
-    @FXML
-    void btnActionEditBook(ActionEvent event) {
-    	if (btnEdit.isSelected()) {
-    		booksTableView.setEditable(true);
-    	} else {
-    		booksTableView.setEditable(false);
-    	}
     }
 
     private void SearchData(String searchText, String searchOption) {

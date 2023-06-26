@@ -120,6 +120,25 @@ public class BookDAO {
         }
     	return true;
     }
+    
+    public void updateBookPublisherID(Books book, int publisherID) throws Exception {
+    	try {
+            String sql = "UPDATE Books B "
+            		+ "JOIN Publications P ON P.PublicationID = B.BookID "
+            		+ "SET B.PublisherID = ? "
+            		+ "WHERE P.PublicationID = ?";
+            PreparedStatement pstmt = DatabaseLayer.prepareStatement(sql);
+            pstmt.setInt(1, publisherID);
+            pstmt.setInt(2, book.getPublicationID());
+
+            pstmt.executeUpdate();
+            pstmt.close();
+
+            System.out.println("Updated book publisher.");
+        } catch (SQLException e) {
+            throw e;
+        }
+    }
 
     public Integer addPublisher(String publisherName) throws SQLException {
     	Integer publisherID = -1;
@@ -134,16 +153,16 @@ public class BookDAO {
             	publisherID = rs.getInt(1);
             }
 
+            System.out.println("Added publisher.");
             rs.close();
             pstmt.close();
         } catch (SQLException e) {
-            e.printStackTrace();
             throw e;
         }
         return publisherID;
     }
 
-    public Integer addPublisherWithCheck(String publisherName) {
+    public Integer addPublisherWithCheck(String publisherName) throws SQLException {
     	Integer publisherID = -1;
         try {
             // Kiểm tra xem đã có tác giả trong CSDL chưa
@@ -163,7 +182,7 @@ public class BookDAO {
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw e;
 		}
 
         return publisherID;
