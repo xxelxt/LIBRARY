@@ -107,23 +107,28 @@ public class BorrowSceneController implements Initializable {
     private StudentDAO studentDAO = new StudentDAO();
 
     public void checkDateAndUpdateFine(Borrow borrow) {
+		LocalDate dueDate = borrow.getDueDate().toLocalDate();
+		LocalDate calcDate;
     	if (borrow.getReturnedDate() == null) {
-    		LocalDate now = LocalDate.now();
-    		LocalDate dueDate = borrow.getDueDate().toLocalDate();
-    		long daysDifference = now.toEpochDay() - dueDate.toEpochDay();
+    		calcDate = LocalDate.now(); // Now if no due date
+    	} else {
+    		calcDate = borrow.getReturnedDate().toLocalDate();
+    	}	
+    	
+    	long daysDifference = calcDate.toEpochDay() - dueDate.toEpochDay();
     		
-			try {
-	    		if (daysDifference > 0){
-					borrowDAO.updateBorrowFineStatus(borrow.getBorrowID(), true);
-	    			studentDAO.updateStudentFine(borrow.getStudentID(), daysDifference);
-	    		} else {
-	    			borrowDAO.updateBorrowFineStatus(borrow.getBorrowID(), false);
-	    		}
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-    	}
+		try {
+    		if (daysDifference > 0){
+    			// One way update only
+    			if (borrow.getReturnedStatusText().equals("Chưa trả")) {
+    				borrowDAO.updateBorrowFineStatus(borrow.getBorrowID());
+        			studentDAO.updateStudentFine(borrow.getStudentID(), daysDifference);
+    			}
+    		}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
     
     public void refresh() {
@@ -321,8 +326,6 @@ public class BorrowSceneController implements Initializable {
         colFineStatus.setCellValueFactory(new PropertyValueFactory<>("fineStatusText"));
         colReturnedStatus.setCellValueFactory(new PropertyValueFactory<>("returnedStatusText"));
 	}
-
-	Date now = new Date(new java.util.Date().getTime());
 
     @FXML
     void btnActionAddBorrow(ActionEvent event) {

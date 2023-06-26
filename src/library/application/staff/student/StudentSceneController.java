@@ -19,12 +19,17 @@ import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.util.converter.IntegerStringConverter;
 import library.mysql.dao.StudentDAO;
+import library.mysql.dao.UserDAO;
+import library.mysql.dao.BorrowDAO;
+import library.publication.Books;
 import library.user.Student;
 
 public class StudentSceneController implements Initializable {
@@ -51,10 +56,10 @@ public class StudentSceneController implements Initializable {
     private TableColumn<Student, Integer> colFine;
 
     @FXML
-    private TableColumn<Student, Boolean> colFineStatus;
+    private TableColumn<Student, String> colFineStatus;
 
     @FXML
-    private TableColumn<Student, Boolean> colGender;
+    private TableColumn<Student, String> colGender;
 
     @FXML
     private TableColumn<Student, String> colName;
@@ -125,22 +130,48 @@ public class StudentSceneController implements Initializable {
         colPhoneNum.setCellFactory(TextFieldTableCell.forTableColumn());
         colAddress.setCellFactory(TextFieldTableCell.forTableColumn());
         colClass.setCellFactory(TextFieldTableCell.forTableColumn());
+        
+        colPassword.setCellFactory(TextFieldTableCell.forTableColumn());
 
 //        colGender.setCellFactory(TextFieldTableCell.forTableColumn());
 //        colFineStatus.setCellFactory(TextFieldTableCell.forTableColumn());
 //        colFine.setCellFactory(TextFieldTableCell.forTableColumn());
 
         EventHandler<CellEditEvent<Student, String>> commonHandler = e -> {
-        	Student std = e.getTableView().getItems().get(e.getTablePosition().getRow());
+        	Student std = e.getRowValue();
         	TableColumn<Student, String> col = e.getTableColumn();
         	if (col == colName) { std.setName(e.getNewValue()); }
         	else if (col == colEmail) { std.setEmail(e.getNewValue()); }
         	else if (col == colPhoneNum) { std.setPhone(e.getNewValue()); }
         	else if (col == colAddress) { std.setAddress(e.getNewValue()); }
         	else if (col == colClass) { std.setClassName(e.getNewValue()); }
-
+        	else if (col == colGender) {
+                std.setGender(e.getNewValue().equals("Nữ") ? true : false);
+        	} else if (col == colFineStatus) {
+        		if (e.getNewValue().equals("Không bị phạt")) {
+        			std.setFine(0);
+        			std.setFineStatus(false);
+        			BorrowDAO borrowDAO = new BorrowDAO();
+        			try {
+						borrowDAO.updateAllStudentBorrowFineStatusToFalse(std.getStudentID());
+					} catch (Exception e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+        		}
+        	}
+        	
         	try {
+            	if (col == colPassword) {
+            		std.getAccount().setPassword(e.getNewValue());
+        			UserDAO userDAO = new UserDAO();
+    				userDAO.updatePassword(std.getAccount());
+            		
+            		return;
+            	}
+        		
 				studentDAO.updateStudent(std);
+				refresh();
 			} catch (Exception e1) {
 				// TODO Auto-generated catch block
 				System.out.println(e1);
@@ -152,6 +183,13 @@ public class StudentSceneController implements Initializable {
         colPhoneNum.setOnEditCommit(commonHandler);
         colAddress.setOnEditCommit(commonHandler);
         colClass.setOnEditCommit(commonHandler);
+        colPassword.setOnEditCommit(commonHandler);
+        
+        colGender.setCellFactory(ComboBoxTableCell.forTableColumn("Nam", "Nữ"));
+        colGender.setOnEditCommit(commonHandler);
+        
+        colFineStatus.setCellFactory(ComboBoxTableCell.forTableColumn("Bị phạt", "Không bị phạt"));
+        colFineStatus.setOnEditCommit(commonHandler);
     }
 
     @Override

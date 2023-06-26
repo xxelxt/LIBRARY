@@ -135,20 +135,38 @@ public class BorrowDAO {
 		return true;
 	}
 	
-	public void updateBorrowFineStatus(int borrowID, boolean borrowStatus) throws Exception {
+	public void updateBorrowFineStatus(int borrowID) throws Exception {
 		try {
             String sql = "UPDATE Borrow "
-            		+ "SET FineStatus = ? "
+            		+ "SET FineStatus = TRUE "
             		+ "WHERE BorrowID = ?";
 
             PreparedStatement pstmt = DatabaseLayer.prepareStatement(sql);
-            pstmt.setBoolean(1, borrowStatus);
-            pstmt.setInt(2, borrowID);
+            pstmt.setInt(1, borrowID);
 
             pstmt.executeUpdate();
             pstmt.close();
 
-            System.out.println("Updated borrow fine status " + borrowStatus + ": " + borrowID);
+            System.out.println("Updated borrow fine status: " + borrowID);
+        } catch (Exception e) {
+            System.out.println(e);
+            throw e;
+        }
+	}
+	
+	public void updateAllStudentBorrowFineStatusToFalse(String studentID) throws Exception {
+		try {
+            String sql = "UPDATE Borrow "
+            		+ "SET ReturnedStatus = TRUE "
+            		+ "WHERE StudentID = ?";
+
+            PreparedStatement pstmt = DatabaseLayer.prepareStatement(sql);
+            pstmt.setString(1, studentID);
+
+            pstmt.executeUpdate();
+            pstmt.close();
+
+            System.out.println("Updated all borrow fine status for student: " + studentID);
         } catch (Exception e) {
             System.out.println(e);
             throw e;

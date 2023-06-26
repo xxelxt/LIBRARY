@@ -20,12 +20,14 @@ import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import library.mysql.dao.StaffDAO;
+import library.mysql.dao.UserDAO;
 import library.user.Staff;
 
 public class StaffSceneController implements Initializable {
@@ -46,7 +48,7 @@ public class StaffSceneController implements Initializable {
     private TableColumn<Staff, String> colEmail;
 
     @FXML
-    private TableColumn<Staff, Boolean> colGender;
+    private TableColumn<Staff, String> colGender;
 
     @FXML
     private TableColumn<Staff, String> colName;
@@ -115,7 +117,8 @@ public class StaffSceneController implements Initializable {
         colEmail.setCellFactory(TextFieldTableCell.forTableColumn());
         colPhoneNum.setCellFactory(TextFieldTableCell.forTableColumn());
         colAddress.setCellFactory(TextFieldTableCell.forTableColumn());
-
+        colPassword.setCellFactory(TextFieldTableCell.forTableColumn());
+        
 //        colGender.setCellFactory(TextFieldTableCell.forTableColumn());
 
         EventHandler<CellEditEvent<Staff, String>> commonHandler = e -> {
@@ -125,8 +128,19 @@ public class StaffSceneController implements Initializable {
         	else if (col == colEmail) { stf.setEmail(e.getNewValue()); }
         	else if (col == colPhoneNum) { stf.setPhone(e.getNewValue()); }
         	else if (col == colAddress) { stf.setAddress(e.getNewValue()); }
-
+        	else if (col == colGender) {
+                stf.setGender(e.getNewValue().equals("Nữ") ? true : false);
+        	}
+        	
         	try {
+            	if (col == colPassword) {
+            		stf.getAccount().setPassword(e.getNewValue());
+        			UserDAO userDAO = new UserDAO();
+    				userDAO.updatePassword(stf.getAccount());
+            		
+            		return;
+            	}
+            	
 				staffDAO.updateStaff(stf);
 			} catch (Exception e1) {
 				// TODO Auto-generated catch block
@@ -138,6 +152,10 @@ public class StaffSceneController implements Initializable {
         colEmail.setOnEditCommit(commonHandler);
         colPhoneNum.setOnEditCommit(commonHandler);
         colAddress.setOnEditCommit(commonHandler);
+        colPassword.setOnEditCommit(commonHandler);
+        
+        colGender.setCellFactory(ComboBoxTableCell.forTableColumn("Nam", "Nữ"));
+        colGender.setOnEditCommit(commonHandler);
     }
 
     @Override
@@ -156,16 +174,10 @@ public class StaffSceneController implements Initializable {
         comboBox.setItems(items);
         comboBox.setValue("Tên nhân viên");
 
-        fieldSearch.textProperty().addListener((observable, oldValue, newValue) -> {
-            String searchText = newValue;
-            String searchOption = comboBox.getValue();
-            SearchData(searchText, searchOption);
-        });
-
         // Bind the columns to the corresponding properties in MyDataModel
         colStaffID.setCellValueFactory(new PropertyValueFactory<>("staffID"));
         colName.setCellValueFactory(new PropertyValueFactory<>("name"));
-        colGender.setCellValueFactory(new PropertyValueFactory<>("gender"));
+        colGender.setCellValueFactory(new PropertyValueFactory<>("genderText"));
         colEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
 
         colPhoneNum.setCellValueFactory(new PropertyValueFactory<>("phone"));
@@ -174,14 +186,6 @@ public class StaffSceneController implements Initializable {
 
         colUsername.setCellValueFactory(new PropertyValueFactory<>("username"));
         colPassword.setCellValueFactory(new PropertyValueFactory<>("password"));
-
-        colGender.setCellFactory(col -> new TableCell<>() {
-            @Override
-            protected void updateItem(Boolean item, boolean empty) {
-                super.updateItem(item, empty) ;
-                setText(empty ? null : item ? "Nữ" : "Nam" );
-            }
-        });
 	}
 
 	Date now = new Date(new java.util.Date().getTime());
