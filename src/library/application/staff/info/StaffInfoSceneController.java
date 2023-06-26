@@ -81,7 +81,7 @@ public class StaffInfoSceneController /*implements Initializable*/ {
 
     		try {
     			UserDAO userDAO = new UserDAO();
-				userDAO.changePassword(currentStaff.getAccount());
+				userDAO.updatePassword(currentStaff.getAccount());
 			} catch (Exception e) {
 				System.out.println(e);
 			}

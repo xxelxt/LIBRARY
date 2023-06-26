@@ -165,11 +165,6 @@
                                     <Font size="14.0" />
                                  </font>
                               </PasswordField>
-                              <ToggleButton graphicTextGap="0.0" mnemonicParsing="false" text="T" StackPane.alignment="CENTER_RIGHT">
-                                 <StackPane.margin>
-                                    <Insets right="10.0" />
-                                 </StackPane.margin>
-                              </ToggleButton>
                            </children>
                         </StackPane>
                      </children>

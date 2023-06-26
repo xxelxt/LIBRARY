@@ -94,7 +94,7 @@ public class StudentInfoSceneController {
 
     		try {
     			UserDAO userDAO = new UserDAO();
-				userDAO.changePassword(currentStudent.getAccount());
+				userDAO.updatePassword(currentStudent.getAccount());
 			} catch (Exception e) {
 				System.out.println(e);
 			}

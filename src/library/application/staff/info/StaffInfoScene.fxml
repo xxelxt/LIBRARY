@@ -173,7 +173,7 @@
                         <Insets />
                      </HBox.margin>
                   </Label>
-                  <TextField fx:id="fieldGender" editable="false" prefHeight="26.0" prefWidth="656.0" HBox.hgrow="ALWAYS">
+                  <TextField fx:id="fieldGender" disable="true" editable="false" prefHeight="26.0" prefWidth="656.0" HBox.hgrow="ALWAYS">
                      <font>
                         <Font size="14.0" />
                      </font>
