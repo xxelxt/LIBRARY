@@ -1,5 +1,7 @@
 package library.application.staff;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -123,10 +125,17 @@ public class MainSceneController implements SceneFeatureGate {
     public void setMain(Main main) {
     	this.main = main;
     }
+    
 
     @FXML
     private TabPane tabPane;
 
+    @FXML
+    private Tab tabBook;
+    
+    @FXML
+    private Tab tabPrintMedia;
+    
     @FXML
     private Tab tabBorrow;
 
@@ -160,6 +169,31 @@ public class MainSceneController implements SceneFeatureGate {
 	@FXML
     public void initialize() {
         labelWarning.setStyle("-fx-text-fill: #ffffff;");
+        
+        tabPane.getSelectionModel().selectedItemProperty().addListener(
+        	    new ChangeListener<Tab>() {
+        	        @Override
+        	        public void changed(ObservableValue<? extends Tab> ov, Tab t, Tab t1) {
+        	            System.out.println("Tab Selection changed: " + t.getId() + " -> " + t1.getId());
+        	            t1.getId();
+        	            if (t1 == tabBook) {
+        	            	bookSceneController.refresh();
+        	        	} else if (t1 == tabPrintMedia) {
+        	        		printMediaSceneController.refresh();
+        	        	} else if (t1 == tabBorrow) {
+        	        		borrowSceneController.refresh();
+        	            } else if (t1 == tabStudent) {
+        	            	studentSceneController.refresh();
+        	            } else if (t1 == tabStaff) {
+        	            	staffSceneController.refresh();
+        	            } else if (t1 == tabStaffInfo) {
+        	            	// staffInfoSceneController.refresh() // NOT NEEDED
+        	            } else if (t1 == tabStudentInfo) {
+        	            	// studentInfoSceneController.refresh();
+        	            }
+        	        }
+        	    }
+        	);
     }
 
 }
