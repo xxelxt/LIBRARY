@@ -131,4 +131,20 @@ public class AuthorDAO {
 
         return authors;
     }
+    
+    public boolean deleteAllBookAuthor(int bookID) {
+    	try {
+            String sql = "DELETE FROM BookAuthors WHERE BookID = ?";
+            PreparedStatement pstmt = DatabaseLayer.prepareStatement(sql);
+            pstmt.setInt(1, bookID);
+
+            int rowsAffected = pstmt.executeUpdate();
+            pstmt.close();
+
+        } catch (Exception e) {
+            System.out.println(e);
+            return false;
+        }
+        return true;
+    }
 }
