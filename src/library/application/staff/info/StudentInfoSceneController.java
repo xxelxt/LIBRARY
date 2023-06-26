@@ -8,6 +8,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.layout.AnchorPane;
+import library.application.staff.borrow.BorrowHistorySceneController;
 import library.mysql.dao.StudentDAO;
 import library.user.Student;
 
@@ -107,6 +109,9 @@ public class StudentInfoSceneController {
 
     @FXML
     private ToggleButton btnEditInfo;
+    
+    @FXML
+    private BorrowHistorySceneController borrowHistorySceneController;
 
     @FXML
     void btnActionEditInfo(ActionEvent event) {
@@ -148,5 +153,25 @@ public class StudentInfoSceneController {
         assert fieldStudentID != null : "fx:id=\"fieldStudentID\" was not injected: check your FXML file 'StudentInfoScene.fxml'.";
         assert fieldUsername != null : "fx:id=\"fieldUsername\" was not injected: check your FXML file 'StudentInfoScene.fxml'.";
     }
+    
+    @FXML
+    private AnchorPane paneInfo;
+    
+    @FXML
+    private AnchorPane paneBorrow;
 
+    
+    @FXML
+    void btnActionBorrowHistory(ActionEvent event) {
+    	paneInfo.setVisible(false);
+    	paneBorrow.setVisible(true);
+        borrowHistorySceneController.setThisStudentID(currentStudent.getStudentID());
+        borrowHistorySceneController.refresh();
+        borrowHistorySceneController.setParent(this);
+    }
+    
+    public void btnActionReturn() {
+    	paneInfo.setVisible(true);
+    	paneBorrow.setVisible(false);
+    }
 }

@@ -98,7 +98,7 @@
          <center>
             <TabPane fx:id="tabPane" side="LEFT" tabClosingPolicy="UNAVAILABLE" tabMaxHeight="100.0" tabMaxWidth="80.0" tabMinHeight="100.0" tabMinWidth="80.0">
               <tabs>
-                <Tab text="Sách">
+                <Tab fx:id="tabBook" text="Sách">
                   <content>
                     <AnchorPane minHeight="0.0" minWidth="0.0">
                            <children>
@@ -111,7 +111,7 @@
                         </AnchorPane>
                   </content>
                 </Tab>
-                <Tab text="Báo &amp; Tạp chí">
+                <Tab fx:id="tabPrintMedia" text="Báo &amp; Tạp chí">
                   <content>
                     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                            <children>
