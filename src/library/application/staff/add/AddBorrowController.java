@@ -2,11 +2,13 @@ package library.application.staff.add;
 
 import java.net.URL;
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ResourceBundle;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
@@ -40,12 +42,12 @@ public class AddBorrowController {
     private DatePicker fieldStartDate;
 
     @FXML
-    private TextField fieldStudentID;
-
+    private TextField fieldStudentID; 
+    
     @FXML
     void btnAddBorrow(ActionEvent event) {
     	BorrowDAO borrowDAO = new BorrowDAO();
-
+    	
     	borrowDAO.addBorrow(
     		fieldStudentID.getText(),
     		Integer.parseInt(fieldPublicationID.getText()),
@@ -70,6 +72,18 @@ public class AddBorrowController {
         assert fieldStudentID != null : "fx:id=\"fieldStudentID\" was not injected: check your FXML file 'AddBorrow.fxml'.";
 
         fieldQuantity.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100, 1));
+        fieldStartDate.setDayCellFactory(d -> new DateCell() {
+            @Override public void updateItem(LocalDate item, boolean empty) {
+                super.updateItem(item, empty);
+                setDisable(item.isAfter(LocalDate.now()));
+            }
+        });
+        fieldDueDate.setDayCellFactory(d -> new DateCell() {
+            @Override public void updateItem(LocalDate item, boolean empty) {
+                super.updateItem(item, empty);
+                setDisable(fieldStartDate.getValue() == null || item.isBefore(fieldStartDate.getValue()));
+            }
+        });
     }
 
     void clearTextField() {
