@@ -61,9 +61,6 @@ public class BorrowSceneController implements Initializable {
     private TableColumn<Borrow, Integer> colBorrowQuantity;
 
     @FXML
-    private TableColumn<Borrow, Date> colDueDate;
-
-    @FXML
     private TableColumn<Borrow, Boolean> colFineStatus;
 
     @FXML
@@ -76,13 +73,17 @@ public class BorrowSceneController implements Initializable {
     private TableColumn<Publication, String> colPublicationTitle;
 
     @FXML
-    private TableColumn<Borrow, Date> colReturnedDate;
-
-    @FXML
     private TableColumn<Borrow, Boolean> colReturnedStatus;
 
     @FXML
     private TableColumn<Borrow, Date> colStartDate;
+    
+    @FXML
+    private TableColumn<Borrow, Date> colReturnedDate;
+    
+    @FXML
+    private TableColumn<Borrow, Date> colDueDate;
+
 
     @FXML
     private TableColumn<Borrow, String> colStudentID;
@@ -191,110 +192,52 @@ public class BorrowSceneController implements Initializable {
     
 
     private void editableCols(){
-        colStudentID.setCellFactory(TextFieldTableCell.forTableColumn());
+//        colStudentID.setCellFactory(TextFieldTableCell.forTableColumn());
 
         setupEditableColumn(colPublicationID, new IntegerStringConverter(), Borrow::setPublicationID);
         setupEditableColumn(colBorrowQuantity, new IntegerStringConverter(), Borrow::setBorrowQuantity);
 
-        colStartDate.setCellFactory(col -> new DatePickerTableCell<Borrow>(col));
-        colDueDate.setCellFactory(col -> new DatePickerTableCell<Borrow>(col));
-//        colReturnedDate.setCellFactory(col -> new DatePickerTableCell<Borrow>(col));
-        
-//        colReturnedDate.setCellFactory(col -> {
-//            return new TableCell<Borrow, Date>() {
-//                private DatePicker datePicker;
-//
-//                @Override
-//                public void startEdit() {
-//                    if (!isEmpty() && getTableView().isEditable() && getTableColumn().isEditable()) {
-//                        super.startEdit();
-//
-//                        createDatePicker();
-//                        setText(null);
-//                        setGraphic(datePicker);
-//                        datePicker.requestFocus();
-//                    }
-//                }
-//
-//                @Override
-//                public void cancelEdit() {
-//                    super.cancelEdit();
-//
-//                    setText(getItem().toString());
-//                    setGraphic(null);
-//                }
-//
-//                @Override
-//                public void updateItem(Date item, boolean empty) {
-//                    super.updateItem(item, empty);
-//
-//                    if (empty || item == null) {
-//                        setText(null);
-//                        setGraphic(null);
-//                    } else {
-//                        setText(item.toString());
-//                        setGraphic(null);
-//                    }
-//                }
-//
-//                private void createDatePicker() {
-//                    datePicker = new DatePicker();
-//                    datePicker.setConverter(getDateConverter());
-//                    datePicker.setValue(getDateFromItem(getItem()));
-//                    datePicker.setMinWidth(this.getWidth() - this.getGraphicTextGap() * 2);
-//                    datePicker.setOnKeyPressed(t -> {
-//                        if (t.getCode() == KeyCode.ENTER || t.getCode() == KeyCode.TAB) {
-//                            commitEdit(getDateFromDatePicker(datePicker));
-//                        } else if (t.getCode() == KeyCode.ESCAPE) {
-//                            cancelEdit();
-//                        }
-//                    });
-//                    datePicker.focusedProperty().addListener((obs, wasFocused, isNowFocused) -> {
-//                        if (!isNowFocused) {
-//                            commitEdit(getDateFromDatePicker(datePicker));
-//                        }
-//                    });
-//                }
-//            };
-//        });
         
         EventHandler<CellEditEvent<Borrow, String>> commonHandler = e -> {
-        	Borrow borrow = e.getTableView().getItems().get(e.getTablePosition().getRow());
+        	Borrow borrow = e.getRowValue();
         	TableColumn<Borrow, String> col = e.getTableColumn();
         	if (col == colStudentID) { borrow.setStudentID(e.getNewValue()); }
 
         	borrowDAO.updateBorrow(borrow);
         };
-
-        colStudentID.setOnEditCommit(commonHandler);
-        colStartDate.setOnEditCommit(e -> {
-            if (btnEdit.isSelected()) {
-                Borrow borrow = e.getRowValue();
-                borrow.setStartDate(e.getNewValue());
-
-                borrowDAO.updateBorrow(borrow);
-            }
-        });
         
-        colDueDate.setOnEditCommit(e -> {
-            if (btnEdit.isSelected()) {
-                Borrow borrow = e.getRowValue();
-                borrow.setDueDate(e.getNewValue());
+        EventHandler<CellEditEvent<Borrow, Date>> commonDateHandler = e -> {
+        	Borrow borrow = e.getRowValue();
+        	TableColumn<Borrow, Date> col = e.getTableColumn();
+        	if (col == colStartDate) { borrow.setStartDate(e.getNewValue()); }
+        	else if (col == colDueDate) { borrow.setDueDate(e.getNewValue()); }
+        	else if (col == colReturnedDate) { borrow.setReturnedDate(e.getNewValue()); }
 
-                borrowDAO.updateBorrow(borrow);
-            }
-        });
+        	borrowDAO.updateBorrow(borrow);
+        };
+
+//        colStudentID.setOnEditCommit(commonHandler);
         
-        // Unable to show datepicker if the colreturneddate is null
+        colStartDate.setCellFactory(col -> new DatePickerTableCell<Borrow>(col,
+        	item -> item.after(Date.valueOf(LocalDate.now()))
+        	// Disable after now
+        ));
+        colDueDate.setCellFactory(col -> new DatePickerTableCell<Borrow>(col,
+    		item -> {
+    			Borrow borrow = borrowTableView.getSelectionModel().getSelectedItem();
+            	return item.before(borrow.getStartDate()); // Disable before start date
+    		}
+        ));
+        colReturnedDate.setCellFactory(col -> new DatePickerTableCell<Borrow>(col,
+    		item -> {
+    			Borrow borrow = borrowTableView.getSelectionModel().getSelectedItem();
+            	return item.before(borrow.getStartDate()); // Disable before start date
+    		}
+        ));
         
-//        colReturnedDate.setOnEditCommit(e -> {
-//            if (btnEdit.isSelected()) {
-//                Borrow borrow = e.getRowValue();
-//                borrow.setReturnedDate(e.getNewValue());
-//
-//                borrowDAO.updateBorrow(borrow);
-//            }
-//        });
+        colStartDate.setOnEditCommit(commonDateHandler);
+        colDueDate.setOnEditCommit(commonDateHandler);
+        colReturnedDate.setOnEditCommit(commonDateHandler);
     }
 
     @Override
@@ -355,6 +298,7 @@ public class BorrowSceneController implements Initializable {
     	if (btnEdit.isSelected()) {
     		borrowTableView.setEditable(true);
     	} else {
+    		borrowTableView.edit(-1, null);
     		borrowTableView.setEditable(false);
     	}
     }

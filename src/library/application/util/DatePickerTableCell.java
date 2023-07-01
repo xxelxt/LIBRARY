@@ -3,8 +3,11 @@ package library.application.util;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 import javafx.scene.control.ContentDisplay;
+import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
@@ -15,6 +18,20 @@ public class DatePickerTableCell<T> extends TableCell<T, Date> {
 //    private final DateTimeFormatter formatter ;
     private final DatePicker datePicker;
     private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    
+    private void setDisableCertainDate(Predicate<Date> condition) {
+    	this.datePicker.setDayCellFactory(d -> new DateCell() {
+            @Override public void updateItem(LocalDate item, boolean empty) {
+                super.updateItem(item, empty);
+                setDisable(condition.test(Date.valueOf(item)));
+            }
+        });
+    }
+    
+    public DatePickerTableCell(TableColumn<T, Date> column, Predicate<Date> condition) {
+    	this(column);
+    	this.setDisableCertainDate(condition);
+    }
     
     public DatePickerTableCell(TableColumn<T, Date> column) {
 		this.datePicker = new DatePicker();
@@ -46,16 +63,18 @@ public class DatePickerTableCell<T> extends TableCell<T, Date> {
 		    }
 		});
 		
-		setGraphic(datePicker);
+		datePicker.setValue(LocalDate.now());
+		
+		this.setGraphic(datePicker);
 		this.setContentDisplay(ContentDisplay.TEXT_ONLY);
     }
     
     @Override
     public void startEdit() {
         super.startEdit();
-        // setGraphic(datePicker);
         setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-        System.out.println("Editing started");
+        System.out.println("Started editing");
+
     }
     
     @Override public void cancelEdit() {
@@ -70,7 +89,7 @@ public class DatePickerTableCell<T> extends TableCell<T, Date> {
 
 		if(empty || item == null) {
 			setText(null);
-		    setGraphic(null);
+			// MAY CAUSE BUG LATER
 		    if (item == null) {
 		    	System.out.println("Something happened item is null");
 		    } else {
