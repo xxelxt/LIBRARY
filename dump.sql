@@ -151,6 +151,32 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `check_borrow_quantity` BEFORE INSERT ON `borrow` FOR EACH ROW BEGIN
+    DECLARE available_quantity INT;
+    
+    SELECT Quantity INTO available_quantity
+    FROM Publications
+    WHERE PublicationID = NEW.PublicationID;
+    
+    IF NEW.BorrowQuantity > available_quantity THEN
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'Borrow quantity exceeds available quantity. Transaction rolled back.';
+    END IF;
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `decrease_quantity_on_borrow` AFTER INSERT ON `borrow` FOR EACH ROW BEGIN
     IF NEW.ReturnedStatus = 0 THEN
         UPDATE Publications
@@ -358,7 +384,7 @@ CREATE TABLE `students` (
 
 LOCK TABLES `students` WRITE;
 /*!40000 ALTER TABLE `students` DISABLE KEYS */;
-INSERT INTO `students` VALUES ('24A4040001','student1','Nguyễn Văn A',_binary '\0','123 Đường Láng','24a4040001@hvnh.edu.vn','0123456789','K24QTKDA',0,_binary '\0'),('24A4040003','student3','Hoàng Thị C',_binary '','345 Đường Láng','24a4040003@hvnh.edu.vn','0123456787','K24QTKDB',0,_binary '\0'),('24A4040006','student6','Nguyễn Văn E',_binary '\0','567 Đường Láng','24a4040006@hvnh.edu.vn','0123456785','K24QTKDC',200000,_binary '');
+INSERT INTO `students` VALUES ('24A4040001','student1','Nguyễn Văn A',_binary '\0','123 Đường Láng','24a4040001@hvnh.edu.vn','0123456789','K24QTKDA',0,_binary '\0'),('24A4040003','student3','Hoàng Thị C',_binary '','345 Đường Láng','24a4040003@hvnh.edu.vn','0123456787','K24QTKDB',0,_binary '\0'),('24A4040006','student6','Nguyễn Văn E',_binary '\0','567 Đường Láng','24a4040006@hvnh.edu.vn','0123456785','K24QTKDC',0,_binary '\0');
 /*!40000 ALTER TABLE `students` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -397,4 +423,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-06-26 15:37:09
+-- Dump completed on 2023-07-01 12:44:16
