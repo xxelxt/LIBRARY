@@ -223,15 +223,15 @@ public class BorrowSceneController implements Initializable {
         	// Disable after now
         ));
         colDueDate.setCellFactory(col -> new DatePickerTableCell<Borrow>(col,
-    		item -> {
+    		item -> { // Disable before start date
     			Borrow borrow = borrowTableView.getSelectionModel().getSelectedItem();
-            	return item.before(borrow.getStartDate()); // Disable before start date
+            	return item.before(borrow.getStartDate()); 
     		}
         ));
         colReturnedDate.setCellFactory(col -> new DatePickerTableCell<Borrow>(col,
-    		item -> {
+    		item -> { // Disable before start date
     			Borrow borrow = borrowTableView.getSelectionModel().getSelectedItem();
-            	return item.before(borrow.getStartDate()); // Disable before start date
+            	return item.before(borrow.getStartDate()); 
     		}
         ));
         
