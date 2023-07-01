@@ -73,14 +73,11 @@ public class DatePickerTableCell<T> extends TableCell<T, Date> {
     public void startEdit() {
         super.startEdit();
         setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-        System.out.println("Started editing");
-
     }
     
     @Override public void cancelEdit() {
         super.cancelEdit();
         setContentDisplay(ContentDisplay.TEXT_ONLY);
-        System.out.println("Cancelled");
     }
  
     @Override
@@ -91,7 +88,7 @@ public class DatePickerTableCell<T> extends TableCell<T, Date> {
 			setText(null);
 			// MAY CAUSE BUG LATER
 		    if (item == null) {
-		    	System.out.println("Something happened item is null");
+
 		    } else {
 		    	System.out.println("FUCK EMTPU");
 		    }
@@ -99,13 +96,11 @@ public class DatePickerTableCell<T> extends TableCell<T, Date> {
 		    datePicker.setValue(item.toLocalDate());
 		    setText(item.toString());
 			setContentDisplay(ContentDisplay.TEXT_ONLY);
-			System.out.println("IS NOOOOOOOOOOT");
 		} 
     }
 
     @Override
     public void commitEdit(Date newValue) {
-    	System.out.println("WTF WHEN DID YOU COMMIT");
         super.commitEdit(newValue);    
     }
 }

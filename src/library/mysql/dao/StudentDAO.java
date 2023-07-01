@@ -186,25 +186,25 @@ public class StudentDAO {
         }
 	}
 	
-	public void resetStudentFine() throws Exception {
-		try {
-            String sql = "UPDATE Students "
-            		+ "SET FineStatus = FALSE, "
-            		+ "Fine = 0";
-
-            PreparedStatement pstmt = DatabaseLayer.prepareStatement(sql);
-
-            pstmt.executeUpdate();
-            pstmt.close();
-
-            System.out.println("Reset student fine status.");
-        } catch (Exception e) {
-            System.out.println(e);
-            throw e;
-        }
-	}
+//	public void resetStudentFine() throws Exception {
+//		try {
+//            String sql = "UPDATE Students "
+//            		+ "SET FineStatus = FALSE, "
+//            		+ "Fine = 0";
+//
+//            PreparedStatement pstmt = DatabaseLayer.prepareStatement(sql);
+//
+//            pstmt.executeUpdate();
+//            pstmt.close();
+//
+//            System.out.println("Reset student fine status.");
+//        } catch (Exception e) {
+//            System.out.println(e);
+//            throw e;
+//        }
+//	}
 	
-	public void updateStudentFine(String studentID, long daysDue) throws Exception {
+	public void addToStudentFine(String studentID, long daysDue) throws Exception {
 		try {
             String sql = "UPDATE Students S "
             		+ "SET S.Fine = S.Fine + 50000 * ?, "

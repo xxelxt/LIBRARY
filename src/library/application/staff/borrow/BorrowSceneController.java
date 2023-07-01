@@ -32,6 +32,7 @@ import javafx.scene.layout.VBox;
 import javafx.util.StringConverter;
 import javafx.util.converter.IntegerStringConverter;
 import library.application.util.DatePickerTableCell;
+import library.application.util.VariableManager;
 import library.central.Borrow;
 import library.mysql.dao.BorrowDAO;
 import library.mysql.dao.StudentDAO;
@@ -107,24 +108,48 @@ public class BorrowSceneController implements Initializable {
     private BorrowDAO borrowDAO = new BorrowDAO();
     private StudentDAO studentDAO = new StudentDAO();
 
-    public void checkDateAndUpdateFine(Borrow borrow) {
+    public void checkDateAndUpdateFine(Borrow borrow, Date lastModified) {
+		LocalDate nowDate = LocalDate.now();
 		LocalDate dueDate = borrow.getDueDate().toLocalDate();
-		LocalDate calcDate;
-    	if (borrow.getReturnedDate() == null) {
-    		calcDate = LocalDate.now(); // Now if no due date
-    	} else {
-    		calcDate = borrow.getReturnedDate().toLocalDate();
-    	}	
-    	
-    	long daysDifference = calcDate.toEpochDay() - dueDate.toEpochDay();
-    		
+		
+		if (nowDate.isBefore(dueDate)) {
+			return;
+		}
+		
+		long daysDifference = 0;
+		
+		if (lastModified == null) {
+	    	if (borrow.getReturnedDate() == null) {
+	    		daysDifference = nowDate.toEpochDay() 
+	    						- dueDate.toEpochDay(); 
+	    		// Now - Due
+	    	} else {
+        		daysDifference = borrow.getReturnedDate().toLocalDate().toEpochDay() 
+        					- dueDate.toEpochDay();
+        		// Return - Due
+	    	}	
+		} else {
+	    	if (borrow.getReturnedDate() == null) {
+	    		daysDifference = nowDate.toEpochDay() 
+	    						- lastModified.toLocalDate().toEpochDay(); 
+	    		// Now - Modified
+	    	} else {
+	    		LocalDate returnDate = borrow.getReturnedDate().toLocalDate();
+
+    			if (returnDate.isAfter(lastModified.toLocalDate())) {
+    				daysDifference = returnDate.toEpochDay()
+    						- lastModified.toLocalDate().toEpochDay();
+    			}
+    			// Return - Modified
+
+	    	}	
+		}
+				
 		try {
     		if (daysDifference > 0){
-    			// One way update only
-    			if (borrow.getReturnedStatusText().equals("Chưa trả")) {
-    				borrowDAO.updateBorrowFineStatus(borrow.getBorrowID());
-        			studentDAO.updateStudentFine(borrow.getStudentID(), daysDifference);
-    			}
+    			borrow.setFineStatus(true);
+				borrowDAO.updateBorrowFineStatus(borrow.getBorrowID());
+    			studentDAO.addToStudentFine(borrow.getStudentID(), daysDifference);
     		}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -135,21 +160,19 @@ public class BorrowSceneController implements Initializable {
     public void refresh() {
         data = FXCollections.observableArrayList();
 
+        Date lastModifiedDate = VariableManager.getLastModifiedDate();
+        System.out.println("LAST MODIFIED: " + lastModifiedDate.toString());
+        
         List<Borrow> allBorrow = borrowDAO.loadAllBorrow();
-
-        try {
-			studentDAO.resetStudentFine();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
         
 	    for (Borrow borrow : allBorrow){
+	    	checkDateAndUpdateFine(borrow, lastModifiedDate);
 	    	data.add(borrow);
-	    	checkDateAndUpdateFine(borrow);
 	    }
 
 	    borrowTableView.setItems(data);
+		
+		VariableManager.saveDate(Date.valueOf(LocalDate.now()));
     }
 
     public void scrollToLast() {
@@ -211,9 +234,10 @@ public class BorrowSceneController implements Initializable {
         	TableColumn<Borrow, Date> col = e.getTableColumn();
         	if (col == colStartDate) { borrow.setStartDate(e.getNewValue()); }
         	else if (col == colDueDate) { borrow.setDueDate(e.getNewValue()); }
-        	else if (col == colReturnedDate) { borrow.setReturnedDate(e.getNewValue()); }
+        	else if (col == colReturnedDate) { borrow.setReturnedDate(e.getNewValue()); borrow.setReturnedStatus(true);}
 
         	borrowDAO.updateBorrow(borrow);
+        	refresh();
         };
 
 //        colStudentID.setOnEditCommit(commonHandler);
@@ -229,9 +253,9 @@ public class BorrowSceneController implements Initializable {
     		}
         ));
         colReturnedDate.setCellFactory(col -> new DatePickerTableCell<Borrow>(col,
-    		item -> { // Disable before start date
+    		item -> { // Disable before start date and after today
     			Borrow borrow = borrowTableView.getSelectionModel().getSelectedItem();
-            	return item.before(borrow.getStartDate()); 
+            	return item.before(borrow.getStartDate()) || item.after(Date.valueOf(LocalDate.now())); 
     		}
         ));
         

@@ -28,6 +28,7 @@ import javafx.scene.layout.VBox;
 import javafx.util.converter.IntegerStringConverter;
 import library.mysql.dao.StudentDAO;
 import library.mysql.dao.UserDAO;
+import library.application.util.IntegerFieldTableCell;
 import library.mysql.dao.BorrowDAO;
 import library.publication.Books;
 import library.user.Student;
@@ -147,18 +148,6 @@ public class StudentSceneController implements Initializable {
         	else if (col == colClass) { std.setClassName(e.getNewValue()); }
         	else if (col == colGender) {
                 std.setGender(e.getNewValue().equals("Nữ") ? true : false);
-        	} else if (col == colFineStatus) {
-        		if (e.getNewValue().equals("Không bị phạt")) {
-        			std.setFine(0);
-        			std.setFineStatus(false);
-        			BorrowDAO borrowDAO = new BorrowDAO();
-        			try {
-						borrowDAO.updateAllStudentBorrowFineStatusToFalse(std.getStudentID());
-					} catch (Exception e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-        		}
         	}
         	
         	try {
@@ -188,8 +177,25 @@ public class StudentSceneController implements Initializable {
         colGender.setCellFactory(ComboBoxTableCell.forTableColumn("Nam", "Nữ"));
         colGender.setOnEditCommit(commonHandler);
         
-        colFineStatus.setCellFactory(ComboBoxTableCell.forTableColumn("Bị phạt", "Không bị phạt"));
-        colFineStatus.setOnEditCommit(commonHandler);
+        colFine.setCellFactory(col -> new IntegerFieldTableCell<Student>());
+        colFine.setOnEditCommit(e -> {
+        	Student std = e.getRowValue();
+        	Integer fine = e.getNewValue();
+        	std.setFine(fine);
+        	if (fine == 0) {
+        		std.setFineStatus(false);
+        	}
+        	
+        	try {
+				studentDAO.updateStudent(std);
+				refresh();
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				System.out.println(e1);
+			}
+        });
+//        colFineStatus.setCellFactory(ComboBoxTableCell.forTableColumn("Bị phạt", "Không bị phạt"));
+//        colFineStatus.setOnEditCommit(commonHandler);
     }
 
     @Override

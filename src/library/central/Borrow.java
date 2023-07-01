@@ -114,6 +114,11 @@ public class Borrow {
 	}
 
 	public String getReturnedStatusText() {
-		return (ReturnedStatus ? "Đã trả" : "Chưa trả");
+		return (ReturnedStatus ? "Đã trả sách" : "Chưa trả sách");
+	}
+
+	public boolean getFineStatus() {
+		// TODO Auto-generated method stub
+		return FineStatus;
 	}
 }

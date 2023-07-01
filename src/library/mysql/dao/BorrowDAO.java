@@ -45,10 +45,10 @@ public class BorrowDAO {
         return borrowList;
     }
 
-	public boolean addBorrow(String studentID, Integer publicationID, Integer borrowQuantity, Date startDate, Date dueDate, boolean fineStatus, boolean returnedStatus) {
+	public boolean addBorrow(String studentID, Integer publicationID, Integer borrowQuantity, Date startDate, Date dueDate, Date returnedDate, boolean fineStatus, boolean returnedStatus) {
 		try {
 			 String sql = "INSERT INTO Borrow (StudentID, PublicationID, BorrowQuantity, StartDate, DueDate, ReturnedDate, FineStatus, ReturnedStatus) "
-			 		+ "VALUES (?, ?, ?, ?, ?, NULL, ?, ?)";
+			 		+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 			 PreparedStatement borrow_pstmt = DatabaseLayer.prepareStatement(sql);
 
 			 borrow_pstmt.setString(1, studentID);
@@ -57,9 +57,10 @@ public class BorrowDAO {
 
 			 borrow_pstmt.setDate(4, startDate);
 			 borrow_pstmt.setDate(5, dueDate);
-
-			 borrow_pstmt.setBoolean(6, fineStatus);
-			 borrow_pstmt.setBoolean(7, returnedStatus);
+			 borrow_pstmt.setDate(6, returnedDate);
+			 
+			 borrow_pstmt.setBoolean(7, fineStatus);
+			 borrow_pstmt.setBoolean(8, returnedStatus);
 
 			 borrow_pstmt.executeUpdate();
 			 borrow_pstmt.close();

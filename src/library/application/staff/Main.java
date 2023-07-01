@@ -8,6 +8,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
+import library.application.util.VariableManager;
 import library.mysql.DatabaseLayer;
 
 public class Main extends Application {
@@ -54,6 +55,8 @@ public class Main extends Application {
 
 	@Override
 	public void start(Stage primaryStage) {
+		VariableManager.loadDate();
+		
 		try {
 			DatabaseLayer.getConnection();
 			this.primaryStage = primaryStage;
