@@ -18,7 +18,7 @@
             <HBox fx:id="hboxFeature" alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="484.0" spacing="10.0" VBox.vgrow="NEVER">
                <children>
                   <Button fx:id="btnAdd" mnemonicParsing="false" onAction="#btnActionAddBook" text="Thêm" />
-                  <ToggleButton fx:id="btnEdit" mnemonicParsing="false" text="Sửa" />
+                  <ToggleButton fx:id="btnEdit" mnemonicParsing="false" onAction="#btnActionEditBooks" text="Sửa" />
                   <Button fx:id="btnDelete" mnemonicParsing="false" onAction="#btnActionDeleteBook" text="Xoá">
                      <HBox.margin>
                         <Insets right="20.0" />

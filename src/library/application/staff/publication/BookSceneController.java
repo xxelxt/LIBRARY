@@ -34,10 +34,12 @@ import javafx.util.StringConverter;
 import javafx.util.converter.IntegerStringConverter;
 import library.application.staff.interfac.SceneFeatureGate;
 import library.application.util.DatePickerTableCell;
+import library.application.util.IntegerFieldTableCell;
 import library.mysql.dao.AuthorDAO;
 import library.mysql.dao.BookDAO;
 import library.publication.Books;
 import library.publication.Publication;
+import library.user.Student;
 
 public class BookSceneController implements Initializable, SceneFeatureGate {
 
@@ -116,74 +118,12 @@ public class BookSceneController implements Initializable, SceneFeatureGate {
     	booksTableView.scrollTo(lastIndex);
     }
 
-    private <T> void setupEditableColumn(TableColumn<Books, T> column, StringConverter<T> converter, BiConsumer<Books, T> updateAction) {
-        column.setCellFactory(TextFieldTableCell.forTableColumn(converter));
-
-        column.setOnEditCommit(event -> {
-            if (btnEdit.isSelected()) {
-                TableCell<Books, T> cell = event.getTablePosition().getTableColumn().getCellFactory().call(column);
-                if (cell != null) {
-                    cell.commitEdit(event.getNewValue());
-                }
-
-                Books book = event.getRowValue();
-                updateAction.accept(book, event.getNewValue());
-
-                bookDAO.updateBook(book);
-                this.refresh();
-            }
-        });
-
-        column.setOnEditStart(event -> {
-            if (!btnEdit.isSelected()) {
-                TableColumn.CellEditEvent<Books, T> cellEditEvent = event;
-                TableView<Books> tableView = cellEditEvent.getTableView();
-                tableView.edit(tableView.getSelectionModel().getSelectedIndex(), column);
-            }
-        });
-
-        column.setOnEditCancel(event -> {
-            TableCell<Books, T> cell = event.getTablePosition().getTableColumn().getCellFactory().call(column);
-            if (cell != null) {
-                cell.cancelEdit();
-            }
-        });
-    }
-
-    private StringConverter<LocalDate> getDateConverter() {
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        return new StringConverter<>() {
-            @Override
-            public String toString(LocalDate date) {
-                if (date != null) {
-                    return dateFormatter.format(date);
-                } else {
-                    return "";
-                }
-            }
-
-            @Override
-            public LocalDate fromString(String string) {
-                if (string != null && !string.isEmpty()) {
-                    return LocalDate.parse(string, dateFormatter);
-                } else {
-                    return null;
-                }
-            }
-        };
-    }
-
     private void editableCols(){
         colTitle.setCellFactory(TextFieldTableCell.forTableColumn());
         colCountry.setCellFactory(TextFieldTableCell.forTableColumn());
         colAuthors.setCellFactory(TextFieldTableCell.forTableColumn());
         colPublisher.setCellFactory(TextFieldTableCell.forTableColumn());
         colCategory.setCellFactory(TextFieldTableCell.forTableColumn());
-
-        setupEditableColumn(colReissue, new IntegerStringConverter(), Books::setReissue);
-        setupEditableColumn(colQuantity, new IntegerStringConverter(), Books::setQuantity);
-
-        colPublicationDate.setCellFactory(col -> new DatePickerTableCell<Books>(col));
 
         EventHandler<CellEditEvent<Books, String>> commonHandler = e -> {
         	Books book = e.getRowValue();
@@ -217,6 +157,9 @@ public class BookSceneController implements Initializable, SceneFeatureGate {
         colPublisher.setOnEditCommit(commonHandler);
         colCategory.setOnEditCommit(commonHandler);
         
+
+
+        colPublicationDate.setCellFactory(col -> new DatePickerTableCell<Books>(col));
         colPublicationDate.setOnEditCommit(e -> {
             if (btnEdit.isSelected()) {
                 Books book = e.getRowValue();
@@ -225,6 +168,21 @@ public class BookSceneController implements Initializable, SceneFeatureGate {
                 bookDAO.updateBook(book);
             }
         });
+        
+        EventHandler<CellEditEvent<Books, Integer>> commonIntegerHandler = e -> {
+        	Books book = e.getRowValue();
+        	TableColumn<Books, Integer> col = e.getTableColumn();
+        	if (col == colReissue) { book.setReissue(e.getNewValue()); }
+        	else if (col == colQuantity) { book.setQuantity(e.getNewValue()); }
+        	
+        	bookDAO.updateBook(book);
+        };
+        
+        colReissue.setCellFactory(col -> new IntegerFieldTableCell<Books>());
+        colQuantity.setCellFactory(col -> new IntegerFieldTableCell<Books>());
+        
+        colReissue.setOnEditCommit(commonIntegerHandler);
+        colQuantity.setOnEditCommit(commonIntegerHandler);
     }
 
 	@Override
@@ -233,7 +191,6 @@ public class BookSceneController implements Initializable, SceneFeatureGate {
         // Add a default row
 		refresh();
 		editableCols();
-		booksTableView.editableProperty().bind(btnEdit.selectedProperty());
 
         // Bind the ObservableList to the TableView
         booksTableView.setItems(data);
@@ -291,6 +248,16 @@ public class BookSceneController implements Initializable, SceneFeatureGate {
     	} else {
         	booksTableView.getSelectionModel().clearSelection();
         }
+    }
+    
+    @FXML
+    void btnActionEditBooks(ActionEvent event) {
+    	if (btnEdit.isSelected()) {
+    		booksTableView.setEditable(true);
+    	} else {
+    		booksTableView.edit(-1, null);
+    		booksTableView.setEditable(false);
+    	}
     }
 
     private void SearchData(String searchText, String searchOption) {
