@@ -22,6 +22,11 @@ repositories {
 dependencies {
 	// https://mvnrepository.com/artifact/mysql/mysql-connector-java
 	implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.33'
+	
+	// https://mvnrepository.com/artifact/org.controlsfx/controlsfx
+	implementation group: 'org.controlsfx', name: 'controlsfx', version: '11.1.2'
+
+	
 
     // Use JUnit Jupiter for testing.
     // testImplementation 'org.junit.jupiter:junit-jupiter:5.8.1'

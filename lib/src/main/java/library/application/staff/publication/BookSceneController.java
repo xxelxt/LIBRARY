@@ -259,6 +259,16 @@ public class BookSceneController implements Initializable, SceneFeatureGate {
     		booksTableView.setEditable(false);
     	}
     }
+    
+    @FXML
+    void btnActionEditBooksClerk(ActionEvent event) {
+    	if (btnEditClerk.isSelected()) {
+    		booksTableView.setEditable(true);
+    	} else {
+    		booksTableView.edit(-1, null);
+    		booksTableView.setEditable(false);
+    	}
+    }
 
     private void SearchData(String searchText, String searchOption) {
         if (searchText.isEmpty()) {
@@ -315,20 +325,37 @@ public class BookSceneController implements Initializable, SceneFeatureGate {
 
     @FXML
     private ToggleButton btnEdit;
+    
+    @FXML
+    private ToggleButton btnEditClerk;
 
     @FXML
     private HBox hboxFeature;
 
 	@Override
 	public void setFeatureFor(Integer user) {
-		if (user == CLERK) {
+		if (user == LIBRARIAN) {
+			hboxFeature.getChildren().remove(btnEditClerk);
+		} else {
 			hboxFeature.getChildren().remove(btnAdd);
 			hboxFeature.getChildren().remove(btnEdit);
 			hboxFeature.getChildren().remove(btnDelete);
-		} else if (user == STUDENT) {
-			hboxFeature.getChildren().remove(btnAdd);
-			hboxFeature.getChildren().remove(btnEdit);
-			hboxFeature.getChildren().remove(btnDelete);
+			
+			if (user == CLERK) {
+
+			    colQuantity.setEditable(true);
+			
+			    colID.setEditable(false);
+			    colTitle.setEditable(false);
+			    colAuthors.setEditable(false);
+			    colCountry.setEditable(false);
+			    colCategory.setEditable(false);
+			    colPublisher.setEditable(false);
+			    colPublicationDate.setEditable(false);
+			    colReissue.setEditable(false);
+				
+			} else if (user == STUDENT) {
+			}
 		}
 	}
 }

@@ -19,6 +19,7 @@
                <children>
                   <Button fx:id="btnAdd" mnemonicParsing="false" onAction="#btnActionAddBook" text="Thêm" />
                   <ToggleButton fx:id="btnEdit" mnemonicParsing="false" onAction="#btnActionEditBooks" text="Sửa" />
+                  <ToggleButton fx:id="btnEditClerk" layoutX="67.0" layoutY="10.0" mnemonicParsing="false" onAction="#btnActionEditBooksClerk" text="Sửa" />
                   <Button fx:id="btnDelete" mnemonicParsing="false" onAction="#btnActionDeleteBook" text="Xoá">
                      <HBox.margin>
                         <Insets right="20.0" />

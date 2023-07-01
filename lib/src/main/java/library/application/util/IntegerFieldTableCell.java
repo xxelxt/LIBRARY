@@ -31,12 +31,14 @@ public class IntegerFieldTableCell<T> extends TextFieldTableCell<T, Integer> {
     @Override
     public void startEdit() {
         super.startEdit();
-        setTextFormatterForTextField();
+//        this.getStyleClass().remove("text-field-table-cell");
+//        this.getStyleClass().add("text-field-table-cell");
+        /// setTextFormatterForTextField();
     }
 
     @Override
     public void cancelEdit() {
         super.cancelEdit();
-        setTextFormatterForTextField();
+       //  setTextFormatterForTextField();
     }
 }
