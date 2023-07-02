@@ -1,6 +1,7 @@
 package library.application.staff.add;
 
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 import javafx.collections.FXCollections;
@@ -9,6 +10,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
+import library.application.util.Toaster;
 import library.mysql.dao.StudentDAO;
 
 public class AddStudentController {
@@ -89,19 +91,27 @@ public class AddStudentController {
         String finestatus = comboboxFineStatus.getValue();
         boolean isFined = finestatus.equals("Bị phạt");
 
-        studentDAO.addStudent(
-            fieldStudentID.getText(),
-            fieldName.getText(),
-            fieldClass.getText(),
-            fieldUsername.getText(),
-            fieldPassword.getText(),
-            isFemale,
-            fieldEmail.getText(),
-            fieldPhoneNum.getText(),
-            fieldAddress.getText(),
-            isFined,
-            Integer.parseInt(fieldFine.getText())
-        );
+        try {
+			studentDAO.addStudent(
+			    fieldStudentID.getText(),
+			    fieldName.getText(),
+			    fieldClass.getText(),
+			    fieldUsername.getText(),
+			    fieldPassword.getText(),
+			    isFemale,
+			    fieldEmail.getText(),
+			    fieldPhoneNum.getText(),
+			    fieldAddress.getText(),
+			    isFined,
+			    Integer.parseInt(fieldFine.getText())
+			);
+		} catch (NumberFormatException e) { // Added Toast
+			Toaster.showError("Input ERROR", e.getMessage());
+			e.printStackTrace();
+		} catch (SQLException e) { // Added Toast
+			Toaster.showError("SQL ERROR", e.getMessage());
+			e.printStackTrace();
+		}
 
         clearTextField();
     }

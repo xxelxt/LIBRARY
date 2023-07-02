@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import library.application.util.Toaster;
 import library.mysql.DatabaseLayer;
 import library.publication.Books;
 
@@ -57,33 +58,27 @@ public class BookDAO {
     }
 
 
-    public boolean addBook(String title, Date releaseDate, String country, int quantity, String category, int reissue,
-    		String authorManyNames, String publisherName) {
+    public void addBook(String title, Date releaseDate, String country, int quantity, String category, int reissue,
+    		String authorManyNames, String publisherName) throws SQLException {
         Integer publicationID = publicationDAO.addPublication(title, releaseDate, country, quantity);
 
         if (publicationID > 0) {
-            try {
-                // Thêm sách
-            	Integer publisherID = this.addPublisherWithCheck(publisherName);
+            // Thêm sách
+        	Integer publisherID = this.addPublisherWithCheck(publisherName);
 
-                String insertBookSql = "INSERT INTO Books (BookID, Category, Reissue, PublisherID) VALUES (?, ?, ?, ?)";
-                PreparedStatement insertBookStmt = DatabaseLayer.prepareStatement(insertBookSql);
-                insertBookStmt.setInt(1, publicationID);
-                insertBookStmt.setString(2, category);
-                insertBookStmt.setInt(3, reissue);
-                insertBookStmt.setInt(4, publisherID);
-                insertBookStmt.executeUpdate();
-                insertBookStmt.close();
+            String insertBookSql = "INSERT INTO Books (BookID, Category, Reissue, PublisherID) VALUES (?, ?, ?, ?)";
+            PreparedStatement insertBookStmt = DatabaseLayer.prepareStatement(insertBookSql);
+            insertBookStmt.setInt(1, publicationID);
+            insertBookStmt.setString(2, category);
+            insertBookStmt.setInt(3, reissue);
+            insertBookStmt.setInt(4, publisherID);
+            insertBookStmt.executeUpdate();
+            insertBookStmt.close();
 
-                authorDAO.addManyAuthorWithCheck(publicationID, authorManyNames);
+            authorDAO.addManyAuthorWithCheck(publicationID, authorManyNames);
 
-                System.out.println("Added book.");
-            } catch (Exception e) {
-                System.out.println(e);
-                return false;
-            }
+            System.out.println("Added book.");
         }
-        return true;
     }
 
     public boolean deleteBook(Integer publicationID) {

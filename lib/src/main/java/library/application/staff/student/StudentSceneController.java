@@ -2,6 +2,8 @@ package library.application.staff.student;
 
 import java.net.URL;
 import java.sql.Date;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -29,6 +31,7 @@ import javafx.util.converter.IntegerStringConverter;
 import library.mysql.dao.StudentDAO;
 import library.mysql.dao.UserDAO;
 import library.application.util.IntegerFieldTableCell;
+import library.application.util.Toaster;
 import library.mysql.dao.BorrowDAO;
 import library.publication.Books;
 import library.user.Student;
@@ -111,7 +114,16 @@ public class StudentSceneController implements Initializable {
     public void refresh() {
         data = FXCollections.observableArrayList();
         
-        List<Student> allStudents = studentDAO.loadAllStudents();
+        List<Student> allStudents;
+        
+		try {
+			allStudents = studentDAO.loadAllStudents();
+		} catch (SQLException e) { // Added Toast
+			allStudents = new ArrayList<>();
+			
+			Toaster.showError("SQL ERROR", e.getMessage());
+			e.printStackTrace();
+		}
 
 	    for (Student student : allStudents){
 	    	data.add(student);
@@ -248,7 +260,13 @@ public class StudentSceneController implements Initializable {
     	Student selectedRow = studentTableView.getSelectionModel().getSelectedItem();
 
     	if (selectedRow != null) {
-	    	studentDAO.deleteStudent(selectedRow.getStudentID());
+	    	try {
+				studentDAO.deleteStudent(selectedRow.getStudentID());
+			} catch (SQLException e) {
+				Toaster.showError("SQL ERROR", e.getMessage());
+				e.printStackTrace();
+			}
+	    	
 	    	this.refresh();
 
 	        if (selectedIndex >= 0 && selectedIndex < data.size()) {

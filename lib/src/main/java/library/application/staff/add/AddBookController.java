@@ -1,6 +1,7 @@
 package library.application.staff.add;
 
 import java.sql.Date;
+import java.sql.SQLException;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -9,6 +10,7 @@ import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import library.application.util.Toaster;
 import library.mysql.dao.BookDAO;
 
 public class AddBookController {
@@ -59,16 +61,26 @@ public class AddBookController {
     void btnAddBook(ActionEvent event) {
     	BookDAO bookDAO = new BookDAO();
 
-    	bookDAO.addBook(
-    		fieldTitle.getText(),
-    		Date.valueOf(fieldPublishDate.getValue()),
-    		fieldCountry.getText(),
-    		fieldQuantity.getValue(),
-    		fieldCategory.getText(),
-    		fieldReissue.getValue(),
-    		fieldAuthors.getText(),
-    		fieldPublisher.getText()
-    	);
+    	try {
+			bookDAO.addBook(
+				fieldTitle.getText(),
+				Date.valueOf(fieldPublishDate.getValue()),
+				fieldCountry.getText(),
+				fieldQuantity.getValue(),
+				fieldCategory.getText(),
+				fieldReissue.getValue(),
+				fieldAuthors.getText(),
+				fieldPublisher.getText()
+			);
+		} catch (SQLException e) { // Added Toast
+			// Catch SQL
+			Toaster.showError("SQL ERROR", e.getMessage());
+			e.printStackTrace();
+		} catch (Exception e) { // Added Toast
+			// Catch DateError
+			Toaster.showError("Input ERROR", e.getMessage());
+			e.printStackTrace();
+		}
 
     	clearTextField();
     }
