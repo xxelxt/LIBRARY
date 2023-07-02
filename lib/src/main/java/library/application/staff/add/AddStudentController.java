@@ -80,9 +80,25 @@ public class AddStudentController {
 
         fieldFine.setText("0");
     }
+    
+    private boolean validateAddStudent() {
+    	TextField[] notNullFields = {fieldStudentID, fieldName, fieldClass, fieldUsername, fieldPassword, fieldEmail};
+    	String[] errMessages = {"Mã sinh viên", "Họ tên", "Lớp", "Tên đăng nhập", "Mật khẩu", "Email"}; 
+    	
+    	for (int i = 0; i < notNullFields.length; i++) {
+    		if (notNullFields[i].getText().isBlank()) {
+    			Toaster.showError("", errMessages[i] + " không được bỏ trống!");
+    			return false;
+    		}
+    	}
+    	
+    	return true;
+    }
 
     @FXML
     void btnAddStudent(ActionEvent event) {
+    	if (!validateAddStudent()) { return; }
+    	
         StudentDAO studentDAO = new StudentDAO();
 
         String gender = comboboxGender.getValue();

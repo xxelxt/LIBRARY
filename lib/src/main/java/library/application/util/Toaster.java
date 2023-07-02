@@ -6,19 +6,20 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 public class Toaster {
-	private static final ImageView iconView = new ImageView();
 	private static final Image ErrorIcon = new Image(Toaster.class.getResourceAsStream("erroricon.png"));
-	// private static Image ErrorIcon;
+	private static Object owner;
 	
-	static {
+	public static void setOwner(Object owner) {
+		Toaster.owner = owner;
+	}
+
+	public static void showError(String title, String text) {
+		ImageView iconView = new ImageView(ErrorIcon);
 		iconView.setFitHeight(20);
         iconView.setFitWidth(20);
-	}
-	
-	public static void showError(String title, String text) {
-		iconView.setImage(ErrorIcon);
 		
 		Notifications.create()
+			.owner(owner)
 			.title(title)
 			.text(text)
 			.graphic(iconView)
