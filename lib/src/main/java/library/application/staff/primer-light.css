@@ -156,9 +156,9 @@ Text {
   -fx-font-weight: normal;
 }
 
-.tab-label {
-  -fx-rotate: 90;
-  -fx-translate-y: -10; /* Adjust the value as needed */
+.tab-label { /*
+  -fx-rotate: 90; */
+  /* -fx-translate-x: -10; /* Adjust the value as needed */
 }
 
 .text-caption {

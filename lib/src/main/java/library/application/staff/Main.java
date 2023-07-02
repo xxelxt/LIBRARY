@@ -70,7 +70,7 @@ public class Main extends Application {
 	        primaryStage.getIcons().add(icon);
 	        
 	        Toaster.setOwner(primaryStage);
-	        Toaster.showError("A", "HELLOW WORLD");
+	        // Toaster.showError("A", "HELLOW WORLD");
 
 		} catch (Exception e) {
 			e.printStackTrace();

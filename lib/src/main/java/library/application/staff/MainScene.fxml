@@ -11,6 +11,8 @@
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
@@ -98,7 +100,7 @@
          <center>
             <TabPane fx:id="tabPane" side="LEFT" tabClosingPolicy="UNAVAILABLE" tabMaxHeight="100.0" tabMaxWidth="80.0" tabMinHeight="100.0" tabMinWidth="80.0">
               <tabs>
-                <Tab fx:id="tabBook" text="Sách">
+                <Tab fx:id="tabBook">
                   <content>
                     <AnchorPane minHeight="0.0" minWidth="0.0">
                            <children>
@@ -110,8 +112,15 @@
                            </children>
                         </AnchorPane>
                   </content>
+                     <graphic>
+                        <ImageView fitHeight="60.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@icons/reading.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
                 </Tab>
-                <Tab fx:id="tabPrintMedia" text="Báo &amp; Tạp chí">
+                <Tab fx:id="tabPrintMedia">
                   <content>
                     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                            <children>
@@ -123,8 +132,15 @@
                            </children>
                         </AnchorPane>
                   </content>
+                     <graphic>
+                        <ImageView fitHeight="60.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@icons/newspaper.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
                 </Tab>
-                  <Tab fx:id="tabBorrow" text="Mượn">
+                  <Tab fx:id="tabBorrow">
                      <content>
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                            <children>
@@ -135,8 +151,15 @@
                               </AnchorPane>
                            </children></AnchorPane>
                      </content>
+                     <graphic>
+                        <ImageView fitHeight="60.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@icons/search.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
                   </Tab>
-                  <Tab fx:id="tabStudent" text="Sinh viên">
+                  <Tab fx:id="tabStudent">
                      <content>
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                            <children>
@@ -148,8 +171,15 @@
                            </children>
                         </AnchorPane>
                      </content>
+                     <graphic>
+                        <ImageView fitHeight="60.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@icons/student.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
                   </Tab>
-                  <Tab fx:id="tabStaff" text="Nhân viên">
+                  <Tab fx:id="tabStaff">
                      <content>
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                            <children>
@@ -160,8 +190,15 @@
                            </children>
                         </AnchorPane>
                      </content>
+                     <graphic>
+                        <ImageView fitHeight="60.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@icons/staff.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
                   </Tab>
-                  <Tab fx:id="tabStudentInfo" text="Thông tin sinh viên">
+                  <Tab fx:id="tabStudentInfo">
                      <content>
                         <AnchorPane>
                            <children>
@@ -173,8 +210,15 @@
                            </children>
                         </AnchorPane>
                      </content>
+                     <graphic>
+                        <ImageView fitHeight="60.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@icons/id-card.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
                   </Tab>
-                  <Tab fx:id="tabStaffInfo" text="Thông tin nhân viên">
+                  <Tab fx:id="tabStaffInfo">
                      <content>
                         <AnchorPane>
                            <children>
@@ -185,6 +229,13 @@
                            </children>
                         </AnchorPane>
                      </content>
+                     <graphic>
+                        <ImageView fitHeight="60.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@icons/id-card.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
                   </Tab>
               </tabs>
             </TabPane>
