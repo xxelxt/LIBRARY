@@ -2,12 +2,18 @@ package library.application.staff;
 
 import java.io.IOException;
 
+import org.controlsfx.control.Notifications;
+
+import com.tangorabox.componentinspector.fx.FXComponentInspectorHandler;
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
+import library.application.util.Toaster;
 import library.application.util.VariableManager;
 import library.mysql.DatabaseLayer;
 
@@ -56,6 +62,7 @@ public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		VariableManager.loadDate();
+		FXComponentInspectorHandler.handleAll();
 		
 		try {
 			DatabaseLayer.getConnection();
@@ -64,10 +71,14 @@ public class Main extends Application {
 
 	        Image icon = new Image(getClass().getResourceAsStream("icon.png"));
 	        primaryStage.getIcons().add(icon);
+	        
+	        Toaster.showError("A", "HELLOW WORLD");
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+
 	}
 
 	@Override
