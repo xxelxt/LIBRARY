@@ -1,5 +1,7 @@
 package library.application.staff;
 
+import java.sql.SQLException;
+
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -22,6 +24,7 @@ import library.application.staff.publication.BookSceneController;
 import library.application.staff.publication.PrintMediaSceneController;
 import library.application.staff.staff.StaffSceneController;
 import library.application.staff.student.StudentSceneController;
+import library.application.util.Toaster;
 import library.mysql.dao.StaffDAO;
 import library.mysql.dao.StudentDAO;
 import library.mysql.dao.UserDAO;
@@ -88,7 +91,12 @@ public class MainSceneController implements SceneFeatureGate {
             printMediaSceneController.setFeatureFor(type);
             if (type == STUDENT) {
             	StudentDAO studentDAO = new StudentDAO();
-    			studentInfoSceneController.setCurrentStudent(studentDAO.loadStudent(logUser));
+    			try {
+					studentInfoSceneController.setCurrentStudent(studentDAO.loadStudent(logUser));
+				} catch (SQLException e) {
+					Toaster.showError("SQL ERROR", e.getMessage());
+					e.printStackTrace();
+				}
     		} else if (type == CLERK || type == LIBRARIAN) {
     			StaffDAO staffDAO = new StaffDAO();
     			staffInfoSceneController.setCurrentStaff(staffDAO.loadStaff(logUser));

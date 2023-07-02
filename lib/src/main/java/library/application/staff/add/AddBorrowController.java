@@ -64,7 +64,6 @@ public class AddBorrowController {
 				return true;
 			}	
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
     	
