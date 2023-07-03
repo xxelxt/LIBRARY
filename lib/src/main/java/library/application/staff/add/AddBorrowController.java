@@ -2,17 +2,18 @@ package library.application.staff.add;
 
 import java.net.URL;
 import java.sql.Date;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TextField;
+import library.application.util.Toaster;
 import library.mysql.dao.BorrowDAO;
 import library.mysql.dao.StudentDAO;
 
@@ -32,61 +33,71 @@ public class AddBorrowController {
 
     @FXML
     private DatePicker fieldStartDate;
-    
+
     @FXML
     private DatePicker fieldDueDate;
-    
+
     @FXML
     private DatePicker fieldReturnedDate;
 
     @FXML
-    private TextField fieldStudentID; 
-    
+    private TextField fieldStudentID;
+
     private boolean calcFineStatus(String studentID, LocalDate dueDate, LocalDate returnedDate) {
     	long daysDifference = 0;
     	LocalDate nowDate = LocalDate.now();
-    	
+
     	if (returnedDate == null) {
 	    	if (nowDate.isAfter(dueDate)) {
 				daysDifference = nowDate.toEpochDay() - dueDate.toEpochDay();
-				// Now - Due (newly added)
+				/* Now - Due (newly added) */
 			}
     	} else {
-    		// Due < Return (always)
+    		/* Due < Return (always) */
 			daysDifference = returnedDate.toEpochDay() - dueDate.toEpochDay();
-			// Return - Due (newly added)
+			/* Return - Due (newly added) */
     	}
-    	
+
 		try {
 			if (daysDifference > 0) {
 				StudentDAO studentDAO = new StudentDAO();
 				studentDAO.addToStudentFine(studentID, daysDifference);
 				return true;
-			}	
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-    	
+
     	return false;
     }
-    
+
     @FXML
     void btnAddBorrow(ActionEvent event) {
     	BorrowDAO borrowDAO = new BorrowDAO();
-    	
+
     	LocalDate dueDate = fieldDueDate.getValue();
     	LocalDate returnedDate = fieldReturnedDate.getValue();
-    	
-    	borrowDAO.addBorrow(
-    		fieldStudentID.getText(),
-    		Integer.parseInt(fieldPublicationID.getText()),
-    		fieldQuantity.getValue(),
-    		Date.valueOf(fieldStartDate.getValue()),
-    		Date.valueOf(dueDate),
-    		(returnedDate != null ? Date.valueOf(returnedDate) : null),
-    		calcFineStatus(fieldStudentID.getText(), dueDate, returnedDate),
-    		(returnedDate != null)
-    	);
+
+    	try {
+    		borrowDAO.addBorrow(
+    	    		fieldStudentID.getText(),
+    	    		Integer.parseInt(fieldPublicationID.getText()),
+    	    		fieldQuantity.getValue(),
+    	    		Date.valueOf(fieldStartDate.getValue()),
+    	    		Date.valueOf(dueDate),
+    	    		(returnedDate != null ? Date.valueOf(returnedDate) : null),
+    	    		calcFineStatus(fieldStudentID.getText(), dueDate, returnedDate),
+    	    		(returnedDate != null)
+			);
+		} catch (SQLException e) { // Added Toast
+			// Catch SQL
+			Toaster.showError("SQL ERROR", e.getMessage());
+			e.printStackTrace();
+		} catch (Exception e) { // Added Toast
+			// Catch DateError
+			Toaster.showError("Input ERROR", e.getMessage());
+			e.printStackTrace();
+		}
 
     	clearTextField();
     }
@@ -100,25 +111,28 @@ public class AddBorrowController {
         assert fieldStudentID != null : "fx:id=\"fieldStudentID\" was not injected: check your FXML file 'AddBorrow.fxml'.";
 
         fieldQuantity.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100, 1));
+
         fieldStartDate.setDayCellFactory(d -> new DateCell() {
             @Override public void updateItem(LocalDate item, boolean empty) {
                 super.updateItem(item, empty);
                 setDisable(item.isAfter(LocalDate.now()));
             }
         });
+
         fieldDueDate.setDayCellFactory(d -> new DateCell() {
             @Override public void updateItem(LocalDate item, boolean empty) {
                 super.updateItem(item, empty);
                 setDisable(fieldStartDate.getValue() == null || item.isBefore(fieldStartDate.getValue()));
             }
         });
+
         fieldReturnedDate.setDayCellFactory(d -> new DateCell() {
             @Override public void updateItem(LocalDate item, boolean empty) {
                 super.updateItem(item, empty);
-                setDisable(fieldDueDate.getValue() == null || 
+                setDisable(fieldDueDate.getValue() == null ||
                 		item.isBefore(fieldDueDate.getValue()) ||
                 		item.isAfter(LocalDate.now()));
-            } // Return date will always be after Due Date
+            } /* Return date will always be after Due date */
         });
     }
 
@@ -126,7 +140,7 @@ public class AddBorrowController {
     	fieldStudentID.clear();
     	fieldPublicationID.clear();
     	fieldQuantity.getValueFactory().setValue(1);
-    	fieldStartDate.setValue(null);
+    	fieldStartDate.setValue(LocalDate.now());
     	fieldDueDate.setValue(null);
     	fieldReturnedDate.setValue(null);
     }

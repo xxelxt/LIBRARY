@@ -15,9 +15,9 @@ public abstract class Person {
 	public void setAccount(User account) {
 		this.account = account;
 	}
-	
+
 	public Person() {
-		
+
 	}
 
 	public Person(String Name, boolean Gender, String Address, String Email, String Phone, User account) {
@@ -69,7 +69,7 @@ public abstract class Person {
 	public void setPhone(String Phone) {
 		this.Phone = Phone;
 	}
-	
+
 	public String getGenderText() {
 		return (Gender ? "Nữ" : "Nam");
 	}

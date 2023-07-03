@@ -16,6 +16,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Font;
+import javafx.stage.Stage;
 import library.application.staff.borrow.BorrowSceneController;
 import library.application.staff.info.StaffInfoSceneController;
 import library.application.staff.info.StudentInfoSceneController;
@@ -68,23 +69,24 @@ public class MainSceneController implements SceneFeatureGate {
     @FXML
     private StaffInfoSceneController staffInfoSceneController;
 
-//    private void passUserNameToStaffInfoScene(String userName) {
-//        staffInfoSceneController.setUsername(userName);
-//    }
-
     private UserDAO userDAO = new UserDAO();
     private User logUser;
 
+    private Stage primaryStage;
+
+    private MainApp main;
+
     @FXML
-    void btnLogin(ActionEvent event) {
+    void btnLogin(ActionEvent event) throws SQLException {
         logUser = userDAO.getUserfromUsername(inputUser.getText());
         if (logUser != null && inputPassword.getText().equals(logUser.getPassword())) {
+        	primaryStage.hide();
             contentPane.setVisible(true);
             loginPane.setVisible(false);
             main.setWindowSize();
+            primaryStage.show();
 
             Integer type = logUser.getType();
-            // passUserNameToStaffInfoScene(logUser.getUsername());
 
             this.setFeatureFor(type);
             bookSceneController.setFeatureFor(type);
@@ -110,40 +112,40 @@ public class MainSceneController implements SceneFeatureGate {
     }
 
     @FXML
-    void onPasswordKeyPressed(KeyEvent event) {
+    void onPasswordKeyPressed(KeyEvent event) throws SQLException {
         if (event.getCode() == KeyCode.ENTER) {
             btnLogin(new ActionEvent());
         }
     }
 
     @FXML
-    void onUsernameKeyPressed(KeyEvent event) {
+    void onUsernameKeyPressed(KeyEvent event) throws SQLException {
         if (event.getCode() == KeyCode.ENTER) {
             btnLogin(new ActionEvent());
         }
     }
-
-    private Main main;
 
     @FXML
     void mainLogOut(ActionEvent event) {
-		main.restart();
+    	primaryStage.hide();
+    	main.restart();
+    	primaryStage.show();
     }
 
-    public void setMain(Main main) {
-    	this.main = main;
+    public void setMain(MainApp main, Stage primaryStage) {
+        this.main = main;
+        this.primaryStage = primaryStage;
     }
-    
 
     @FXML
     private TabPane tabPane;
 
     @FXML
     private Tab tabBook;
-    
+
     @FXML
     private Tab tabPrintMedia;
-    
+
     @FXML
     private Tab tabBorrow;
 
@@ -177,14 +179,15 @@ public class MainSceneController implements SceneFeatureGate {
 	@FXML
     public void initialize() {
         labelWarning.setStyle("-fx-text-fill: #ffffff;");
-        
+
         tabPane.getSelectionModel().selectedItemProperty().addListener(
-        	    new ChangeListener<Tab>() {
-        	        @Override
-        	        public void changed(ObservableValue<? extends Tab> ov, Tab t, Tab t1) {
-        	            System.out.println("Tab Selection changed: " + t.getId() + " -> " + t1.getId());
-        	            t1.getId();
-        	            if (t1 == tabBook) {
+    	    new ChangeListener<Tab>() {
+    	        @Override
+    	        public void changed(ObservableValue<? extends Tab> ov, Tab t, Tab t1) {
+    	            System.out.println("Tab Selection changed: " + t.getId() + " -> " + t1.getId());
+    	            t1.getId();
+    	            try {
+    	            	if (t1 == tabBook) {
         	            	bookSceneController.refresh();
         	        	} else if (t1 == tabPrintMedia) {
         	        		printMediaSceneController.refresh();
@@ -194,14 +197,14 @@ public class MainSceneController implements SceneFeatureGate {
         	            	studentSceneController.refresh();
         	            } else if (t1 == tabStaff) {
         	            	staffSceneController.refresh();
-        	            } else if (t1 == tabStaffInfo) {
-        	            	// staffInfoSceneController.refresh() // NOT NEEDED
-        	            } else if (t1 == tabStudentInfo) {
-        	            	// studentInfoSceneController.refresh();
         	            }
-        	        }
-        	    }
-        	);
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+
+    	        }
+    	    }
+        );
     }
 
 }

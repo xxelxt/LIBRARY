@@ -1,6 +1,7 @@
 package library.application.staff.add;
 
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 import javafx.collections.FXCollections;
@@ -9,6 +10,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
+import library.application.util.Toaster;
 import library.mysql.dao.StaffDAO;
 
 public class AddStaffController {
@@ -48,11 +50,6 @@ public class AddStaffController {
     private ObservableList<String> posItems = FXCollections.observableArrayList("Thủ thư", "Nhân viên");
 
     @FXML
-    void btnAddStudent(ActionEvent event) {
-
-    }
-
-    @FXML
     void initialize() {
         assert comboboxGender != null : "fx:id=\"comboboxGender\" was not injected: check your FXML file 'AddStaff.fxml'.";
         assert comboboxPosition != null : "fx:id=\"comboboxPosition\" was not injected: check your FXML file 'AddStaff.fxml'.";
@@ -77,16 +74,24 @@ public class AddStaffController {
         String gender = comboboxGender.getValue();
         boolean isFemale = gender.equals("Nữ");
 
-        staffDAO.addStaff(
-            fieldName.getText(),
-            fieldUsername.getText(),
-            fieldPassword.getText(),
-            isFemale,
-            fieldEmail.getText(),
-            fieldPhoneNum.getText(),
-            fieldAddress.getText(),
-            comboboxPosition.getValue()
-        );
+        try {
+        	staffDAO.addStaff(
+                    fieldName.getText(),
+                    fieldUsername.getText(),
+                    fieldPassword.getText(),
+                    isFemale,
+                    fieldEmail.getText(),
+                    fieldPhoneNum.getText(),
+                    fieldAddress.getText(),
+                    comboboxPosition.getValue()
+            );
+		} catch (NumberFormatException e) { // Added Toast
+			Toaster.showError("Input ERROR", e.getMessage());
+			e.printStackTrace();
+		} catch (SQLException e) { // Added Toast
+			Toaster.showError("SQL ERROR", e.getMessage());
+			e.printStackTrace();
+		}
 
         clearTextField();
     }

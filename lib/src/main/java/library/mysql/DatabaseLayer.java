@@ -1,8 +1,8 @@
 package library.mysql;
 
-import java.io.IOException;
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -26,7 +26,7 @@ public class DatabaseLayer {
         USER_NAME = variable1;
         PASSWORD = variable2;
     }
-    
+
     private static Connection conn;
 
     public static void getConnection() throws Exception {

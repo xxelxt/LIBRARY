@@ -55,5 +55,5 @@ public class Publication {
 
 	public void setQuantity(int Quantity) {
 		this.Quantity = Quantity;
-	}	
+	}
 }

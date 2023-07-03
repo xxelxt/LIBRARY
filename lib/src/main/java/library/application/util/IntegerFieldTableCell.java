@@ -17,7 +17,7 @@ public class IntegerFieldTableCell<T> extends TextFieldTableCell<T, Integer> {
     		((TextField) getGraphic()).setTextFormatter(textFormatter);
     	}
     }
-    
+
     private final TextFormatter<Integer> textFormatter = new TextFormatter<>(
     	change -> {
 	        String newText = change.getControlNewText();
@@ -30,15 +30,11 @@ public class IntegerFieldTableCell<T> extends TextFieldTableCell<T, Integer> {
 
     @Override
     public void startEdit() {
-        super.startEdit();
-//        this.getStyleClass().remove("text-field-table-cell");
-//        this.getStyleClass().add("text-field-table-cell");
-        /// setTextFormatterForTextField();
+
     }
 
     @Override
     public void cancelEdit() {
         super.cancelEdit();
-       //  setTextFormatterForTextField();
     }
 }

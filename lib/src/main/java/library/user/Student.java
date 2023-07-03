@@ -54,7 +54,7 @@ public class Student extends Person {
 	public void setFine(int Fine) {
 		this.Fine = Fine;
 	}
-	
+
 	// For table setColFactory (automatic map string "fineStatusText" with the method below)
 	public String getFineStatusText() {
 		return (FineStatus ? "Bị phạt" : "Không bị phạt");

@@ -1,7 +1,6 @@
 package library.application.staff.student;
 
 import java.net.URL;
-import java.sql.Date;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +13,6 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellEditEvent;
@@ -27,13 +25,10 @@ import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
-import javafx.util.converter.IntegerStringConverter;
-import library.mysql.dao.StudentDAO;
-import library.mysql.dao.UserDAO;
 import library.application.util.IntegerFieldTableCell;
 import library.application.util.Toaster;
-import library.mysql.dao.BorrowDAO;
-import library.publication.Books;
+import library.mysql.dao.StudentDAO;
+import library.mysql.dao.UserDAO;
 import library.user.Student;
 
 public class StudentSceneController implements Initializable {
@@ -43,6 +38,10 @@ public class StudentSceneController implements Initializable {
 
     @FXML
     private URL location;
+
+    /**
+     * TABLE
+     */
 
     @FXML
     private TableView<Student> studentTableView;
@@ -80,47 +79,46 @@ public class StudentSceneController implements Initializable {
     @FXML
     private TableColumn<Student, String> colUsername;
 
+    /**
+     * SEARCH FUNCTION
+     */
+
     @FXML
     private ComboBox<String> comboBox;
 
     @FXML
-    private ComboBox<String> comboBoxFine;
+    private ComboBox<String> comboBoxFineStatus;
 
     @FXML
     private TextField fieldSearch;
 
-    @FXML
-    private Button btnAdd;
+    private ObservableList<String> items = FXCollections.observableArrayList("Mã sinh viên", "Tên sinh viên", "Lớp", "Số điện thoại");
+    private ObservableList<String> fineItems = FXCollections.observableArrayList("Tất cả", "Không bị phạt", "Bị phạt");
 
-    @FXML
-    private Button btnDelete;
-
-    @FXML
-    private ToggleButton btnEdit;
-
-    @FXML
-    private AnchorPane paneAdd;
+    /**
+     * DATA
+     */
 
     @FXML
     private VBox paneMain;
 
-    private ObservableList<Student> data;
+    @FXML
+    private AnchorPane paneAdd;
 
-    private ObservableList<String> items = FXCollections.observableArrayList("Mã sinh viên", "Tên sinh viên", "Lớp", "Số điện thoại");
-    private ObservableList<String> fineItems = FXCollections.observableArrayList("Tất cả", "Không bị phạt", "Bị phạt");
+    private ObservableList<Student> data;
 
     private StudentDAO studentDAO = new StudentDAO();
 
     public void refresh() {
         data = FXCollections.observableArrayList();
-        
+
         List<Student> allStudents;
-        
+
 		try {
 			allStudents = studentDAO.loadAllStudents();
 		} catch (SQLException e) { // Added Toast
 			allStudents = new ArrayList<>();
-			
+
 			Toaster.showError("SQL ERROR", e.getMessage());
 			e.printStackTrace();
 		}
@@ -137,18 +135,18 @@ public class StudentSceneController implements Initializable {
     	studentTableView.scrollTo(lastIndex);
     }
 
-    private void editableCols(){
+    private void editCell() {
+    	/**
+    	 * String & combo box cell
+    	 */
+
         colName.setCellFactory(TextFieldTableCell.forTableColumn());
         colEmail.setCellFactory(TextFieldTableCell.forTableColumn());
         colPhoneNum.setCellFactory(TextFieldTableCell.forTableColumn());
         colAddress.setCellFactory(TextFieldTableCell.forTableColumn());
         colClass.setCellFactory(TextFieldTableCell.forTableColumn());
-        
-        colPassword.setCellFactory(TextFieldTableCell.forTableColumn());
 
-//        colGender.setCellFactory(TextFieldTableCell.forTableColumn());
-//        colFineStatus.setCellFactory(TextFieldTableCell.forTableColumn());
-//        colFine.setCellFactory(TextFieldTableCell.forTableColumn());
+        colPassword.setCellFactory(TextFieldTableCell.forTableColumn());
 
         EventHandler<CellEditEvent<Student, String>> commonHandler = e -> {
         	Student std = e.getRowValue();
@@ -161,21 +159,20 @@ public class StudentSceneController implements Initializable {
         	else if (col == colGender) {
                 std.setGender(e.getNewValue().equals("Nữ") ? true : false);
         	}
-        	
+
         	try {
             	if (col == colPassword) {
             		std.getAccount().setPassword(e.getNewValue());
         			UserDAO userDAO = new UserDAO();
     				userDAO.updatePassword(std.getAccount());
-            		
+
             		return;
             	}
-        		
+
 				studentDAO.updateStudent(std);
 				refresh();
 			} catch (Exception e1) {
-				// TODO Auto-generated catch block
-				System.out.println(e1);
+				e1.printStackTrace();
 			}
         };
 
@@ -185,11 +182,15 @@ public class StudentSceneController implements Initializable {
         colAddress.setOnEditCommit(commonHandler);
         colClass.setOnEditCommit(commonHandler);
         colPassword.setOnEditCommit(commonHandler);
-        
+
         colGender.setCellFactory(ComboBoxTableCell.forTableColumn("Nam", "Nữ"));
         colGender.setOnEditCommit(commonHandler);
-        
-        colFine.setCellFactory(col -> new IntegerFieldTableCell<Student>());
+
+        /**
+         * Fine & Fine status
+         */
+
+        colFine.setCellFactory(col -> new IntegerFieldTableCell<>());
         colFine.setOnEditCommit(e -> {
         	Student std = e.getRowValue();
         	Integer fine = e.getNewValue();
@@ -197,25 +198,22 @@ public class StudentSceneController implements Initializable {
         	if (fine == 0) {
         		std.setFineStatus(false);
         	}
-        	
+
         	try {
 				studentDAO.updateStudent(std);
 				refresh();
 			} catch (Exception e1) {
-				// TODO Auto-generated catch block
-				System.out.println(e1);
+				e1.printStackTrace();
 			}
         });
-//        colFineStatus.setCellFactory(ComboBoxTableCell.forTableColumn("Bị phạt", "Không bị phạt"));
-//        colFineStatus.setOnEditCommit(commonHandler);
     }
 
     @Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
         System.out.println("Student controller initialized");
-        // Add a default row
+
 		refresh();
-		editableCols();
+		editCell();
 
         // Bind the ObservableList to the TableView
         studentTableView.setItems(data);
@@ -226,9 +224,9 @@ public class StudentSceneController implements Initializable {
         comboBox.setItems(items);
         comboBox.setValue("Mã sinh viên");
 
-        comboBoxFine.setPromptText("Thuộc tính tìm kiếm");
-        comboBoxFine.setItems(fineItems);
-        comboBoxFine.setValue("Tất cả");
+        comboBoxFineStatus.setPromptText("Tình trạng phạt");
+        comboBoxFineStatus.setItems(fineItems);
+        comboBoxFineStatus.setValue("Tất cả");
 
         // Bind the columns to the corresponding properties in MyDataModel
         colStudentID.setCellValueFactory(new PropertyValueFactory<>("studentID"));
@@ -246,12 +244,72 @@ public class StudentSceneController implements Initializable {
         colPassword.setCellValueFactory(new PropertyValueFactory<>("password"));
 	}
 
-	Date now = new Date(new java.util.Date().getTime());
+    @FXML
+    void comboBoxActionSearch(ActionEvent event) {
+    	startSearch();
+    }
+
+    @FXML
+    void inputSearch(KeyEvent event) {
+    	startSearch();
+    }
+
+    private void startSearch() {
+        String searchText = fieldSearch.getText();
+        String searchOption = comboBox.getValue();
+        String searchFineStatus = comboBoxFineStatus.getValue();
+
+        SearchData(searchText, searchOption, searchFineStatus);
+    }
+
+    private void SearchData(String searchText, String searchOption, String searchFineStatus) {
+        FilteredList<Student> filteredList = new FilteredList<>(data);
+
+        filteredList.setPredicate(student -> {
+        	if (!searchFineStatus.equals("Tất cả") && !student.getFineStatusText().equals(searchFineStatus)) {
+        		return false;
+        	}
+
+            String originalText = "";
+            switch (searchOption) {
+                case "Mã sinh viên":
+                    originalText = student.getStudentID();
+                    break;
+
+                case "Tên sinh viên":
+                    originalText = student.getName();
+                    break;
+
+                case "Lớp":
+                    originalText = student.getClassName();
+                    break;
+
+                case "Số điện thoại":
+                    originalText = student.getPhone();
+                    break;
+            }
+
+            if (!originalText.isEmpty()) {
+                return originalText.toLowerCase().contains(searchText.toLowerCase());
+            }
+
+            return false;
+        });
+
+        studentTableView.setItems(filteredList);
+    }
 
 	@FXML
     void btnActionAddStudent(ActionEvent event) {
 		paneMain.setVisible(false);
     	paneAdd.setVisible(true);
+    }
+
+    @FXML
+    void btnActionReturn(ActionEvent event) {
+    	paneMain.setVisible(true);
+    	paneAdd.setVisible(false);
+    	this.refresh();
     }
 
     @FXML
@@ -266,7 +324,7 @@ public class StudentSceneController implements Initializable {
 				Toaster.showError("SQL ERROR", e.getMessage());
 				e.printStackTrace();
 			}
-	    	
+
 	    	this.refresh();
 
 	        if (selectedIndex >= 0 && selectedIndex < data.size()) {
@@ -282,77 +340,12 @@ public class StudentSceneController implements Initializable {
     	if (btnEdit.isSelected()) {
     		studentTableView.setEditable(true);
     	} else {
+    		studentTableView.edit(-1, null);
     		studentTableView.setEditable(false);
     	}
     }
-    
-    @FXML
-    void comboBoxActionSearch(ActionEvent event) {
-    	startSearch();
-    }
-    
-    @FXML
-    void inputSearch(KeyEvent event) {
-    	startSearch();
-    }
-    
-    private void startSearch() {
-        String searchText = fieldSearch.getText();
-        String searchOption = comboBox.getValue();
-        String searchFineStatus = comboBoxFine.getValue();
-
-        SearchData(searchText, searchOption, searchFineStatus);
-    }
-
-    private void SearchData(String searchText, String searchOption, String searchFineStatus) {
-//        if (searchText.isEmpty()) {
-//            // If the search text is empty, revert to the original unfiltered list
-//            studentTableView.setItems(data);
-//        } else {
-            // Apply filtering based on the search text and option
-            FilteredList<Student> filteredList = new FilteredList<>(data);
-
-            filteredList.setPredicate(student -> {
-            	if (!searchFineStatus.equals("Tất cả") && !student.getFineStatusText().equals(searchFineStatus)) {
-            		return false;
-            	}
-            	
-                String originalText = "";
-                switch (searchOption) {
-                    case "Mã sinh viên":
-                        originalText = student.getStudentID();
-                        break;
-
-                    case "Tên sinh viên":
-                        originalText = student.getName();
-                        break;
-
-                    case "Lớp":
-                        originalText = student.getClassName();
-                        break;
-
-                    case "Số điện thoại":
-                        originalText = student.getPhone();
-                        break;
-                }
-
-                if (!originalText.isEmpty()) {
-                    return originalText.toLowerCase().contains(searchText.toLowerCase());
-                }
-
-                return false;
-            });
-
-            studentTableView.setItems(filteredList);
-//        }
-    }
-
 
     @FXML
-    void btnActionReturn(ActionEvent event) {
-    	paneMain.setVisible(true);
-    	paneAdd.setVisible(false);
-    	this.refresh();
-    }
+    private ToggleButton btnEdit;
 
 }

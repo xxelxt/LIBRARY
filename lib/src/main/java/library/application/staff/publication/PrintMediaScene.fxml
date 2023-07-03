@@ -19,12 +19,19 @@
                <children>
                   <Button fx:id="btnAdd" mnemonicParsing="false" onAction="#btnActionAddPrintMedia" text="Thêm" />
                   <ToggleButton fx:id="btnEdit" mnemonicParsing="false" onAction="#btnActionEditPrintMedia" text="Sửa" />
+                  <ToggleButton fx:id="btnEditClerk" mnemonicParsing="false" onAction="#btnActionEditPrintMediaClerk" text="Sửa" />
                   <Button fx:id="btnDelete" mnemonicParsing="false" onAction="#btnActionDeletePrintMedia" text="Xoá">
                      <HBox.margin>
                         <Insets right="20.0" />
                      </HBox.margin></Button>
-                  <TextField fx:id="fieldSearch" onKeyTyped="#inputSearch" prefHeight="26.0" prefWidth="413.0" promptText="Thông tin tìm kiếm" HBox.hgrow="ALWAYS" />
-                  <ComboBox fx:id="comboBox" prefHeight="25.0" prefWidth="150.0" promptText="Thuộc tính tìm kiếm" HBox.hgrow="ALWAYS" />
+                  <TextField fx:id="fieldSearch" onKeyTyped="#inputSearch" prefHeight="26.0" prefWidth="413.0" promptText="Thông tin tìm kiếm" HBox.hgrow="ALWAYS">
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin></TextField>
+                  <ComboBox fx:id="comboBox" prefHeight="25.0" prefWidth="150.0" promptText="Thuộc tính tìm kiếm" HBox.hgrow="ALWAYS">
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin></ComboBox>
                </children>
                <opaqueInsets>
                   <Insets />

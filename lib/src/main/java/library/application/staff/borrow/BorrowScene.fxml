@@ -17,14 +17,15 @@
          <children>
             <HBox alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="484.0" spacing="10.0" VBox.vgrow="NEVER">
                <children>
-                  <Button fx:id="btnAdd" mnemonicParsing="false" onAction="#btnActionAddBorrow" text="Thêm" />
+                  <Button mnemonicParsing="false" onAction="#btnActionAddBorrow" text="Thêm" />
                   <ToggleButton fx:id="btnEdit" mnemonicParsing="false" onAction="#btnActionEditBorrow" text="Sửa" />
-                  <Button fx:id="btnDelete" mnemonicParsing="false" onAction="#btnActionDeleteBorrow" text="Xoá">
+                  <Button mnemonicParsing="false" onAction="#btnActionDeleteBorrow" text="Xoá">
                      <HBox.margin>
                         <Insets right="20.0" />
                      </HBox.margin></Button>
                   <TextField fx:id="fieldSearch" onKeyTyped="#inputSearch" prefHeight="26.0" prefWidth="406.0" HBox.hgrow="ALWAYS" />
                   <ComboBox fx:id="comboBox" prefHeight="25.0" prefWidth="150.0" promptText="Thuộc tính tìm kiếm" HBox.hgrow="ALWAYS" />
+                  <ComboBox fx:id="comboBoxFineStatus" onAction="#comboBoxActionSearch" prefHeight="25.0" prefWidth="150.0" promptText="Thuộc tính tìm kiếm" />
                </children>
                <opaqueInsets>
                   <Insets />

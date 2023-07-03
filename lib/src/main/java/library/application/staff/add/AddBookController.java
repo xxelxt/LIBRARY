@@ -14,6 +14,7 @@ import library.application.util.Toaster;
 import library.mysql.dao.BookDAO;
 
 public class AddBookController {
+
 	@FXML
     private TextField fieldAuthors;
 
@@ -56,9 +57,22 @@ public class AddBookController {
         fieldReissue.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 255, 1));
         fieldReissue.getValueFactory().setValue(0);
     }
+    
+    boolean isAnyFieldNull() {
+        return fieldTitle.getText().isEmpty() || fieldPublishDate.getValue() == null ||
+            fieldCountry.getText().isEmpty() || fieldQuantity.getValue() == null ||
+            fieldCategory.getText().isEmpty() || fieldReissue.getValue() == null ||
+            fieldAuthors.getText().isEmpty() || fieldPublisher.getText().isEmpty();
+    }
 
     @FXML
     void btnAddBook(ActionEvent event) {
+    	if (isAnyFieldNull()) {
+    		highlightNullFields();
+            Toaster.showError("Keo ly tái châu", "Điền hết chỗ nào còn trống đi mă.");
+            return;
+        }
+    	
     	BookDAO bookDAO = new BookDAO();
 
     	try {
@@ -83,6 +97,33 @@ public class AddBookController {
 		}
 
     	clearTextField();
+    }
+    
+    void highlightNullFields() {
+        if (fieldTitle.getText().isEmpty()) {
+            fieldTitle.setStyle("-fx-border-color: red;");
+        }
+        if (fieldPublishDate.getValue() == null) {
+            fieldPublishDate.setStyle("-fx-border-color: red;");
+        }
+        if (fieldCountry.getText().isEmpty()) {
+            fieldCountry.setStyle("-fx-border-color: red;");
+        }
+        if (fieldQuantity.getValue() == null) {
+            fieldQuantity.setStyle("-fx-border-color: red;");
+        }
+        if (fieldCategory.getText().isEmpty()) {
+            fieldCategory.setStyle("-fx-border-color: red;");
+        }
+        if (fieldReissue.getValue() == null) {
+            fieldReissue.setStyle("-fx-border-color: red;");
+        }
+        if (fieldAuthors.getText().isEmpty()) {
+            fieldAuthors.setStyle("-fx-border-color: red;");
+        }
+        if (fieldPublisher.getText().isEmpty()) {
+            fieldPublisher.setStyle("-fx-border-color: red;");
+        }
     }
 
     void clearTextField() {

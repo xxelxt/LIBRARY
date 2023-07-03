@@ -1,7 +1,7 @@
 package library.application.staff.staff;
 
 import java.net.URL;
-import java.sql.Date;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -12,9 +12,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.TableView;
@@ -37,6 +35,10 @@ public class StaffSceneController implements Initializable {
 
     @FXML
     private URL location;
+
+    /**
+     * TABLE
+     */
 
     @FXML
     private TableView<Staff> staffTableView;
@@ -68,20 +70,21 @@ public class StaffSceneController implements Initializable {
     @FXML
     private TableColumn<Staff, String> colUsername;
 
+    /**
+     * SEARCH FUNCTION
+     */
+
     @FXML
     private ComboBox<String> comboBox;
 
     @FXML
     private TextField fieldSearch;
 
-    @FXML
-    private Button btnAdd;
+    private ObservableList<String> items = FXCollections.observableArrayList("Mã nhân viên", "Tên nhân viên", "Chức vụ", "Số điện thoại");
 
-    @FXML
-    private Button btnDelete;
-
-    @FXML
-    private ToggleButton btnEdit;
+    /**
+     * DATA
+     */
 
     @FXML
     private AnchorPane paneAdd;
@@ -91,11 +94,9 @@ public class StaffSceneController implements Initializable {
 
     private ObservableList<Staff> data;
 
-    private ObservableList<String> items = FXCollections.observableArrayList("Mã nhân viên", "Tên nhân viên", "Số điện thoại");
-
     private StaffDAO staffDAO = new StaffDAO();
 
-    public void refresh() {
+    public void refresh() throws SQLException {
         data = FXCollections.observableArrayList();
 
         List<Staff> allStaff = staffDAO.loadAllStaff();
@@ -112,14 +113,16 @@ public class StaffSceneController implements Initializable {
     	staffTableView.scrollTo(lastIndex);
     }
 
-    private void editableCols(){
+    private void editCell() {
+    	/**
+    	 * String & combo box cell
+    	 */
+
         colName.setCellFactory(TextFieldTableCell.forTableColumn());
         colEmail.setCellFactory(TextFieldTableCell.forTableColumn());
         colPhoneNum.setCellFactory(TextFieldTableCell.forTableColumn());
         colAddress.setCellFactory(TextFieldTableCell.forTableColumn());
         colPassword.setCellFactory(TextFieldTableCell.forTableColumn());
-        
-//        colGender.setCellFactory(TextFieldTableCell.forTableColumn());
 
         EventHandler<CellEditEvent<Staff, String>> commonHandler = e -> {
         	Staff stf = e.getTableView().getItems().get(e.getTablePosition().getRow());
@@ -131,19 +134,19 @@ public class StaffSceneController implements Initializable {
         	else if (col == colGender) {
                 stf.setGender(e.getNewValue().equals("Nữ") ? true : false);
         	}
-        	
+
         	try {
             	if (col == colPassword) {
             		stf.getAccount().setPassword(e.getNewValue());
         			UserDAO userDAO = new UserDAO();
     				userDAO.updatePassword(stf.getAccount());
-            		
+
             		return;
             	}
-            	
+
 				staffDAO.updateStaff(stf);
+				refresh();
 			} catch (Exception e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
         };
@@ -153,7 +156,7 @@ public class StaffSceneController implements Initializable {
         colPhoneNum.setOnEditCommit(commonHandler);
         colAddress.setOnEditCommit(commonHandler);
         colPassword.setOnEditCommit(commonHandler);
-        
+
         colGender.setCellFactory(ComboBoxTableCell.forTableColumn("Nam", "Nữ"));
         colGender.setOnEditCommit(commonHandler);
     }
@@ -161,9 +164,13 @@ public class StaffSceneController implements Initializable {
     @Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
         System.out.println("Staff controller initialized");
-        // Add a default row
-		refresh();
-		editableCols();
+
+		try {
+			refresh();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		editCell();
 
         // Bind the ObservableList to the TableView
         staffTableView.setItems(data);
@@ -188,47 +195,6 @@ public class StaffSceneController implements Initializable {
         colPassword.setCellValueFactory(new PropertyValueFactory<>("password"));
 	}
 
-	Date now = new Date(new java.util.Date().getTime());
-
-    @FXML
-    void btnActionAddStaff(ActionEvent event) {
-    	paneMain.setVisible(false);
-    	paneAdd.setVisible(true);
-    }
-
-    @FXML
-    void btnActionDeleteStaff(ActionEvent event) {
-    	Integer selectedIndex = staffTableView.getSelectionModel().getSelectedIndex();
-    	Staff selectedRow = staffTableView.getSelectionModel().getSelectedItem();
-
-    	if (selectedRow != null) {
-	    	staffDAO.deleteStaff(selectedRow.getStaffID());
-	    	this.refresh();
-
-	        if (selectedIndex >= 0 && selectedIndex < data.size()) {
-	        	staffTableView.getSelectionModel().select(selectedIndex);
-	        }
-    	} else {
-    		staffTableView.getSelectionModel().clearSelection();
-        }
-    }
-
-    @FXML
-    void btnActionEditStaff(ActionEvent event) {
-    	if (btnEdit.isSelected()) {
-    		staffTableView.setEditable(true);
-    	} else {
-    		staffTableView.setEditable(false);
-    	}
-    }
-
-    @FXML
-    void btnActionReturn(ActionEvent event) {
-    	paneMain.setVisible(true);
-    	paneAdd.setVisible(false);
-    	this.refresh();
-    }
-
     @FXML
     void inputSearch(KeyEvent event) {
     	String searchText = fieldSearch.getText();
@@ -238,7 +204,6 @@ public class StaffSceneController implements Initializable {
 
     private void SearchData(String searchText, String searchOption) {
         if (searchText.isEmpty()) {
-            // If the search text is empty, revert to the original unfiltered list
             staffTableView.setItems(data);
         } else {
             // Apply filtering based on the search text and option
@@ -253,6 +218,10 @@ public class StaffSceneController implements Initializable {
 
                     case "Tên nhân viên":
                         originalText = staff.getName();
+                        break;
+
+                    case "Chức vụ":
+                        originalText = staff.getPosition();
                         break;
 
                     case "Số điện thoại":
@@ -274,5 +243,49 @@ public class StaffSceneController implements Initializable {
             staffTableView.setItems(filteredList);
         }
     }
+
+    @FXML
+    void btnActionAddStaff(ActionEvent event) {
+    	paneMain.setVisible(false);
+    	paneAdd.setVisible(true);
+    }
+
+
+    @FXML
+    void btnActionReturn(ActionEvent event) throws SQLException {
+    	paneMain.setVisible(true);
+    	paneAdd.setVisible(false);
+    	this.refresh();
+    }
+
+    @FXML
+    void btnActionDeleteStaff(ActionEvent event) throws SQLException {
+    	Integer selectedIndex = staffTableView.getSelectionModel().getSelectedIndex();
+    	Staff selectedRow = staffTableView.getSelectionModel().getSelectedItem();
+
+    	if (selectedRow != null) {
+	    	staffDAO.deleteStaff(selectedRow.getStaffID());
+	    	this.refresh();
+
+	        if (selectedIndex >= 0 && selectedIndex < data.size()) {
+	        	staffTableView.getSelectionModel().select(selectedIndex);
+	        }
+    	} else {
+    		staffTableView.getSelectionModel().clearSelection();
+        }
+    }
+
+    @FXML
+    void btnActionEditStaff(ActionEvent event) {
+    	if (btnEdit.isSelected()) {
+    		staffTableView.setEditable(true);
+    	} else {
+    		staffTableView.edit(-1, null);
+    		staffTableView.setEditable(false);
+    	}
+    }
+
+    @FXML
+    private ToggleButton btnEdit;
 
 }

@@ -3,78 +3,59 @@ package library.mysql.dao;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 
 import library.mysql.DatabaseLayer;
 
 public class PublicationDAO {
 
-    public Integer addPublication(String title, Date releaseDate, String country, int quantity) {
-    	Integer newpubID = -1;
+    public Integer addPublication(String title, Date releaseDate, String country, int quantity) throws SQLException {
+    	Integer newPublicationID = -1;
 
-        try {
-            String sql = "INSERT INTO Publications (Title, ReleaseDate, Country, Quantity) VALUES (?, ?, ?, ?)";
-            PreparedStatement pstmt = DatabaseLayer.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+    	String sql = "INSERT INTO Publications (Title, ReleaseDate, Country, Quantity) VALUES (?, ?, ?, ?)";
+        PreparedStatement pstmt = DatabaseLayer.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
-            pstmt.setString(1, title);
-            pstmt.setDate(2, new Date(releaseDate.getTime()));
-            pstmt.setString(3, country);
-            pstmt.setInt(4, quantity);
+        pstmt.setString(1, title);
+        pstmt.setDate(2, new Date(releaseDate.getTime()));
+        pstmt.setString(3, country);
+        pstmt.setInt(4, quantity);
 
-            pstmt.executeUpdate();
-            ResultSet rs = pstmt.getGeneratedKeys();
-            if (rs.next()){
-                newpubID = rs.getInt(1);
-            }
+        pstmt.executeUpdate();
+        ResultSet rs = pstmt.getGeneratedKeys();
 
-            rs.close();
-            pstmt.close();
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (rs.next()){
+        	newPublicationID = rs.getInt(1);
         }
 
-        return newpubID;
+        rs.close();
+        pstmt.close();
+
+        return newPublicationID;
     }
 
-    public boolean deletePublication(Integer publicationID) {
-        try {
-            String deletePublicationSql = "DELETE FROM Publications WHERE PublicationID = ?";
-            PreparedStatement stmt = DatabaseLayer.prepareStatement(deletePublicationSql);
-            stmt.setInt(1, publicationID);
-
-            int rowsAffected = stmt.executeUpdate();
-            stmt.close();
-
-            if (rowsAffected == 0) {
-                System.out.println("No publication found with the provided ID.");
-                return false;
-            }
-
-        } catch (Exception e) {
-            System.out.println(e);
-            return false;
-        }
-        return true;
+    public void deletePublication(Integer publicationID) throws SQLException {
+    	String sql = "DELETE FROM Publications WHERE PublicationID = ?";
+        PreparedStatement pstmt = DatabaseLayer.prepareStatement(sql);
+        pstmt.setInt(1, publicationID);
+        pstmt.executeUpdate();
+        pstmt.close();
     }
 
-    public String getTitlebyPublicationID(Integer publicationID) {
+    public String getTitlebyPublicationID(Integer publicationID) throws SQLException {
     	String title = "";
-    	try {
-    		String sql = "SELECT Title FROM Publication WHERE PublicationID = ?";
-            PreparedStatement pstmt = DatabaseLayer.prepareStatement(sql);
-            pstmt.setInt(1, publicationID);
 
-            ResultSet rs = pstmt.executeQuery();
+    	String sql = "SELECT Title FROM Publication WHERE PublicationID = ?";
+        PreparedStatement pstmt = DatabaseLayer.prepareStatement(sql);
+        pstmt.setInt(1, publicationID);
 
-            while (rs.next()) {
-                title = rs.getString(1);
-            }
-            rs.close();
-            pstmt.close();
+        ResultSet rs = pstmt.executeQuery();
 
-        } catch (Exception e) {
-            System.out.println(e);
-    	}
+        while (rs.next()) {
+            title = rs.getString(1);
+        }
+        rs.close();
+        pstmt.close();
 
     	return title;
     }

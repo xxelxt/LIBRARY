@@ -107,7 +107,7 @@ public class Borrow {
 	public void setReturnedStatus(boolean ReturnedStatus) {
 		this.ReturnedStatus = ReturnedStatus;
 	}
-	
+
 	// For table setCellValueFactory (automatic map string "fineStatusText" with the method below)
 	public String getFineStatusText() {
 		return (FineStatus ? "Bị phạt" : "Không bị phạt");
@@ -115,10 +115,5 @@ public class Borrow {
 
 	public String getReturnedStatusText() {
 		return (ReturnedStatus ? "Đã trả sách" : "Chưa trả sách");
-	}
-
-	public boolean getFineStatus() {
-		// TODO Auto-generated method stub
-		return FineStatus;
 	}
 }

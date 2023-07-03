@@ -14,7 +14,13 @@ import library.mysql.dao.StaffDAO;
 import library.mysql.dao.UserDAO;
 import library.user.Staff;
 
-public class StaffInfoSceneController /*implements Initializable*/ {
+public class StaffInfoSceneController {
+
+	@FXML
+    private ResourceBundle resources;
+
+    @FXML
+    private URL location;
 
 	private Staff currentStaff;
 
@@ -30,12 +36,6 @@ public class StaffInfoSceneController /*implements Initializable*/ {
         fieldUsername.setText(currentStaff.getUsername());
         fieldPassword.setText(currentStaff.getPassword());
 	}
-
-	@FXML
-    private ResourceBundle resources;
-
-    @FXML
-    private URL location;
 
     @FXML
     private TextField fieldAddress;
@@ -54,7 +54,7 @@ public class StaffInfoSceneController /*implements Initializable*/ {
 
     @FXML
     private TextField fieldPasswordAlt;
-    
+
     @FXML
     private TextField fieldPhone;
 
@@ -69,10 +69,9 @@ public class StaffInfoSceneController /*implements Initializable*/ {
 
     @FXML
     private ToggleButton btnChangePassword;
-    
+
     @FXML
     private ToggleButton btnEditInfo;
-
 
     @FXML
     void btnActionChangePassword(ActionEvent event) {
@@ -83,11 +82,11 @@ public class StaffInfoSceneController /*implements Initializable*/ {
     			UserDAO userDAO = new UserDAO();
 				userDAO.updatePassword(currentStaff.getAccount());
 			} catch (Exception e) {
-				System.out.println(e);
+				e.printStackTrace();
 			}
     	}
     }
-    
+
     @FXML
     void btnActionEditInfo(ActionEvent event) {
     	if (!btnEditInfo.isSelected()) {
@@ -100,7 +99,7 @@ public class StaffInfoSceneController /*implements Initializable*/ {
     			StaffDAO staffDAO = new StaffDAO();
 				staffDAO.updateStaff(currentStaff);
 			} catch (Exception e) {
-				System.out.println(e);
+				e.printStackTrace();
 			}
     	}
     }
@@ -118,12 +117,12 @@ public class StaffInfoSceneController /*implements Initializable*/ {
         assert fieldUsername != null : "fx:id=\"fieldUsername\" was not injected: check your FXML file 'StaffInfoScene.fxml'.";
 
         BooleanProperty editable = btnEditInfo.selectedProperty();
-        
+
         fieldName.editableProperty().bind(editable);
         fieldEmail.editableProperty().bind(editable);
         fieldPhone.editableProperty().bind(editable);
         fieldAddress.editableProperty().bind(editable);
-        
+
         fieldName.disableProperty().bind(editable.not());
         fieldEmail.disableProperty().bind(editable.not());
         fieldPhone.disableProperty().bind(editable.not());
@@ -131,7 +130,7 @@ public class StaffInfoSceneController /*implements Initializable*/ {
 
         fieldPasswordAlt.visibleProperty().bind(btnChangePassword.selectedProperty());
         fieldPassword.visibleProperty().bind(btnChangePassword.selectedProperty().not());
-        
+
         // Bind textField to passwordField
         Bindings.bindBidirectional(fieldPassword.textProperty(), fieldPasswordAlt.textProperty());
         fieldPassword.setDisable(true);

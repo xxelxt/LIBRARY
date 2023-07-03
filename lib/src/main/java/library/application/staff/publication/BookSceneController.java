@@ -2,11 +2,9 @@ package library.application.staff.publication;
 
 import java.net.URL;
 import java.sql.Date;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.function.BiConsumer;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -17,8 +15,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.TableView;
@@ -30,8 +26,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.util.StringConverter;
-import javafx.util.converter.IntegerStringConverter;
 import library.application.staff.interfac.SceneFeatureGate;
 import library.application.util.DatePickerTableCell;
 import library.application.util.IntegerFieldTableCell;
@@ -39,7 +33,6 @@ import library.mysql.dao.AuthorDAO;
 import library.mysql.dao.BookDAO;
 import library.publication.Books;
 import library.publication.Publication;
-import library.user.Student;
 
 public class BookSceneController implements Initializable, SceneFeatureGate {
 
@@ -49,9 +42,15 @@ public class BookSceneController implements Initializable, SceneFeatureGate {
     @FXML
     private URL location;
 
-    // Table
+    /**
+     * TABLE
+     */
+
     @FXML
     private TableView<Books> booksTableView;
+
+    @FXML
+    private TableColumn<Books, String> colAuthors;
 
     @FXML
     private TableColumn<Books, String> colCategory;
@@ -60,27 +59,27 @@ public class BookSceneController implements Initializable, SceneFeatureGate {
     private TableColumn<Books, String> colCountry;
 
     @FXML
-    private TableColumn<Books, Date> colPublicationDate;
-
-    @FXML
-    private TableColumn<Books, Integer> colQuantity;
-
-    @FXML
     private TableColumn<Books, Integer> colID;
 
     @FXML
-    private TableColumn<Books, String> colTitle;
-
-    @FXML
-    private TableColumn<Books, String> colAuthors;
+    private TableColumn<Books, Date> colPublicationDate;
 
     @FXML
     private TableColumn<Books, String> colPublisher;
 
     @FXML
+    private TableColumn<Books, Integer> colQuantity;
+
+    @FXML
     private TableColumn<Books, Integer> colReissue;
 
-    // Searching
+    @FXML
+    private TableColumn<Books, String> colTitle;
+
+    /**
+     * SEARCH FUNCTION
+     */
+
     @FXML
     private ComboBox<String> comboBox;
 
@@ -89,7 +88,10 @@ public class BookSceneController implements Initializable, SceneFeatureGate {
 
     private ObservableList<String> comboBoxItems = FXCollections.observableArrayList("ID", "Tên sách", "Tác giả", "Quốc gia", "Thể loại");
 
-    // PANES & DATA
+    /**
+     * DATA
+     */
+
     @FXML
     private VBox paneMain;
 
@@ -101,7 +103,7 @@ public class BookSceneController implements Initializable, SceneFeatureGate {
     private AuthorDAO authorDAO = new AuthorDAO();
     private BookDAO bookDAO = new BookDAO();
 
-    public void refresh() {
+    public void refresh() throws SQLException {
         data = FXCollections.observableArrayList();
 
         List<Books> allBooks = bookDAO.loadAllBooks();
@@ -118,7 +120,11 @@ public class BookSceneController implements Initializable, SceneFeatureGate {
     	booksTableView.scrollTo(lastIndex);
     }
 
-    private void editableCols(){
+    private void editCell() throws SQLException {
+    	/**
+    	 * String cells
+    	 */
+
         colTitle.setCellFactory(TextFieldTableCell.forTableColumn());
         colCountry.setCellFactory(TextFieldTableCell.forTableColumn());
         colAuthors.setCellFactory(TextFieldTableCell.forTableColumn());
@@ -128,6 +134,7 @@ public class BookSceneController implements Initializable, SceneFeatureGate {
         EventHandler<CellEditEvent<Books, String>> commonHandler = e -> {
         	Books book = e.getRowValue();
         	TableColumn<Books, String> col = e.getTableColumn();
+
         	if (col == colTitle) { book.setTitle(e.getNewValue()); }
         	else if (col == colCountry) { book.setCountry(e.getNewValue()); }
         	else if (col == colCategory) { book.setCategory(e.getNewValue()); }
@@ -138,16 +145,24 @@ public class BookSceneController implements Initializable, SceneFeatureGate {
         			Integer publisherID = bookDAO.addPublisherWithCheck(publisherName);
 					bookDAO.updateBookPublisherID(book, publisherID);
 				} catch (Exception e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
         	}
 
         	if (col == colAuthors) {
-        		authorDAO.addManyAuthorWithCheck(book.getPublicationID(), e.getNewValue());
-        		refresh();
+        		try {
+            		authorDAO.addManyAuthorWithCheck(book.getPublicationID(), e.getNewValue());
+    				refresh();
+    			} catch (SQLException e1) {
+    				e1.printStackTrace();
+    			}
         	} else {
-            	bookDAO.updateBook(book);
+        		try {
+            		bookDAO.updateBook(book);
+    				refresh();
+    			} catch (SQLException e1) {
+    				e1.printStackTrace();
+    			}
         	}
         };
 
@@ -156,31 +171,48 @@ public class BookSceneController implements Initializable, SceneFeatureGate {
         colAuthors.setOnEditCommit(commonHandler);
         colPublisher.setOnEditCommit(commonHandler);
         colCategory.setOnEditCommit(commonHandler);
-        
 
+        /**
+         * Date cells
+         */
 
-        colPublicationDate.setCellFactory(col -> new DatePickerTableCell<Books>(col));
+        colPublicationDate.setCellFactory(col -> new DatePickerTableCell<>(col));
+
         colPublicationDate.setOnEditCommit(e -> {
             if (btnEdit.isSelected()) {
                 Books book = e.getRowValue();
                 book.setReleaseDate(e.getNewValue());
 
-                bookDAO.updateBook(book);
+                try {
+            		bookDAO.updateBook(book);
+    				refresh();
+    			} catch (SQLException e1) {
+    				e1.printStackTrace();
+    			}
             }
         });
-        
+
+        /**
+         * Integer cells
+         */
+
         EventHandler<CellEditEvent<Books, Integer>> commonIntegerHandler = e -> {
         	Books book = e.getRowValue();
         	TableColumn<Books, Integer> col = e.getTableColumn();
         	if (col == colReissue) { book.setReissue(e.getNewValue()); }
         	else if (col == colQuantity) { book.setQuantity(e.getNewValue()); }
-        	
-        	bookDAO.updateBook(book);
+
+        	try {
+        		bookDAO.updateBook(book);
+				refresh();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
         };
-        
-        colReissue.setCellFactory(col -> new IntegerFieldTableCell<Books>());
-        colQuantity.setCellFactory(col -> new IntegerFieldTableCell<Books>());
-        
+
+        colReissue.setCellFactory(col -> new IntegerFieldTableCell<>());
+        colQuantity.setCellFactory(col -> new IntegerFieldTableCell<>());
+
         colReissue.setOnEditCommit(commonIntegerHandler);
         colQuantity.setOnEditCommit(commonIntegerHandler);
     }
@@ -188,9 +220,13 @@ public class BookSceneController implements Initializable, SceneFeatureGate {
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
         System.out.println("Book controller initialized");
-        // Add a default row
-		refresh();
-		editableCols();
+
+		try {
+			refresh();
+			editCell();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 
         // Bind the ObservableList to the TableView
         booksTableView.setItems(data);
@@ -218,61 +254,8 @@ public class BookSceneController implements Initializable, SceneFeatureGate {
         SearchData(searchText, searchOption);
     }
 
-	Date now = new Date(new java.util.Date().getTime());
-
-    @FXML
-    void btnActionAddBook(ActionEvent event) {
-    	paneMain.setVisible(false);
-    	paneAdd.setVisible(true);
-    }
-
-    @FXML
-    void btnActionReturn(ActionEvent event) {
-    	paneMain.setVisible(true);
-    	paneAdd.setVisible(false);
-    	this.refresh();
-    }
-
-    @FXML
-    void btnActionDeleteBook(ActionEvent event) {
-    	Integer selectedIndex = booksTableView.getSelectionModel().getSelectedIndex();
-    	Publication selectedRow = booksTableView.getSelectionModel().getSelectedItem();
-
-    	if (selectedRow != null) {
-	    	bookDAO.deleteBook(selectedRow.getPublicationID());
-	    	this.refresh();
-
-	        if (selectedIndex >= 0 && selectedIndex < data.size()) {
-	            booksTableView.getSelectionModel().select(selectedIndex);
-	        }
-    	} else {
-        	booksTableView.getSelectionModel().clearSelection();
-        }
-    }
-    
-    @FXML
-    void btnActionEditBooks(ActionEvent event) {
-    	if (btnEdit.isSelected()) {
-    		booksTableView.setEditable(true);
-    	} else {
-    		booksTableView.edit(-1, null);
-    		booksTableView.setEditable(false);
-    	}
-    }
-    
-    @FXML
-    void btnActionEditBooksClerk(ActionEvent event) {
-    	if (btnEditClerk.isSelected()) {
-    		booksTableView.setEditable(true);
-    	} else {
-    		booksTableView.edit(-1, null);
-    		booksTableView.setEditable(false);
-    	}
-    }
-
     private void SearchData(String searchText, String searchOption) {
         if (searchText.isEmpty()) {
-            // If the search text is empty, revert to the original unfiltered list
             booksTableView.setItems(data);
         } else {
             // Apply filtering based on the search text and option
@@ -318,6 +301,56 @@ public class BookSceneController implements Initializable, SceneFeatureGate {
     }
 
     @FXML
+    void btnActionAddBook(ActionEvent event) {
+    	paneMain.setVisible(false);
+    	paneAdd.setVisible(true);
+    }
+
+    @FXML
+    void btnActionReturn(ActionEvent event) throws SQLException {
+    	paneMain.setVisible(true);
+    	paneAdd.setVisible(false);
+    	this.refresh();
+    }
+
+    @FXML
+    void btnActionDeleteBook(ActionEvent event) throws SQLException {
+    	Integer selectedIndex = booksTableView.getSelectionModel().getSelectedIndex();
+    	Publication selectedRow = booksTableView.getSelectionModel().getSelectedItem();
+
+    	if (selectedRow != null) {
+	    	bookDAO.deleteBook(selectedRow.getPublicationID());
+	    	this.refresh();
+
+	        if (selectedIndex >= 0 && selectedIndex < data.size()) {
+	            booksTableView.getSelectionModel().select(selectedIndex);
+	        }
+    	} else {
+        	booksTableView.getSelectionModel().clearSelection();
+        }
+    }
+
+    @FXML
+    void btnActionEditBooks(ActionEvent event) {
+    	if (btnEdit.isSelected()) {
+    		booksTableView.setEditable(true);
+    	} else {
+    		booksTableView.edit(-1, null);
+    		booksTableView.setEditable(false);
+    	}
+    }
+
+    @FXML
+    void btnActionEditBooksClerk(ActionEvent event) {
+    	if (btnEditClerk.isSelected()) {
+    		booksTableView.setEditable(true);
+    	} else {
+    		booksTableView.edit(-1, null);
+    		booksTableView.setEditable(false);
+    	}
+    }
+
+    @FXML
     private Button btnAdd;
 
     @FXML
@@ -325,7 +358,7 @@ public class BookSceneController implements Initializable, SceneFeatureGate {
 
     @FXML
     private ToggleButton btnEdit;
-    
+
     @FXML
     private ToggleButton btnEditClerk;
 
@@ -340,11 +373,11 @@ public class BookSceneController implements Initializable, SceneFeatureGate {
 			hboxFeature.getChildren().remove(btnAdd);
 			hboxFeature.getChildren().remove(btnEdit);
 			hboxFeature.getChildren().remove(btnDelete);
-			
+
 			if (user == CLERK) {
 
 			    colQuantity.setEditable(true);
-			
+
 			    colID.setEditable(false);
 			    colTitle.setEditable(false);
 			    colAuthors.setEditable(false);
@@ -353,8 +386,9 @@ public class BookSceneController implements Initializable, SceneFeatureGate {
 			    colPublisher.setEditable(false);
 			    colPublicationDate.setEditable(false);
 			    colReissue.setEditable(false);
-				
+
 			} else if (user == STUDENT) {
+
 			}
 		}
 	}

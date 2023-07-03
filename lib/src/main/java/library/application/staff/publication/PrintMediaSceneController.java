@@ -2,11 +2,9 @@ package library.application.staff.publication;
 
 import java.net.URL;
 import java.sql.Date;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.function.BiConsumer;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -17,8 +15,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.TableView;
@@ -30,10 +26,9 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.util.StringConverter;
-import javafx.util.converter.IntegerStringConverter;
 import library.application.staff.interfac.SceneFeatureGate;
 import library.application.util.DatePickerTableCell;
+import library.application.util.IntegerFieldTableCell;
 import library.mysql.dao.PrintMediaDAO;
 import library.publication.PrintMedia;
 import library.publication.Publication;
@@ -46,7 +41,10 @@ public class PrintMediaSceneController implements Initializable, SceneFeatureGat
     @FXML
     private URL location;
 
-    // Table
+    /**
+     * TABLE
+     */
+
     @FXML
     private TableView<PrintMedia> printMediaTableView;
 
@@ -57,10 +55,10 @@ public class PrintMediaSceneController implements Initializable, SceneFeatureGat
     private TableColumn<PrintMedia, Integer> colID;
 
     @FXML
-    private TableColumn<PrintMedia, String> colPrintType;
+    private TableColumn<PrintMedia, Date> colPublicationDate;
 
     @FXML
-    private TableColumn<PrintMedia, Date> colPublicationDate;
+    private TableColumn<PrintMedia, String> colPrintType;
 
     @FXML
     private TableColumn<PrintMedia, Integer> colQuantity;
@@ -71,7 +69,10 @@ public class PrintMediaSceneController implements Initializable, SceneFeatureGat
     @FXML
     private TableColumn<PrintMedia, String> colTitle;
 
-    // Searching
+    /**
+     * SEARCH FUNCTION
+     */
+
     @FXML
     private ComboBox<String> comboBox;
 
@@ -80,7 +81,10 @@ public class PrintMediaSceneController implements Initializable, SceneFeatureGat
 
     private ObservableList<String> comboBoxItems = FXCollections.observableArrayList("ID", "Tên ẩn phẩm", "Loại ấn phẩm", "Quốc gia");
 
-    // PANES & DATA
+    /**
+     * DATA
+     */
+
     @FXML
     private VBox paneMain;
 
@@ -91,7 +95,7 @@ public class PrintMediaSceneController implements Initializable, SceneFeatureGat
 
     private PrintMediaDAO pmDAO = new PrintMediaDAO();
 
-    public void refresh() {
+    public void refresh() throws SQLException {
         data = FXCollections.observableArrayList();
 
         List<PrintMedia> allPM = pmDAO.loadAllPrintMedias();
@@ -108,82 +112,15 @@ public class PrintMediaSceneController implements Initializable, SceneFeatureGat
     	printMediaTableView.scrollTo(lastIndex);
     }
 
-    private <T> void setupEditableColumn(TableColumn<PrintMedia, T> column, StringConverter<T> converter, BiConsumer<PrintMedia, T> updateAction) {
-        column.setCellFactory(TextFieldTableCell.forTableColumn(converter));
+    private void editCell(){
+    	/**
+    	 * String cell
+    	 */
 
-        column.setOnEditCommit(event -> {
-            if (btnEdit.isSelected()) {
-                TableCell<PrintMedia, T> cell = event.getTablePosition().getTableColumn().getCellFactory().call(column);
-                if (cell != null) {
-                    cell.commitEdit(event.getNewValue());
-                }
-
-                PrintMedia pm = event.getRowValue();
-                updateAction.accept(pm, event.getNewValue());
-
-                pmDAO.updatePrintMedia(pm);
-                this.refresh();
-            }
-        });
-
-        column.setOnEditStart(event -> {
-            if (!btnEdit.isSelected()) {
-                TableColumn.CellEditEvent<PrintMedia, T> cellEditEvent = event;
-                TableView<PrintMedia> tableView = cellEditEvent.getTableView();
-                tableView.edit(tableView.getSelectionModel().getSelectedIndex(), column);
-            }
-        });
-
-        column.setOnEditCancel(event -> {
-            TableCell<PrintMedia, T> cell = event.getTablePosition().getTableColumn().getCellFactory().call(column);
-            if (cell != null) {
-                cell.cancelEdit();
-            }
-        });
-    }
-    
-    private StringConverter<LocalDate> getDateConverter() {
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        return new StringConverter<>() {
-            @Override
-            public String toString(LocalDate date) {
-                if (date != null) {
-                    return dateFormatter.format(date);
-                } else {
-                    return "";
-                }
-            }
-
-            @Override
-            public LocalDate fromString(String string) {
-                if (string != null && !string.isEmpty()) {
-                    return LocalDate.parse(string, dateFormatter);
-                } else {
-                    return null;
-                }
-            }
-        };
-    }
-
-    private Date getDateFromDatePicker(DatePicker datePicker) {
-        LocalDate localDate = datePicker.getValue();
-        if (localDate != null) {
-            return java.sql.Date.valueOf(localDate);
-        } else {
-            return null;
-        }
-    }
-
-    private void editableCols(){
         colTitle.setCellFactory(TextFieldTableCell.forTableColumn());
         colCountry.setCellFactory(TextFieldTableCell.forTableColumn());
         colPrintType.setCellFactory(TextFieldTableCell.forTableColumn());
 
-        setupEditableColumn(colReleaseNumber, new IntegerStringConverter(), PrintMedia::setReleaseNumber);
-        setupEditableColumn(colQuantity, new IntegerStringConverter(), PrintMedia::setQuantity);
-
-        colPublicationDate.setCellFactory(col -> new DatePickerTableCell<PrintMedia>(col));
-        
         EventHandler<CellEditEvent<PrintMedia, String>> commonHandler = e -> {
         	PrintMedia pm = e.getTableView().getItems().get(e.getTablePosition().getRow());
         	TableColumn<PrintMedia, String> col = e.getTableColumn();
@@ -191,29 +128,73 @@ public class PrintMediaSceneController implements Initializable, SceneFeatureGat
         	else if (col == colCountry) { pm.setCountry(e.getNewValue()); }
         	else if (col == colPrintType) { pm.setPrintType(e.getNewValue()); }
 
-        	pmDAO.updatePrintMedia(pm);
+        	try {
+        		pmDAO.updatePrintMedia(pm);
+            	refresh();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
         };
 
         colTitle.setOnEditCommit(commonHandler);
         colCountry.setOnEditCommit(commonHandler);
         colPrintType.setOnEditCommit(commonHandler);
-        
+
+        /**
+         * Date cell
+         */
+
+        colPublicationDate.setCellFactory(col -> new DatePickerTableCell<>(col));
+
         colPublicationDate.setOnEditCommit(e -> {
             if (btnEdit.isSelected()) {
                 PrintMedia pm = e.getRowValue();
                 pm.setReleaseDate(e.getNewValue());
 
-                pmDAO.updatePrintMedia(pm);
+                try {
+            		pmDAO.updatePrintMedia(pm);
+                	refresh();
+    			} catch (SQLException e1) {
+    				e1.printStackTrace();
+    			}
             }
         });
+
+        /**
+         * Integer cell
+         */
+
+        EventHandler<CellEditEvent<PrintMedia, Integer>> commonIntegerHandler = e -> {
+        	PrintMedia pm = e.getRowValue();
+        	TableColumn<PrintMedia, Integer> col = e.getTableColumn();
+        	if (col == colReleaseNumber) { pm.setReleaseNumber(e.getNewValue()); }
+        	else if (col == colQuantity) { pm.setQuantity(e.getNewValue()); }
+
+        	try {
+        		pmDAO.updatePrintMedia(pm);
+            	refresh();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+        };
+
+        colReleaseNumber.setCellFactory(col -> new IntegerFieldTableCell<>());
+        colQuantity.setCellFactory(col -> new IntegerFieldTableCell<>());
+
+        colReleaseNumber.setOnEditCommit(commonIntegerHandler);
+        colQuantity.setOnEditCommit(commonIntegerHandler);
     }
 
     @Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
         System.out.println("Print media controller initialized");
-        // Add a default row
-		refresh();
-		editableCols();
+
+        try {
+        	refresh();
+    		editCell();
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
 
         // Bind the ObservableList to the TableView
 		printMediaTableView.setItems(data);
@@ -232,48 +213,6 @@ public class PrintMediaSceneController implements Initializable, SceneFeatureGat
         colPrintType.setCellValueFactory(new PropertyValueFactory<>("printType"));
 	}
 
-	Date now = new Date(new java.util.Date().getTime());
-
-    @FXML
-    void btnActionAddPrintMedia(ActionEvent event) {
-    	paneMain.setVisible(false);
-    	paneAdd.setVisible(true);
-    }
-
-    @FXML
-    void btnActionReturn(ActionEvent event) {
-    	paneMain.setVisible(true);
-    	paneAdd.setVisible(false);
-    	this.refresh();
-    }
-
-    @FXML
-    void btnActionDeletePrintMedia(ActionEvent event) {
-    	Integer selectedIndex = printMediaTableView.getSelectionModel().getSelectedIndex();
-    	Publication selectedRow = printMediaTableView.getSelectionModel().getSelectedItem();
-
-    	if (selectedRow != null) {
-	    	pmDAO.deletePrintMedia(selectedRow.getPublicationID());
-	    	this.refresh();
-
-	        if (selectedIndex >= 0 && selectedIndex < data.size()) {
-	        	printMediaTableView.getSelectionModel().select(selectedIndex);
-	        }
-    	} else {
-    		printMediaTableView.getSelectionModel().clearSelection();
-        }
-    }
-
-
-    @FXML
-    void btnActionEditPrintMedia(ActionEvent event) {
-    	if (btnEdit.isSelected()) {
-    		printMediaTableView.setEditable(true);
-    	} else {
-    		printMediaTableView.setEditable(false);
-    	}
-    }
-
     @FXML
     void inputSearch(KeyEvent event) {
         String searchText = fieldSearch.getText();
@@ -283,7 +222,6 @@ public class PrintMediaSceneController implements Initializable, SceneFeatureGat
 
     private void SearchData(String searchText, String searchOption) {
         if (searchText.isEmpty()) {
-            // If the search text is empty, revert to the original unfiltered list
             printMediaTableView.setItems(data);
         } else {
             // Apply filtering based on the search text and option
@@ -325,6 +263,56 @@ public class PrintMediaSceneController implements Initializable, SceneFeatureGat
     }
 
     @FXML
+    void btnActionAddPrintMedia(ActionEvent event) {
+    	paneMain.setVisible(false);
+    	paneAdd.setVisible(true);
+    }
+
+    @FXML
+    void btnActionReturn(ActionEvent event) throws SQLException {
+    	paneMain.setVisible(true);
+    	paneAdd.setVisible(false);
+    	this.refresh();
+    }
+
+    @FXML
+    void btnActionDeletePrintMedia(ActionEvent event) throws SQLException {
+    	Integer selectedIndex = printMediaTableView.getSelectionModel().getSelectedIndex();
+    	Publication selectedRow = printMediaTableView.getSelectionModel().getSelectedItem();
+
+    	if (selectedRow != null) {
+    		pmDAO.deletePrintMedia(selectedRow.getPublicationID());
+	    	this.refresh();
+
+	        if (selectedIndex >= 0 && selectedIndex < data.size()) {
+	        	printMediaTableView.getSelectionModel().select(selectedIndex);
+	        }
+    	} else {
+    		printMediaTableView.getSelectionModel().clearSelection();
+        }
+    }
+
+    @FXML
+    void btnActionEditPrintMedia(ActionEvent event) {
+    	if (btnEdit.isSelected()) {
+    		printMediaTableView.setEditable(true);
+    	} else {
+    		printMediaTableView.edit(-1, null);
+    		printMediaTableView.setEditable(false);
+    	}
+    }
+
+    @FXML
+    void btnActionEditPrintMediaClerk(ActionEvent event) {
+    	if (btnEditClerk.isSelected()) {
+    		printMediaTableView.setEditable(true);
+    	} else {
+    		printMediaTableView.edit(-1, null);
+    		printMediaTableView.setEditable(false);
+    	}
+    }
+
+    @FXML
     private Button btnAdd;
 
     @FXML
@@ -334,18 +322,33 @@ public class PrintMediaSceneController implements Initializable, SceneFeatureGat
     private ToggleButton btnEdit;
 
     @FXML
+    private ToggleButton btnEditClerk;
+
+    @FXML
     private HBox hboxFeature;
 
 	@Override
 	public void setFeatureFor(Integer user) {
-		if (user == CLERK) {
+		if (user == LIBRARIAN) {
+			hboxFeature.getChildren().remove(btnEditClerk);
+		} else {
 			hboxFeature.getChildren().remove(btnAdd);
 			hboxFeature.getChildren().remove(btnEdit);
 			hboxFeature.getChildren().remove(btnDelete);
-		} else if (user == STUDENT) {
-			hboxFeature.getChildren().remove(btnAdd);
-			hboxFeature.getChildren().remove(btnEdit);
-			hboxFeature.getChildren().remove(btnDelete);
+
+			if (user == CLERK) {
+
+			    colQuantity.setEditable(true);
+
+			    colID.setEditable(false);
+			    colTitle.setEditable(false);
+			    colCountry.setEditable(false);
+			    colPublicationDate.setEditable(false);
+			    colReleaseNumber.setEditable(false);
+
+			} else if (user == STUDENT) {
+
+			}
 		}
 	}
 }

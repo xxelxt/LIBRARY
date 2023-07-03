@@ -1,6 +1,7 @@
 package library.application.staff.info;
 
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 import javafx.beans.binding.Bindings;
@@ -18,6 +19,12 @@ import library.user.Student;
 
 public class StudentInfoSceneController {
 
+    @FXML
+    private ResourceBundle resources;
+
+    @FXML
+    private URL location;
+
 	private Student currentStudent;
 
 	public void setCurrentStudent(Student currentUser) {
@@ -34,12 +41,6 @@ public class StudentInfoSceneController {
         fieldUsername.setText(currentStudent.getUsername());
         fieldPassword.setText(currentStudent.getPassword());
 	}
-
-    @FXML
-    private ResourceBundle resources;
-
-    @FXML
-    private URL location;
 
     @FXML
     private TextField fieldAddress;
@@ -67,7 +68,7 @@ public class StudentInfoSceneController {
 
     @FXML
     private TextField fieldPasswordAlt;
-    
+
     @FXML
     private TextField fieldPhone;
 
@@ -77,13 +78,12 @@ public class StudentInfoSceneController {
     @FXML
     private TextField fieldUsername;
 
-    
     @FXML
     private ToggleButton btnChangePassword;
 
     @FXML
     private ToggleButton btnEditInfo;
-    
+
     @FXML
     private BorrowHistorySceneController borrowHistorySceneController;
 
@@ -96,12 +96,12 @@ public class StudentInfoSceneController {
     			UserDAO userDAO = new UserDAO();
 				userDAO.updatePassword(currentStudent.getAccount());
 			} catch (Exception e) {
-				System.out.println(e);
+				e.printStackTrace();
 			}
     	}
     }
 
-    
+
     @FXML
     void btnActionEditInfo(ActionEvent event) {
     	if (!btnEditInfo.isSelected()) {
@@ -109,19 +109,12 @@ public class StudentInfoSceneController {
     		currentStudent.setEmail(fieldEmail.getText());
     		currentStudent.setPhone(fieldPhone.getText());
     		currentStudent.setAddress(fieldAddress.getText());
-    		
-//     		currentStudent.setClassName(fieldClass.getText());    		
-//    		currentStudent.setStudentID(fieldStudentID.getText());
-//			currentStudent.setGender(fieldGender.getText());
-//          currentStudent.set(fieldFineStatus.getText());
-//          currentStudent.set(fieldFine.getText());
-//  		currentStudent.getAccount().setUsername(fieldUsername.getText());
 
     		try {
     			StudentDAO studentDAO = new StudentDAO();
 				studentDAO.updateStudent(currentStudent);
 			} catch (Exception e) {
-				System.out.println(e);
+				e.printStackTrace();
 			}
     	}
     }
@@ -139,43 +132,43 @@ public class StudentInfoSceneController {
         assert fieldPhone != null : "fx:id=\"fieldPhone\" was not injected: check your FXML file 'StudentInfoScene.fxml'.";
         assert fieldStudentID != null : "fx:id=\"fieldStudentID\" was not injected: check your FXML file 'StudentInfoScene.fxml'.";
         assert fieldUsername != null : "fx:id=\"fieldUsername\" was not injected: check your FXML file 'StudentInfoScene.fxml'.";
-        
+
         BooleanProperty editable = btnEditInfo.selectedProperty();
-        
+
         fieldName.editableProperty().bind(editable);
         fieldEmail.editableProperty().bind(editable);
         fieldPhone.editableProperty().bind(editable);
         fieldAddress.editableProperty().bind(editable);
-        
+
         fieldName.disableProperty().bind(editable.not());
         fieldEmail.disableProperty().bind(editable.not());
         fieldPhone.disableProperty().bind(editable.not());
         fieldAddress.disableProperty().bind(editable.not());
-        
+
         fieldPasswordAlt.visibleProperty().bind(btnChangePassword.selectedProperty());
         fieldPassword.visibleProperty().bind(btnChangePassword.selectedProperty().not());
-        
+
         // Bind textField to passwordField
         Bindings.bindBidirectional(fieldPassword.textProperty(), fieldPasswordAlt.textProperty());
         fieldPassword.setDisable(true);
     }
-    
+
     @FXML
     private AnchorPane paneInfo;
-    
+
     @FXML
     private AnchorPane paneBorrow;
 
-    
     @FXML
-    void btnActionBorrowHistory(ActionEvent event) {
+    void btnActionBorrowHistory(ActionEvent event) throws SQLException {
     	paneInfo.setVisible(false);
     	paneBorrow.setVisible(true);
+
         borrowHistorySceneController.setThisStudentID(currentStudent.getStudentID());
         borrowHistorySceneController.refresh();
         borrowHistorySceneController.setParent(this);
     }
-    
+
     public void btnActionReturn() {
     	paneInfo.setVisible(true);
     	paneBorrow.setVisible(false);

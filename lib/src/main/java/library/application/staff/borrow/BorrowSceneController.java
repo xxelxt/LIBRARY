@@ -2,11 +2,10 @@ package library.application.staff.borrow;
 
 import java.net.URL;
 import java.sql.Date;
+import java.sql.SQLException;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.function.BiConsumer;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -15,10 +14,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.TableView;
@@ -29,9 +25,8 @@ import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
-import javafx.util.StringConverter;
-import javafx.util.converter.IntegerStringConverter;
 import library.application.util.DatePickerTableCell;
+import library.application.util.IntegerFieldTableCell;
 import library.application.util.VariableManager;
 import library.central.Borrow;
 import library.mysql.dao.BorrowDAO;
@@ -46,17 +41,12 @@ public class BorrowSceneController implements Initializable {
     @FXML
     private URL location;
 
+    /**
+     * TABLE
+     */
+
     @FXML
     private TableView<Borrow> borrowTableView;
-
-    @FXML
-    private Button btnAdd;
-
-    @FXML
-    private Button btnDelete;
-
-    @FXML
-    private ToggleButton btnEdit;
 
     @FXML
     private TableColumn<Borrow, Integer> colBorrowQuantity;
@@ -77,23 +67,36 @@ public class BorrowSceneController implements Initializable {
     private TableColumn<Borrow, Boolean> colReturnedStatus;
 
     @FXML
-    private TableColumn<Borrow, Date> colStartDate;
-    
+    private TableColumn<Borrow, String> colStudentID;
+
     @FXML
-    private TableColumn<Borrow, Date> colReturnedDate;
-    
+    private TableColumn<Borrow, Date> colStartDate;
+
     @FXML
     private TableColumn<Borrow, Date> colDueDate;
 
-
     @FXML
-    private TableColumn<Borrow, String> colStudentID;
+    private TableColumn<Borrow, Date> colReturnedDate;
+
+    /**
+     * SEARCH FUNCTION
+     */
 
     @FXML
     private ComboBox<String> comboBox;
 
     @FXML
+    private ComboBox<String> comboBoxFineStatus;
+
+    @FXML
     private TextField fieldSearch;
+
+    private ObservableList<String> items = FXCollections.observableArrayList("Mã mượn", "Mã sinh viên");
+    private ObservableList<String> fineItems = FXCollections.observableArrayList("Tất cả", "Không bị phạt", "Bị phạt");
+
+    /**
+     * DATA
+     */
 
     @FXML
     private AnchorPane paneAdd;
@@ -103,35 +106,33 @@ public class BorrowSceneController implements Initializable {
 
     private ObservableList<Borrow> data = FXCollections.observableArrayList();
 
-    private ObservableList<String> items = FXCollections.observableArrayList("Mã mượn", "Mã sinh viên", "Tình trạng trả");
-
     private BorrowDAO borrowDAO = new BorrowDAO();
     private StudentDAO studentDAO = new StudentDAO();
 
     public void checkDateAndUpdateFine(Borrow borrow, Date lastModified) {
 		LocalDate nowDate = LocalDate.now();
 		LocalDate dueDate = borrow.getDueDate().toLocalDate();
-		
+
 		if (nowDate.isBefore(dueDate)) {
 			return;
 		}
-		
+
 		long daysDifference = 0;
-		
+
 		if (lastModified == null) {
 	    	if (borrow.getReturnedDate() == null) {
-	    		daysDifference = nowDate.toEpochDay() 
-	    						- dueDate.toEpochDay(); 
+	    		daysDifference = nowDate.toEpochDay()
+	    						- dueDate.toEpochDay();
 	    		// Now - Due
 	    	} else {
-        		daysDifference = borrow.getReturnedDate().toLocalDate().toEpochDay() 
+        		daysDifference = borrow.getReturnedDate().toLocalDate().toEpochDay()
         					- dueDate.toEpochDay();
         		// Return - Due
-	    	}	
+	    	}
 		} else {
 	    	if (borrow.getReturnedDate() == null) {
-	    		daysDifference = nowDate.toEpochDay() 
-	    						- lastModified.toLocalDate().toEpochDay(); 
+	    		daysDifference = nowDate.toEpochDay()
+	    						- lastModified.toLocalDate().toEpochDay();
 	    		// Now - Modified
 	    	} else {
 	    		LocalDate returnDate = borrow.getReturnedDate().toLocalDate();
@@ -141,10 +142,9 @@ public class BorrowSceneController implements Initializable {
     						- lastModified.toLocalDate().toEpochDay();
     			}
     			// Return - Modified
-
-	    	}	
+	    	}
 		}
-				
+
 		try {
     		if (daysDifference > 0){
     			borrow.setFineStatus(true);
@@ -152,26 +152,25 @@ public class BorrowSceneController implements Initializable {
     			studentDAO.addToStudentFine(borrow.getStudentID(), daysDifference);
     		}
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
     }
-    
-    public void refresh() {
+
+    public void refresh() throws SQLException {
         data = FXCollections.observableArrayList();
 
         Date lastModifiedDate = VariableManager.getLastModifiedDate();
         System.out.println("LAST MODIFIED: " + (lastModifiedDate != null ? lastModifiedDate.toString() : "") );
-        
+
         List<Borrow> allBorrow = borrowDAO.loadAllBorrow();
-        
+
 	    for (Borrow borrow : allBorrow){
 	    	checkDateAndUpdateFine(borrow, lastModifiedDate);
 	    	data.add(borrow);
 	    }
 
 	    borrowTableView.setItems(data);
-		
+
 		VariableManager.saveDate(Date.valueOf(LocalDate.now()));
     }
 
@@ -180,55 +179,31 @@ public class BorrowSceneController implements Initializable {
     	borrowTableView.scrollTo(lastIndex);
     }
 
-    private <T> void setupEditableColumn(TableColumn<Borrow, T> column, StringConverter<T> converter, BiConsumer<Borrow, T> updateAction) {
-        column.setCellFactory(TextFieldTableCell.forTableColumn(converter));
+    private void editCell(){
+    	/**
+    	 * String cell
+    	 */
 
-        column.setOnEditCommit(event -> {
-            if (btnEdit.isSelected()) {
-                TableCell<Borrow, T> cell = event.getTablePosition().getTableColumn().getCellFactory().call(column);
-                if (cell != null) {
-                    cell.commitEdit(event.getNewValue());
-                }
+    	colStudentID.setCellFactory(TextFieldTableCell.forTableColumn());
 
-                Borrow borrow = event.getRowValue();
-                updateAction.accept(borrow, event.getNewValue());
-
-                borrowDAO.updateBorrow(borrow);
-                this.refresh();            }
-        });
-
-        column.setOnEditStart(event -> {
-            if (!btnEdit.isSelected()) {
-                TableColumn.CellEditEvent<Borrow, T> cellEditEvent = event;
-                TableView<Borrow> tableView = cellEditEvent.getTableView();
-                tableView.edit(tableView.getSelectionModel().getSelectedIndex(), column);
-            }
-        });
-
-        column.setOnEditCancel(event -> {
-            TableCell<Borrow, T> cell = event.getTablePosition().getTableColumn().getCellFactory().call(column);
-            if (cell != null) {
-                cell.cancelEdit();
-            }
-        });
-    }
-    
-
-    private void editableCols(){
-//        colStudentID.setCellFactory(TextFieldTableCell.forTableColumn());
-
-        setupEditableColumn(colPublicationID, new IntegerStringConverter(), Borrow::setPublicationID);
-        setupEditableColumn(colBorrowQuantity, new IntegerStringConverter(), Borrow::setBorrowQuantity);
-
-        
         EventHandler<CellEditEvent<Borrow, String>> commonHandler = e -> {
         	Borrow borrow = e.getRowValue();
         	TableColumn<Borrow, String> col = e.getTableColumn();
         	if (col == colStudentID) { borrow.setStudentID(e.getNewValue()); }
 
-        	borrowDAO.updateBorrow(borrow);
+        	try {
+				borrowDAO.updateBorrow(borrow);
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
         };
-        
+
+        colStudentID.setOnEditCommit(commonHandler);
+
+        /**
+         * Date cell
+         */
+
         EventHandler<CellEditEvent<Borrow, Date>> commonDateHandler = e -> {
         	Borrow borrow = e.getRowValue();
         	TableColumn<Borrow, Date> col = e.getTableColumn();
@@ -236,40 +211,75 @@ public class BorrowSceneController implements Initializable {
         	else if (col == colDueDate) { borrow.setDueDate(e.getNewValue()); }
         	else if (col == colReturnedDate) { borrow.setReturnedDate(e.getNewValue()); borrow.setReturnedStatus(true);}
 
-        	borrowDAO.updateBorrow(borrow);
-        	refresh();
+        	try {
+				borrowDAO.updateBorrow(borrow);
+				refresh();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
         };
 
-//        colStudentID.setOnEditCommit(commonHandler);
-        
-        colStartDate.setCellFactory(col -> new DatePickerTableCell<Borrow>(col,
+        /* Disable after now */
+        colStartDate.setCellFactory(col -> new DatePickerTableCell<>(col,
         	item -> item.after(Date.valueOf(LocalDate.now()))
-        	// Disable after now
+
         ));
-        colDueDate.setCellFactory(col -> new DatePickerTableCell<Borrow>(col,
-    		item -> { // Disable before start date
+
+        /* Disable before start date */
+        colDueDate.setCellFactory(col -> new DatePickerTableCell<>(col,
+    		item -> {
     			Borrow borrow = borrowTableView.getSelectionModel().getSelectedItem();
-            	return item.before(borrow.getStartDate()); 
+            	return item.before(borrow.getStartDate());
     		}
         ));
-        colReturnedDate.setCellFactory(col -> new DatePickerTableCell<Borrow>(col,
-    		item -> { // Disable before start date and after today
+
+        /* Disable before start date and after today */
+        colReturnedDate.setCellFactory(col -> new DatePickerTableCell<>(col,
+    		item -> {
     			Borrow borrow = borrowTableView.getSelectionModel().getSelectedItem();
-            	return item.before(borrow.getStartDate()) || item.after(Date.valueOf(LocalDate.now())); 
+            	return item.before(borrow.getStartDate()) || item.after(Date.valueOf(LocalDate.now()));
     		}
         ));
-        
+
         colStartDate.setOnEditCommit(commonDateHandler);
         colDueDate.setOnEditCommit(commonDateHandler);
         colReturnedDate.setOnEditCommit(commonDateHandler);
+
+        /**
+         * Integer cell
+         */
+
+        EventHandler<CellEditEvent<Borrow, Integer>> commonIntegerHandler = e -> {
+        	Borrow borrow = e.getRowValue();
+        	TableColumn<Borrow, Integer> col = e.getTableColumn();
+        	if (col == colPublicationID) { borrow.setPublicationID(e.getNewValue()); }
+        	else if (col == colBorrowQuantity) { borrow.setBorrowQuantity(e.getNewValue()); }
+
+        	try {
+				borrowDAO.updateBorrow(borrow);
+				refresh();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+        };
+
+        colPublicationID.setCellFactory(col -> new IntegerFieldTableCell<>());
+        colBorrowQuantity.setCellFactory(col -> new IntegerFieldTableCell<>());
+
+        colPublicationID.setOnEditCommit(commonIntegerHandler);
+        colBorrowQuantity.setOnEditCommit(commonIntegerHandler);
     }
 
     @Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
         System.out.println("Borrow controller initialized");
-        // Add a default row
-        refresh();
-		editableCols();
+
+        try {
+        	refresh();
+    		editCell();
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
 
         // Bind the ObservableList to the TableView
         borrowTableView.setItems(data);
@@ -279,6 +289,10 @@ public class BorrowSceneController implements Initializable {
         comboBox.setPromptText("Thuộc tính tìm kiếm");
         comboBox.setItems(items);
         comboBox.setValue("Mã sinh viên");
+
+        comboBoxFineStatus.setPromptText("Tình trạng phạt");
+        comboBoxFineStatus.setItems(fineItems);
+        comboBoxFineStatus.setValue("Tất cả");
 
         // Bind the columns to the corresponding properties in MyDataModel
         colID.setCellValueFactory(new PropertyValueFactory<>("borrowID"));
@@ -295,13 +309,68 @@ public class BorrowSceneController implements Initializable {
 	}
 
     @FXML
+    void comboBoxActionSearch(ActionEvent event) {
+    	startSearch();
+    }
+
+    @FXML
+    void inputSearch(KeyEvent event) {
+    	startSearch();
+    }
+
+    private void startSearch() {
+        String searchText = fieldSearch.getText();
+        String searchOption = comboBox.getValue();
+        String searchFineStatus = comboBoxFineStatus.getValue();
+
+        SearchData(searchText, searchOption, searchFineStatus);
+    }
+
+    private void SearchData(String searchText, String searchOption, String searchFineStatus) {
+        FilteredList<Borrow> filteredList = new FilteredList<>(data);
+
+        filteredList.setPredicate(borrow -> {
+        	if (!searchFineStatus.equals("Tất cả") && !borrow.getFineStatusText().equals(searchFineStatus)) {
+        		return false;
+        	}
+
+            String originalText = "";
+            switch (searchOption) {
+	            case "Mã mượn":
+	                originalText = Integer.toString(borrow.getBorrowID());
+	                break;
+
+	            case "Mã sinh viên":
+	                originalText = borrow.getStudentID();
+	                break;
+
+	        }
+
+            if (!originalText.isEmpty()) {
+                return originalText.toLowerCase().contains(searchText.toLowerCase());
+            }
+
+            return false;
+        });
+
+        borrowTableView.setItems(filteredList);
+    }
+
+    @FXML
     void btnActionAddBorrow(ActionEvent event) {
     	paneMain.setVisible(false);
     	paneAdd.setVisible(true);
     }
 
     @FXML
-    void btnActionDeleteBorrow(ActionEvent event) {
+    void btnActionReturn(ActionEvent event) throws SQLException {
+    	paneMain.setVisible(true);
+    	paneAdd.setVisible(false);
+    	this.refresh();
+    }
+
+    @FXML
+    void btnActionDeleteBorrow(ActionEvent event) throws SQLException {
     	Integer selectedIndex = borrowTableView.getSelectionModel().getSelectedIndex();
     	Borrow selectedRow = borrowTableView.getSelectionModel().getSelectedItem();
 
@@ -328,56 +397,6 @@ public class BorrowSceneController implements Initializable {
     }
 
     @FXML
-    void btnActionReturn(ActionEvent event) {
-    	paneMain.setVisible(true);
-    	paneAdd.setVisible(false);
-    	this.refresh();
-    }
-
-    @FXML
-    void inputSearch(KeyEvent event) {
-    	String searchText = fieldSearch.getText();
-        String searchOption = comboBox.getValue();
-        SearchData(searchText, searchOption);
-    }
-
-    private void SearchData(String searchText, String searchOption) {
-        if (searchText.isEmpty()) {
-            // If the search text is empty, revert to the original unfiltered list
-            borrowTableView.setItems(data);
-        } else {
-            // Apply filtering based on the search text and option
-            FilteredList<Borrow> filteredList = new FilteredList<>(data);
-
-            filteredList.setPredicate(borrow -> {
-                String originalText = "";
-                switch (searchOption) {
-                    case "Mã mượn":
-                        originalText = Integer.toString(borrow.getBorrowID());
-                        break;
-
-                    case "Mã sinh viên":
-                        originalText = borrow.getStudentID();
-                        break;
-
-                    case "Tình trạng trả":
-                    	originalText = borrow.isReturnedStatus() ? "Đã trả" : "Chưa trả";
-                        break;
-                }
-
-                if (!originalText.isEmpty()) {
-                    if (searchOption.equals("Mã mượn")) {
-                        return originalText.startsWith(searchText);
-                    } else {
-                        return originalText.toLowerCase().contains(searchText.toLowerCase());
-                    }
-                }
-
-                return false;
-            });
-
-            borrowTableView.setItems(filteredList);
-        }
-    }
+    private ToggleButton btnEdit;
 
 }

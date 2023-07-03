@@ -1,13 +1,12 @@
 package library.application.util;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.sql.Date;
-import java.time.LocalDate;
-import java.io.FileInputStream;
-import java.io.ObjectInputStream;
 
 public class VariableManager {
 
@@ -18,14 +17,14 @@ public class VariableManager {
 		return lastModifiedDate;
 	}
 
-    // Only save can set it
+    /* Only save can set it */
 	public static void saveDate(Date date) {
-        lastModifiedDate = date;    
+        lastModifiedDate = date;
         try {
             FileOutputStream fileOut = new FileOutputStream(FILE_NAME);
             ObjectOutputStream objectOut = new ObjectOutputStream(fileOut);
             objectOut.writeObject(lastModifiedDate);
-            
+
             objectOut.close();
             fileOut.close();
             System.out.println("Date saved successfully.");

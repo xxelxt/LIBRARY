@@ -15,7 +15,7 @@ public class StudentDAO {
 	private UserDAO userDAO = new UserDAO();
 
 	public List<Student> loadAllStudents() throws SQLException {
-        List<Student> students = new ArrayList<>();
+        List<Student> studentList = new ArrayList<>();
 
         String sql = "SELECT StudentID, Name, ClassName, Gender, Email, Phone, Address, FineStatus, Fine, S.Username, U.Password "
         		+ "FROM Students S "
@@ -40,22 +40,22 @@ public class StudentDAO {
         			user
         	);
 
-            students.add(student);
+            studentList.add(student);
         }
 
         rs.close();
         pstmt.close();
 
-        return students;
+        return studentList;
     }
-	
+
 	public Student loadStudent(User user) throws SQLException {
 		Student student = null;
 
         String sql = "SELECT StudentID, Name, ClassName, Gender, Email, Phone, Address, FineStatus, Fine "
         		+ "FROM Students S "
         		+ "INNER JOIN Users U ON S.Username = U.Username "
-        		+ "WHERE S.Username = ?;";
+        		+ "WHERE S.Username = ?";
 
         PreparedStatement pstmt = DatabaseLayer.prepareStatement(sql);
         pstmt.setString(1, user.getUsername());
@@ -86,30 +86,29 @@ public class StudentDAO {
             String Email, String Phone, String Address, boolean FineStatus, int Fine) throws SQLException {
 		String userstd = userDAO.addUser(Username, Password, 3);
 
+		String sql = "INSERT INTO Students (StudentID, Name, ClassName, Username, Gender, Email, Phone, Address, FineStatus, Fine) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		PreparedStatement pstmt = DatabaseLayer.prepareStatement(sql);
 
-		String studentSql = "INSERT INTO Students (StudentID, Name, ClassName, Username, Gender, Email, Phone, Address, FineStatus, Fine) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-		PreparedStatement student_pstmt = DatabaseLayer.prepareStatement(studentSql);
-		
-		student_pstmt.setString(1, StudentID);
-		student_pstmt.setString(2, Name);
-		student_pstmt.setString(3, ClassName);
-		
-		student_pstmt.setString(4, userstd);
-		
-		student_pstmt.setBoolean(5, Gender);
-		student_pstmt.setString(6, Email);
-		student_pstmt.setString(7, Phone);
-		
-		student_pstmt.setString(8, Address);
-		student_pstmt.setBoolean(9, FineStatus);
-		student_pstmt.setInt(10, Fine);
-		
-		student_pstmt.executeUpdate();
-		student_pstmt.close();
-		
+		pstmt.setString(1, StudentID);
+		pstmt.setString(2, Name);
+		pstmt.setString(3, ClassName);
+
+		pstmt.setString(4, userstd);
+
+		pstmt.setBoolean(5, Gender);
+		pstmt.setString(6, Email);
+		pstmt.setString(7, Phone);
+
+		pstmt.setString(8, Address);
+		pstmt.setBoolean(9, FineStatus);
+		pstmt.setInt(10, Fine);
+
+		pstmt.executeUpdate();
+		pstmt.close();
+
 		System.out.println("Added student.");
 	}
-	
+
 	public String getUsernamebyStudentID(String StudentID) throws SQLException {
     	String username = "";
 
@@ -127,10 +126,9 @@ public class StudentDAO {
 
     	return username;
     }
-	
 
-    public boolean deleteStudent(String StudentID) throws SQLException {
-        return userDAO.deleteUser(getUsernamebyStudentID(StudentID));
+    public void deleteStudent(String StudentID) throws SQLException {
+        userDAO.deleteUser(getUsernamebyStudentID(StudentID));
     }
 
 	public void updateStudent(Student std) throws SQLException {
@@ -162,20 +160,16 @@ public class StudentDAO {
 
         System.out.println("Updated student.");
 	}
-	
+
 	public void addToStudentFine(String studentID, long daysDue) throws SQLException {
         String sql = "UPDATE Students S "
-        		+ "SET S.Fine = S.Fine + 50000 * ?, "
+        		+ "SET S.Fine = S.Fine + 25000 * ?, "
         		+ "S.FineStatus = TRUE "
         		+ "WHERE S.StudentID = ?";
 
         PreparedStatement pstmt = DatabaseLayer.prepareStatement(sql);
-
         pstmt.setLong(1, daysDue);
         pstmt.setString(2, studentID);
-
-        System.out.println(pstmt.toString());
-        
         pstmt.executeUpdate();
         pstmt.close();
 

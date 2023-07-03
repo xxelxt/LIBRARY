@@ -4,7 +4,6 @@ import java.sql.Date;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.function.Predicate;
-import java.util.function.Supplier;
 
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.DateCell;
@@ -14,11 +13,10 @@ import javafx.scene.control.TableColumn;
 import javafx.util.StringConverter;
 
 public class DatePickerTableCell<T> extends TableCell<T, Date> {
-    
-//    private final DateTimeFormatter formatter ;
+
     private final DatePicker datePicker;
     private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-    
+
     private void setDisableCertainDate(Predicate<Date> condition) {
     	this.datePicker.setDayCellFactory(d -> new DateCell() {
             @Override public void updateItem(LocalDate item, boolean empty) {
@@ -27,12 +25,12 @@ public class DatePickerTableCell<T> extends TableCell<T, Date> {
             }
         });
     }
-    
+
     public DatePickerTableCell(TableColumn<T, Date> column, Predicate<Date> condition) {
     	this(column);
     	this.setDisableCertainDate(condition);
     }
-    
+
     public DatePickerTableCell(TableColumn<T, Date> column) {
 		this.datePicker = new DatePicker();
 		this.datePicker.setConverter(
@@ -49,40 +47,33 @@ public class DatePickerTableCell<T> extends TableCell<T, Date> {
 	                  : null;
 	            }
 			});
-//		this.datePicker.
-//		this.datePicker.editableProperty().bind(column.editableProperty());
-//		this.datePicker.disableProperty().bind(column.editableProperty().not());
-//		this.datePicker.setOnShowing(event -> {
-//		    final TableView<T> tableView = getTableView();
-//		    tableView.getSelectionModel().select(getTableRow().getIndex());
-//		    tableView.edit(tableView.getSelectionModel().getSelectedIndex(), column);	    
-//		});
+
 		this.datePicker.valueProperty().addListener((observable, oldValue, newValue) -> {
 		    if(isEditing()) {
 		    	commitEdit(Date.valueOf(newValue));
 		    }
 		});
-		
+
 		datePicker.setValue(LocalDate.now());
-		
+
 		this.setGraphic(datePicker);
 		this.setContentDisplay(ContentDisplay.TEXT_ONLY);
     }
-    
+
     @Override
     public void startEdit() {
         super.startEdit();
         setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
     }
-    
+
     @Override public void cancelEdit() {
         super.cancelEdit();
         setContentDisplay(ContentDisplay.TEXT_ONLY);
     }
- 
+
     @Override
     protected void updateItem(Date item, boolean empty) {
-		super.updateItem(item, empty);	
+		super.updateItem(item, empty);
 
 		if(empty || item == null) {
 			setText(null);
@@ -96,12 +87,12 @@ public class DatePickerTableCell<T> extends TableCell<T, Date> {
 		    datePicker.setValue(item.toLocalDate());
 		    setText(item.toString());
 			setContentDisplay(ContentDisplay.TEXT_ONLY);
-		} 
+		}
     }
 
     @Override
     public void commitEdit(Date newValue) {
-        super.commitEdit(newValue);    
+        super.commitEdit(newValue);
     }
 }
 
