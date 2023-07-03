@@ -36,10 +36,9 @@ public class MainApp extends Application {
 			// root.setStyle("-fx-font-family: '" + customFont.getName() + "'; -fx-font-size: 16px;");
 
 			MainSceneController controller = loader.getController();
-			// controller.setMain(this);
 			controller.setMain(this, primaryStage);
 
-	        primaryStage.setTitle("");
+	        primaryStage.setTitle("THE FINAL MOVEMENT BETA");
 
 	        Scene scene = new Scene(root);
 			scene.getStylesheets().add(getClass().getResource("primer-light.css").toExternalForm());
@@ -47,7 +46,7 @@ public class MainApp extends Application {
 
 			primaryStage.setMaximized(false);
 			primaryStage.setWidth(335);
-			primaryStage.setHeight(500);
+			primaryStage.setHeight(600);
 			primaryStage.centerOnScreen();
 			primaryStage.show();
 		} catch (IOException e) {
@@ -68,7 +67,6 @@ public class MainApp extends Application {
 	        primaryStage.getIcons().add(icon);
 
 	        Toaster.setOwner(primaryStage);
-	        // Toaster.showError("A", "HELLOW WORLD");
 
 		} catch (Exception e) {
 			e.printStackTrace();

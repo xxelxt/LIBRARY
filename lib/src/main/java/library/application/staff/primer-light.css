@@ -156,11 +156,6 @@ Text {
   -fx-font-weight: normal;
 }
 
-.tab-label { /*
-  -fx-rotate: 90; */
-  /* -fx-translate-x: -10; /* Adjust the value as needed */
-}
-
 .text-caption {
   -fx-font-size: 1em;
   -fx-font-weight: bold;
@@ -4672,17 +4667,13 @@ Add support for NO_HEADER tweak in tables .table-view.no-header > .column-header
   -fx-effect: dropshadow(three-pass-box, -color-shadow-default, 6px, 0.3, 0, 2);
 }
 
-/******************************************************************************
- * 
- * NOTIFICATION
- * 
- *****************************************************************************/
+
 
 .notification-bar>.pane {
     -fx-background-color: -color-border-default, -color-bg-overlay;
     -fx-padding: 15 15 15 15;
-    -fx-background-radius: 8;
     -fx-background-insets: 0, 1, 2;
+    -fx-effect: none;
 }
 
 .notification-bar>.pane .title {
@@ -4696,45 +4687,3 @@ Add support for NO_HEADER tweak in tables .table-view.no-header > .column-header
     -fx-text-fill: -color-fg-default;
     -fx-alignment: top-left;
 }
-
-/******************************************************************************
- * 
- * Close button
- * 
- *****************************************************************************/
-/*
-.notification-bar>.pane .close-button {
-    -fx-background-color: transparent;
-    -fx-background-insets: 0;
-    -fx-background-radius: 0;
-    -fx-padding: 0 0 0 0;
-    -fx-alignment: center;
-}
-
-.notification-bar > .pane .close-button:hover {
-     
-}
-
-.notification-bar > .pane .close-button:pressed {
-    
-
-} */
-
-/*
-.notification-bar>.pane .close-button>.graphic {
-     -fx-background-color: #fff;
-     -fx-scale-shape: false;
-     -fx-padding: 4.5 4.5 4.5 4.5; 
-} */ /* Graphic is 9x9 px */
-
-/*
-.notification-bar>.pane .close-button:hover>.graphic {
-     -fx-background-color: #fff;
-}
-
-.notification-bar>.pane .close-button:pressed>.graphic {
-     -fx-background-color: #fff;
-}
-
-.notification-bar>.pane .close-button>.graphic {
-} */

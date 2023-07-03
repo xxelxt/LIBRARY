@@ -57,7 +57,7 @@ public class AddBookController {
         fieldReissue.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 255, 1));
         fieldReissue.getValueFactory().setValue(0);
     }
-    
+
     boolean isAnyFieldNull() {
         return fieldTitle.getText().isEmpty() || fieldPublishDate.getValue() == null ||
             fieldCountry.getText().isEmpty() || fieldQuantity.getValue() == null ||
@@ -69,10 +69,10 @@ public class AddBookController {
     void btnAddBook(ActionEvent event) {
     	if (isAnyFieldNull()) {
     		highlightNullFields();
-            Toaster.showError("Keo ly tái châu", "Điền hết chỗ nào còn trống đi mă.");
+            Toaster.showError("Chưa đủ thông tin", "Điền hết chỗ nào còn trống đi mă");
             return;
         }
-    	
+
     	BookDAO bookDAO = new BookDAO();
 
     	try {
@@ -98,31 +98,33 @@ public class AddBookController {
 
     	clearTextField();
     }
-    
+
     void highlightNullFields() {
+        String highlightStyle = "-fx-border-color: red; -fx-border-radius: 5px;";
+
         if (fieldTitle.getText().isEmpty()) {
-            fieldTitle.setStyle("-fx-border-color: red;");
+            fieldTitle.setStyle(highlightStyle);
         }
         if (fieldPublishDate.getValue() == null) {
-            fieldPublishDate.setStyle("-fx-border-color: red;");
+            fieldPublishDate.setStyle(highlightStyle);
         }
         if (fieldCountry.getText().isEmpty()) {
-            fieldCountry.setStyle("-fx-border-color: red;");
+            fieldCountry.setStyle(highlightStyle);
         }
         if (fieldQuantity.getValue() == null) {
-            fieldQuantity.setStyle("-fx-border-color: red;");
+            fieldQuantity.setStyle(highlightStyle);
         }
         if (fieldCategory.getText().isEmpty()) {
-            fieldCategory.setStyle("-fx-border-color: red;");
+            fieldCategory.setStyle(highlightStyle);
         }
         if (fieldReissue.getValue() == null) {
-            fieldReissue.setStyle("-fx-border-color: red;");
+            fieldReissue.setStyle(highlightStyle);
         }
         if (fieldAuthors.getText().isEmpty()) {
-            fieldAuthors.setStyle("-fx-border-color: red;");
+            fieldAuthors.setStyle(highlightStyle);
         }
         if (fieldPublisher.getText().isEmpty()) {
-            fieldPublisher.setStyle("-fx-border-color: red;");
+            fieldPublisher.setStyle(highlightStyle);
         }
     }
 

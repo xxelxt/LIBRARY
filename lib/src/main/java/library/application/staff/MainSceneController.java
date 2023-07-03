@@ -11,6 +11,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
@@ -84,6 +85,7 @@ public class MainSceneController implements SceneFeatureGate {
             contentPane.setVisible(true);
             loginPane.setVisible(false);
             main.setWindowSize();
+            addTabTooltip();
             primaryStage.show();
 
             Integer type = logUser.getType();
@@ -160,6 +162,24 @@ public class MainSceneController implements SceneFeatureGate {
 
     @FXML
     private Tab tabStudentInfo;
+
+    private void addTabTooltip() {
+    	Tooltip tooltipBook = new Tooltip("Sách");
+    	Tooltip tooltipPrintMedia = new Tooltip("Báo & tạp chí");
+    	Tooltip tooltipBorrow = new Tooltip("Mượn");
+    	Tooltip tooltipStaff = new Tooltip("Nhân viên");
+    	Tooltip tooltipStudent = new Tooltip("Sinh viên");
+    	Tooltip tooltipStaffInfo = new Tooltip("Thông tin");
+    	Tooltip tooltipStudentInfo = new Tooltip("Thông tin");
+    	tabBook.setTooltip(tooltipBook);
+    	tabPrintMedia.setTooltip(tooltipPrintMedia);
+    	tabBorrow.setTooltip(tooltipBorrow);
+    	tabStaff.setTooltip(tooltipStaff);
+    	tabStudent.setTooltip(tooltipStudent);
+    	tabStaffInfo.setTooltip(tooltipStaffInfo);
+    	tabStudentInfo.setTooltip(tooltipStudentInfo);
+
+    }
 
 	@Override
 	public void setFeatureFor(Integer user) {
