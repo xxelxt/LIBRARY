@@ -4,6 +4,7 @@ import java.net.URL;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -15,6 +16,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.TableView;
@@ -27,6 +29,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import library.application.util.DatePickerTableCell;
 import library.application.util.IntegerFieldTableCell;
+import library.application.util.Toaster;
 import library.application.util.VariableManager;
 import library.central.Borrow;
 import library.mysql.dao.BorrowDAO;
@@ -162,7 +165,16 @@ public class BorrowSceneController implements Initializable {
         Date lastModifiedDate = VariableManager.getLastModifiedDate();
         System.out.println("LAST MODIFIED: " + (lastModifiedDate != null ? lastModifiedDate.toString() : "") );
 
-        List<Borrow> allBorrow = borrowDAO.loadAllBorrow();
+        List<Borrow> allBorrow;
+
+        try {
+			allBorrow = borrowDAO.loadAllBorrow();
+		} catch (SQLException e) {
+			allBorrow = new ArrayList<>();
+
+			Toaster.showError("Không thể tải danh sách mượn", e.getMessage());
+			e.printStackTrace();
+		}
 
 	    for (Borrow borrow : allBorrow){
 	    	checkDateAndUpdateFine(borrow, lastModifiedDate);
@@ -306,6 +318,8 @@ public class BorrowSceneController implements Initializable {
         colReturnedDate.setCellValueFactory(new PropertyValueFactory<>("returnedDate"));
         colFineStatus.setCellValueFactory(new PropertyValueFactory<>("fineStatusText"));
         colReturnedStatus.setCellValueFactory(new PropertyValueFactory<>("returnedStatusText"));
+
+        borrowTableView.setPlaceholder(new Label("Không có thông tin"));
 	}
 
     @FXML
@@ -375,7 +389,14 @@ public class BorrowSceneController implements Initializable {
     	Borrow selectedRow = borrowTableView.getSelectionModel().getSelectedItem();
 
     	if (selectedRow != null) {
-	    	borrowDAO.deleteBorrow(selectedRow.getBorrowID());
+    		try {
+    			borrowDAO.deleteBorrow(selectedRow.getBorrowID());
+    	    	Toaster.showSuccess("Xoá mượn thành công", "Đã xoá thông tin mượn khỏi CSDL.");
+    		} catch (SQLException e) {
+				Toaster.showError("Lỗi CSDL", e.getMessage());
+				e.printStackTrace();
+			}
+
 	    	this.refresh();
 
 	        if (selectedIndex >= 0 && selectedIndex < data.size()) {

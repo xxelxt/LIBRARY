@@ -49,6 +49,8 @@ public class AddStaffController {
 
     private ObservableList<String> posItems = FXCollections.observableArrayList("Thủ thư", "Nhân viên");
 
+    private TextField[] textFields;
+
     @FXML
     void initialize() {
         assert comboboxGender != null : "fx:id=\"comboboxGender\" was not injected: check your FXML file 'AddStaff.fxml'.";
@@ -60,6 +62,8 @@ public class AddStaffController {
         assert fieldPhoneNum != null : "fx:id=\"fieldPhoneNum\" was not injected: check your FXML file 'AddStaff.fxml'.";
         assert fieldUsername != null : "fx:id=\"fieldUsername\" was not injected: check your FXML file 'AddStaff.fxml'.";
 
+        textFields = new TextField[]{fieldName, fieldUsername, fieldPassword, fieldEmail, fieldPhoneNum};
+
         comboboxGender.setItems(genderItems);
         comboboxGender.setValue("Nữ");
 
@@ -69,6 +73,12 @@ public class AddStaffController {
 
     @FXML
     void btnAddStaff(ActionEvent event) {
+    	if (isAnyFieldNull()) {
+    		highlightFields();
+            Toaster.showError("Lỗi", "Vui lòng nhập đầy đủ thông tin.");
+            return;
+        }
+
         StaffDAO staffDAO = new StaffDAO();
 
         String gender = comboboxGender.getValue();
@@ -85,15 +95,35 @@ public class AddStaffController {
                     fieldAddress.getText(),
                     comboboxPosition.getValue()
             );
-		} catch (NumberFormatException e) { // Added Toast
-			Toaster.showError("Input ERROR", e.getMessage());
-			e.printStackTrace();
-		} catch (SQLException e) { // Added Toast
-			Toaster.showError("SQL ERROR", e.getMessage());
+
+        	highlightFields();
+	    	clearTextField();
+	    	Toaster.showSuccess("Thêm nhân viên thành công", "Đã thêm nhân viên vào CSDL.");
+
+		} catch (SQLException e) {
+			Toaster.showError("Lỗi CSDL", e.getMessage());
 			e.printStackTrace();
 		}
+    }
 
-        clearTextField();
+    private boolean isAnyFieldNull() {
+        for (TextField textField : textFields) {
+            if (textField.getText().isEmpty()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void highlightFields() {
+    	String highlight = "-fx-border-color: red; -fx-border-radius: 5px;";
+        for (TextField textField : textFields) {
+            if (textField.getText().isEmpty()) {
+                textField.setStyle(highlight);
+            } else {
+                textField.setStyle("");
+            }
+        }
     }
 
     void clearTextField() {

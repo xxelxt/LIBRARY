@@ -14,6 +14,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.TableView;
@@ -116,10 +117,10 @@ public class StudentSceneController implements Initializable {
 
 		try {
 			allStudents = studentDAO.loadAllStudents();
-		} catch (SQLException e) { // Added Toast
+		} catch (SQLException e) {
 			allStudents = new ArrayList<>();
 
-			Toaster.showError("SQL ERROR", e.getMessage());
+			Toaster.showError("Không thể tải danh sách sinh viên", e.getMessage());
 			e.printStackTrace();
 		}
 
@@ -242,6 +243,8 @@ public class StudentSceneController implements Initializable {
 
         colUsername.setCellValueFactory(new PropertyValueFactory<>("username"));
         colPassword.setCellValueFactory(new PropertyValueFactory<>("password"));
+
+        studentTableView.setPlaceholder(new Label("Không có thông tin"));
 	}
 
     @FXML
@@ -320,6 +323,7 @@ public class StudentSceneController implements Initializable {
     	if (selectedRow != null) {
 	    	try {
 				studentDAO.deleteStudent(selectedRow.getStudentID());
+				Toaster.showSuccess("Xoá sinh viên thành công", "Đã xoá sinh viên khỏi CSDL.");
 			} catch (SQLException e) {
 				Toaster.showError("SQL ERROR", e.getMessage());
 				e.printStackTrace();

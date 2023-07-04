@@ -126,8 +126,6 @@ public class BorrowHistorySceneController implements Initializable {
         colReturnedStatus.setCellValueFactory(new PropertyValueFactory<>("returnedStatusText"));
 	}
 
-	Date now = new Date(new java.util.Date().getTime());
-
     @FXML
     void inputSearch(KeyEvent event) {
     	String searchText = fieldSearch.getText();

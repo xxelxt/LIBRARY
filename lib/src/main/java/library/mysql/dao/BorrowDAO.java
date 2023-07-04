@@ -16,7 +16,8 @@ public class BorrowDAO {
 
         String sql = "SELECT B.BorrowID, B.StudentID, B.PublicationID, P.Title, B.BorrowQuantity, B.StartDate, B.DueDate, B.ReturnedDate, B.FineStatus, B.ReturnedStatus "
         		+ "FROM Borrow AS B "
-        		+ "JOIN Publications AS P ON B.PublicationID = P.PublicationID";
+        		+ "JOIN Publications AS P ON B.PublicationID = P.PublicationID "
+        		+ "ORDER BY B.BorrowID DESC";
 
         PreparedStatement pstmt = DatabaseLayer.prepareStatement(sql);
         ResultSet rs = pstmt.executeQuery();
@@ -47,21 +48,21 @@ public class BorrowDAO {
 	public void addBorrow(String studentID, Integer publicationID, Integer borrowQuantity, Date startDate, Date dueDate, Date returnedDate, boolean fineStatus, boolean returnedStatus) throws SQLException {
 		String sql = "INSERT INTO Borrow (StudentID, PublicationID, BorrowQuantity, StartDate, DueDate, ReturnedDate, FineStatus, ReturnedStatus) "
 		 		+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-		PreparedStatement borrow_pstmt = DatabaseLayer.prepareStatement(sql);
+		PreparedStatement pstmt = DatabaseLayer.prepareStatement(sql);
 
-		borrow_pstmt.setString(1, studentID);
-		borrow_pstmt.setInt(2, publicationID);
-		borrow_pstmt.setInt(3, borrowQuantity);
+		pstmt.setString(1, studentID);
+		pstmt.setInt(2, publicationID);
+		pstmt.setInt(3, borrowQuantity);
 
-		borrow_pstmt.setDate(4, startDate);
-		borrow_pstmt.setDate(5, dueDate);
-		borrow_pstmt.setDate(6, returnedDate);
+		pstmt.setDate(4, startDate);
+		pstmt.setDate(5, dueDate);
+		pstmt.setDate(6, returnedDate);
 
-		borrow_pstmt.setBoolean(7, fineStatus);
-		borrow_pstmt.setBoolean(8, returnedStatus);
+		pstmt.setBoolean(7, fineStatus);
+		pstmt.setBoolean(8, returnedStatus);
 
-		borrow_pstmt.executeUpdate();
-		borrow_pstmt.close();
+		pstmt.executeUpdate();
+		pstmt.close();
 
 		System.out.println("Added borrow.");
     }
@@ -70,6 +71,8 @@ public class BorrowDAO {
 		String sql = "DELETE FROM Borrow WHERE BorrowID = ?";
         PreparedStatement pstmt = DatabaseLayer.prepareStatement(sql);
         pstmt.setInt(1, borrowID);
+        pstmt.executeUpdate();
+		pstmt.close();
 
         System.out.println("Deleted borrow.");
 	}

@@ -43,6 +43,8 @@ public class AddBorrowController {
     @FXML
     private TextField fieldStudentID;
 
+    private TextField[] textFields;
+
     private boolean calcFineStatus(String studentID, LocalDate dueDate, LocalDate returnedDate) {
     	long daysDifference = 0;
     	LocalDate nowDate = LocalDate.now();
@@ -73,6 +75,12 @@ public class AddBorrowController {
 
     @FXML
     void btnAddBorrow(ActionEvent event) {
+    	if (isAnyFieldNull()) {
+            highlightFields();
+            Toaster.showError("Lỗi", "Vui lòng nhập đầy đủ thông tin mượn.");
+            return;
+        }
+
     	BorrowDAO borrowDAO = new BorrowDAO();
 
     	LocalDate dueDate = fieldDueDate.getValue();
@@ -89,17 +97,19 @@ public class AddBorrowController {
     	    		calcFineStatus(fieldStudentID.getText(), dueDate, returnedDate),
     	    		(returnedDate != null)
 			);
-		} catch (SQLException e) { // Added Toast
-			// Catch SQL
-			Toaster.showError("SQL ERROR", e.getMessage());
+
+    		highlightFields();
+        	clearTextField();
+        	Toaster.showSuccess("Thêm mượn thành công", "Đã thêm mượn vào CSDL.");
+
+    	} catch (SQLException e) {
+			Toaster.showError("Lỗi", e.getMessage());
 			e.printStackTrace();
-		} catch (Exception e) { // Added Toast
-			// Catch DateError
-			Toaster.showError("Input ERROR", e.getMessage());
+		} catch (Exception e) {
+			/* Catch DateError */
+			Toaster.showError("Lỗi nhập ngày tháng", e.getMessage());
 			e.printStackTrace();
 		}
-
-    	clearTextField();
     }
 
     @FXML
@@ -109,6 +119,8 @@ public class AddBorrowController {
         assert fieldQuantity != null : "fx:id=\"fieldQuantity\" was not injected: check your FXML file 'AddBorrow.fxml'.";
         assert fieldStartDate != null : "fx:id=\"fieldStartDate\" was not injected: check your FXML file 'AddBorrow.fxml'.";
         assert fieldStudentID != null : "fx:id=\"fieldStudentID\" was not injected: check your FXML file 'AddBorrow.fxml'.";
+
+        textFields = new TextField[]{fieldStudentID, fieldPublicationID};
 
         fieldQuantity.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100, 1));
 
@@ -136,6 +148,41 @@ public class AddBorrowController {
         });
     }
 
+    private boolean isAnyFieldNull() {
+        for (TextField textField : textFields) {
+            if (textField.getText().isEmpty()) {
+                return true;
+            }
+        }
+
+        return fieldStartDate.getValue() == null ||
+                fieldDueDate.getValue() == null;
+    }
+
+    private void highlightFields() {
+        String highlight = "-fx-border-color: red; -fx-border-radius: 5px;";
+
+        for (TextField textField : textFields) {
+            if (textField.getText().isEmpty()) {
+                textField.setStyle(highlight);
+            } else {
+                textField.setStyle("");
+            }
+        }
+
+        if (fieldStartDate.getValue() == null) {
+            fieldStartDate.setStyle(highlight);
+        } else {
+            fieldStartDate.setStyle("");
+        }
+
+        if (fieldDueDate.getValue() == null) {
+            fieldDueDate.setStyle(highlight);
+        } else {
+            fieldDueDate.setStyle("");
+        }
+    }
+
     void clearTextField() {
     	fieldStudentID.clear();
     	fieldPublicationID.clear();
@@ -144,4 +191,5 @@ public class AddBorrowController {
     	fieldDueDate.setValue(null);
     	fieldReturnedDate.setValue(null);
     }
+
 }

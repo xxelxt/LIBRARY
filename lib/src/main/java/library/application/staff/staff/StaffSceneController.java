@@ -2,6 +2,7 @@ package library.application.staff.staff;
 
 import java.net.URL;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -13,6 +14,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.TableView;
@@ -24,6 +26,7 @@ import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import library.application.util.Toaster;
 import library.mysql.dao.StaffDAO;
 import library.mysql.dao.UserDAO;
 import library.user.Staff;
@@ -99,7 +102,16 @@ public class StaffSceneController implements Initializable {
     public void refresh() throws SQLException {
         data = FXCollections.observableArrayList();
 
-        List<Staff> allStaff = staffDAO.loadAllStaff();
+        List<Staff> allStaff;
+
+        try {
+			allStaff = staffDAO.loadAllStaff();
+		} catch (SQLException e) {
+			allStaff = new ArrayList<>();
+
+			Toaster.showError("Không thể tải danh sách nhân viên", e.getMessage());
+			e.printStackTrace();
+		}
 
 	    for (Staff staff : allStaff){
 	    	data.add(staff);
@@ -193,6 +205,8 @@ public class StaffSceneController implements Initializable {
 
         colUsername.setCellValueFactory(new PropertyValueFactory<>("username"));
         colPassword.setCellValueFactory(new PropertyValueFactory<>("password"));
+
+        staffTableView.setPlaceholder(new Label("Không có thông tin"));
 	}
 
     @FXML
@@ -264,7 +278,14 @@ public class StaffSceneController implements Initializable {
     	Staff selectedRow = staffTableView.getSelectionModel().getSelectedItem();
 
     	if (selectedRow != null) {
-	    	staffDAO.deleteStaff(selectedRow.getStaffID());
+    		try {
+    			staffDAO.deleteStaff(selectedRow.getStaffID());
+    	    	Toaster.showSuccess("Xoá nhân viên thành công", "Đã xoá nhân viên khỏi CSDL.");
+    		} catch (SQLException e) {
+				Toaster.showError("Lỗi CSDL", e.getMessage());
+				e.printStackTrace();
+			}
+
 	    	this.refresh();
 
 	        if (selectedIndex >= 0 && selectedIndex < data.size()) {

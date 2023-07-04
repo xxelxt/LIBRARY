@@ -3,6 +3,7 @@ package library.application.staff.publication;
 import java.net.URL;
 import java.sql.Date;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -15,6 +16,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.TableView;
@@ -29,6 +31,7 @@ import javafx.scene.layout.VBox;
 import library.application.staff.interfac.SceneFeatureGate;
 import library.application.util.DatePickerTableCell;
 import library.application.util.IntegerFieldTableCell;
+import library.application.util.Toaster;
 import library.mysql.dao.AuthorDAO;
 import library.mysql.dao.BookDAO;
 import library.publication.Books;
@@ -106,7 +109,16 @@ public class BookSceneController implements Initializable, SceneFeatureGate {
     public void refresh() throws SQLException {
         data = FXCollections.observableArrayList();
 
-        List<Books> allBooks = bookDAO.loadAllBooks();
+        List<Books> allBooks;
+
+        try {
+			allBooks = bookDAO.loadAllBooks();
+		} catch (SQLException e) {
+			allBooks = new ArrayList<>();
+
+			Toaster.showError("Không thể tải danh sách sách", e.getMessage());
+			e.printStackTrace();
+		}
 
 	    for (Books book: allBooks){
 	    	data.add(book);
@@ -245,6 +257,8 @@ public class BookSceneController implements Initializable, SceneFeatureGate {
         colPublisher.setCellValueFactory(new PropertyValueFactory<>("publisher"));
         colCategory.setCellValueFactory(new PropertyValueFactory<>("category"));
         colReissue.setCellValueFactory(new PropertyValueFactory<>("reissue"));
+
+        booksTableView.setPlaceholder(new Label("Không có thông tin"));
 	}
 
     @FXML
@@ -307,7 +321,7 @@ public class BookSceneController implements Initializable, SceneFeatureGate {
     }
 
     @FXML
-    void btnActionReturn(ActionEvent event) throws SQLException {
+    public void btnActionReturn(ActionEvent event) throws SQLException {
     	paneMain.setVisible(true);
     	paneAdd.setVisible(false);
     	this.refresh();
@@ -319,7 +333,14 @@ public class BookSceneController implements Initializable, SceneFeatureGate {
     	Publication selectedRow = booksTableView.getSelectionModel().getSelectedItem();
 
     	if (selectedRow != null) {
-	    	bookDAO.deleteBook(selectedRow.getPublicationID());
+    		try {
+    			bookDAO.deleteBook(selectedRow.getPublicationID());
+    			Toaster.showSuccess("Xoá sách thành công", "Đã xoá sách khỏi CSDL.");
+			} catch (SQLException e) {
+				Toaster.showError("Lỗi CSDL", e.getMessage());
+				e.printStackTrace();
+			}
+
 	    	this.refresh();
 
 	        if (selectedIndex >= 0 && selectedIndex < data.size()) {

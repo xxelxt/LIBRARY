@@ -4,6 +4,8 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -58,6 +60,8 @@ public class AddStudentController {
 
     private ObservableList<String> fineItems = FXCollections.observableArrayList("Không bị phạt", "Bị phạt");
 
+    private TextField[] textFields;
+
     @FXML
     void initialize() {
         assert comboboxFineStatus != null : "fx:id=\"comboboxFineStatus\" was not injected: check your FXML file 'AddStudent.fxml'.";
@@ -72,32 +76,36 @@ public class AddStudentController {
         assert fieldStudentID != null : "fx:id=\"fieldStudentID\" was not injected: check your FXML file 'AddStudent.fxml'.";
         assert fieldUsername != null : "fx:id=\"fieldUsername\" was not injected: check your FXML file 'AddStudent.fxml'.";
 
+        textFields = new TextField[]{fieldStudentID, fieldName, fieldClass, fieldUsername, fieldPassword, fieldEmail, fieldPhoneNum, fieldFine};
+
         comboboxGender.setItems(genderItems);
         comboboxGender.setValue("Nữ");
 
         comboboxFineStatus.setItems(fineItems);
         comboboxFineStatus.setValue("Không bị phạt");
 
+        fieldPassword.setText("hvnh1961");
+    	fieldEmail.setText("@hvnh.edu.vn");
         fieldFine.setText("0");
-    }
 
-    private boolean validateAddStudent() {
-    	TextField[] notNullFields = {fieldStudentID, fieldName, fieldClass, fieldUsername, fieldPassword, fieldEmail};
-    	String[] errMessages = {"Mã sinh viên", "Họ tên", "Lớp", "Tên đăng nhập", "Mật khẩu", "Email"};
-
-    	for (int i = 0; i < notNullFields.length; i++) {
-    		if (notNullFields[i].getText().isBlank()) {
-    			Toaster.showError("", errMessages[i] + " không được bỏ trống!");
-    			return false;
-    		}
-    	}
-
-    	return true;
+        fieldStudentID.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                fieldUsername.setText(newValue);
+                String emailPrefix = newValue.toLowerCase();
+                String domain = "@hvnh.edu.vn";
+                fieldEmail.setText(emailPrefix + domain);
+            }
+        });
     }
 
     @FXML
     void btnAddStudent(ActionEvent event) {
-    	if (!validateAddStudent()) { return; }
+        if (isAnyFieldNull()) {
+            highlightFields();
+            Toaster.showError("Lỗi", "Vui lòng nhập đầy đủ thông tin sinh viên.");
+            return;
+        }
 
         StudentDAO studentDAO = new StudentDAO();
 
@@ -108,28 +116,60 @@ public class AddStudentController {
         boolean isFined = finestatus.equals("Bị phạt");
 
         try {
-			studentDAO.addStudent(
-			    fieldStudentID.getText(),
-			    fieldName.getText(),
-			    fieldClass.getText(),
-			    fieldUsername.getText(),
-			    fieldPassword.getText(),
-			    isFemale,
-			    fieldEmail.getText(),
-			    fieldPhoneNum.getText(),
-			    fieldAddress.getText(),
-			    isFined,
-			    Integer.parseInt(fieldFine.getText())
-			);
-		} catch (NumberFormatException e) { // Added Toast
-			Toaster.showError("Input ERROR", e.getMessage());
-			e.printStackTrace();
-		} catch (SQLException e) { // Added Toast
-			Toaster.showError("SQL ERROR", e.getMessage());
-			e.printStackTrace();
-		}
+            int fineAmount = Integer.parseInt(fieldFine.getText());
+            if (fineAmount < 0) {
+                throw new IllegalArgumentException("Số tiền phạt không hợp lệ.");
+            }
 
-        clearTextField();
+            studentDAO.addStudent(
+                fieldStudentID.getText(),
+                fieldName.getText(),
+                fieldClass.getText(),
+                fieldUsername.getText(),
+                fieldPassword.getText(),
+                isFemale,
+                fieldEmail.getText(),
+                fieldPhoneNum.getText(),
+                fieldAddress.getText(),
+                isFined,
+                fineAmount
+            );
+
+            highlightFields();
+            clearTextField();
+            Toaster.showSuccess("Thêm sinh viên thành công", "Đã thêm sinh viên vào CSDL.");
+
+        } catch (NumberFormatException e) {
+            Toaster.showError("Lỗi nhập tiền phạt", "Dữ liệu nhập vào không hợp lệ.");
+            e.printStackTrace();
+        } catch (SQLException e) {
+            Toaster.showError("Lỗi CSDL", e.getMessage());
+            e.printStackTrace();
+        } catch (IllegalArgumentException e) {
+            Toaster.showError("Lỗi nhập tiền phạt", e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+
+    private boolean isAnyFieldNull() {
+        for (TextField textField : textFields) {
+            if (textField.getText().isEmpty()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void highlightFields() {
+    	String highlight = "-fx-border-color: red; -fx-border-radius: 5px;";
+        for (TextField textField : textFields) {
+            if (textField.getText().isEmpty()) {
+                textField.setStyle(highlight);
+            } else {
+                textField.setStyle("");
+            }
+        }
     }
 
     void clearTextField() {
@@ -137,8 +177,8 @@ public class AddStudentController {
     	fieldName.clear();
     	fieldClass.clear();
     	fieldUsername.clear();
-    	fieldPassword.clear();
-    	fieldEmail.clear();
+    	fieldPassword.setText("hvnh1961");
+    	fieldEmail.setText("@hvnh.edu.vn");
     	fieldPhoneNum.clear();
     	fieldAddress.clear();
     	fieldFine.setText("0");

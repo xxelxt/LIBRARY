@@ -3,6 +3,7 @@ package library.application.staff.publication;
 import java.net.URL;
 import java.sql.Date;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -15,6 +16,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.TableView;
@@ -29,6 +31,7 @@ import javafx.scene.layout.VBox;
 import library.application.staff.interfac.SceneFeatureGate;
 import library.application.util.DatePickerTableCell;
 import library.application.util.IntegerFieldTableCell;
+import library.application.util.Toaster;
 import library.mysql.dao.PrintMediaDAO;
 import library.publication.PrintMedia;
 import library.publication.Publication;
@@ -98,7 +101,16 @@ public class PrintMediaSceneController implements Initializable, SceneFeatureGat
     public void refresh() throws SQLException {
         data = FXCollections.observableArrayList();
 
-        List<PrintMedia> allPM = pmDAO.loadAllPrintMedias();
+        List<PrintMedia> allPM;
+
+        try {
+			allPM = pmDAO.loadAllPrintMedias();
+		} catch (SQLException e) {
+			allPM = new ArrayList<>();
+
+			Toaster.showError("Không thể tải danh sách ấn phẩm", e.getMessage());
+			e.printStackTrace();
+		}
 
 	    for (PrintMedia pm : allPM){
 	    	data.add(pm);
@@ -211,6 +223,8 @@ public class PrintMediaSceneController implements Initializable, SceneFeatureGat
 
         colReleaseNumber.setCellValueFactory(new PropertyValueFactory<>("releaseNumber"));
         colPrintType.setCellValueFactory(new PropertyValueFactory<>("printType"));
+
+        printMediaTableView.setPlaceholder(new Label("Không có thông tin"));
 	}
 
     @FXML
@@ -281,7 +295,14 @@ public class PrintMediaSceneController implements Initializable, SceneFeatureGat
     	Publication selectedRow = printMediaTableView.getSelectionModel().getSelectedItem();
 
     	if (selectedRow != null) {
-    		pmDAO.deletePrintMedia(selectedRow.getPublicationID());
+    		try {
+    			pmDAO.deletePrintMedia(selectedRow.getPublicationID());
+    	    	Toaster.showSuccess("Xoá ấn phẩm thành công", "Đã xoá ấn phẩm khỏi CSDL.");
+			} catch (SQLException e) {
+				Toaster.showError("Lỗi CSDL", e.getMessage());
+				e.printStackTrace();
+			}
+
 	    	this.refresh();
 
 	        if (selectedIndex >= 0 && selectedIndex < data.size()) {

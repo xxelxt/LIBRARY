@@ -2,14 +2,15 @@ package library.application.staff.add;
 
 import java.sql.Date;
 import java.sql.SQLException;
+import java.time.LocalDate;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.AnchorPane;
 import library.application.util.Toaster;
 import library.mysql.dao.BookDAO;
 
@@ -39,8 +40,7 @@ public class AddBookController {
     @FXML
     private TextField fieldTitle;
 
-    @FXML
-    private AnchorPane paneAdd;
+    private TextField[] textFields;
 
     @FXML
     void initialize() {
@@ -53,23 +53,25 @@ public class AddBookController {
         assert fieldReissue != null : "fx:id=\"fieldReissue\" was not injected: check your FXML file 'AddBook.fxml'.";
         assert fieldTitle != null : "fx:id=\"fieldTitle\" was not injected: check your FXML file 'AddBook.fxml'.";
 
+        textFields = new TextField[]{fieldTitle, fieldCountry, fieldAuthors, fieldCategory, fieldPublisher};
+
         fieldQuantity.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100, 1));
         fieldReissue.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 255, 1));
         fieldReissue.getValueFactory().setValue(0);
-    }
 
-    boolean isAnyFieldNull() {
-        return fieldTitle.getText().isEmpty() || fieldPublishDate.getValue() == null ||
-            fieldCountry.getText().isEmpty() || fieldQuantity.getValue() == null ||
-            fieldCategory.getText().isEmpty() || fieldReissue.getValue() == null ||
-            fieldAuthors.getText().isEmpty() || fieldPublisher.getText().isEmpty();
+        fieldPublishDate.setDayCellFactory(d -> new DateCell() {
+            @Override public void updateItem(LocalDate item, boolean empty) {
+                super.updateItem(item, empty);
+                setDisable(item.isAfter(LocalDate.now()));
+            }
+        });
     }
 
     @FXML
     void btnAddBook(ActionEvent event) {
     	if (isAnyFieldNull()) {
-    		highlightNullFields();
-            Toaster.showError("Chưa đủ thông tin", "Điền hết chỗ nào còn trống đi mă");
+    		highlightFields();
+            Toaster.showError("Lỗi", "Vui lòng nhập đầy đủ thông tin sách.");
             return;
         }
 
@@ -86,45 +88,43 @@ public class AddBookController {
 				fieldAuthors.getText(),
 				fieldPublisher.getText()
 			);
-		} catch (SQLException e) { // Added Toast
-			// Catch SQL
-			Toaster.showError("SQL ERROR", e.getMessage());
+
+			highlightFields();
+	    	clearTextField();
+	    	Toaster.showSuccess("Thêm sách thành công", "Đã thêm sách vào CSDL.");
+
+		} catch (SQLException e) {
+			Toaster.showError("Lỗi CSDL", e.getMessage());
 			e.printStackTrace();
-		} catch (Exception e) { // Added Toast
-			// Catch DateError
-			Toaster.showError("Input ERROR", e.getMessage());
+		} catch (Exception e) {
+			/* Catch DateError */
+			Toaster.showError("Lỗi nhập ngày tháng", e.getMessage());
 			e.printStackTrace();
 		}
-
-    	clearTextField();
     }
 
-    void highlightNullFields() {
-        String highlightStyle = "-fx-border-color: red; -fx-border-radius: 5px;";
+    private boolean isAnyFieldNull() {
+        for (TextField textField : textFields) {
+            if (textField.getText().isEmpty()) {
+                return true;
+            }
+        }
+        return fieldPublishDate.getValue() == null;
+    }
 
-        if (fieldTitle.getText().isEmpty()) {
-            fieldTitle.setStyle(highlightStyle);
+    private void highlightFields() {
+    	String highlight = "-fx-border-color: red; -fx-border-radius: 5px;";
+        for (TextField textField : textFields) {
+            if (textField.getText().isEmpty()) {
+                textField.setStyle(highlight);
+            } else {
+                textField.setStyle("");
+            }
         }
         if (fieldPublishDate.getValue() == null) {
-            fieldPublishDate.setStyle(highlightStyle);
-        }
-        if (fieldCountry.getText().isEmpty()) {
-            fieldCountry.setStyle(highlightStyle);
-        }
-        if (fieldQuantity.getValue() == null) {
-            fieldQuantity.setStyle(highlightStyle);
-        }
-        if (fieldCategory.getText().isEmpty()) {
-            fieldCategory.setStyle(highlightStyle);
-        }
-        if (fieldReissue.getValue() == null) {
-            fieldReissue.setStyle(highlightStyle);
-        }
-        if (fieldAuthors.getText().isEmpty()) {
-            fieldAuthors.setStyle(highlightStyle);
-        }
-        if (fieldPublisher.getText().isEmpty()) {
-            fieldPublisher.setStyle(highlightStyle);
+            fieldPublishDate.setStyle(highlight);
+        } else {
+            fieldPublishDate.setStyle("");
         }
     }
 
