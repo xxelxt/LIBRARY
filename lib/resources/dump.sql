@@ -86,15 +86,15 @@ DROP TABLE IF EXISTS `books`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `books` (
   `BookID` int NOT NULL AUTO_INCREMENT,
-  `Category` varchar(20) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
-  `Reissue` tinyint DEFAULT NULL,
-  `PublisherID` int DEFAULT NULL,
+  `Category` varchar(20) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+  `Reissue` tinyint NOT NULL,
+  `PublisherID` int NOT NULL,
   PRIMARY KEY (`BookID`),
   KEY `PublisherID` (`PublisherID`),
   KEY `Category` (`Category`),
   CONSTRAINT `books_ibfk_1` FOREIGN KEY (`BookID`) REFERENCES `publications` (`PublicationID`) ON DELETE CASCADE,
   CONSTRAINT `books_ibfk_2` FOREIGN KEY (`PublisherID`) REFERENCES `publishers` (`PublisherID`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -116,8 +116,8 @@ DROP TABLE IF EXISTS `borrow`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `borrow` (
   `BorrowID` int NOT NULL AUTO_INCREMENT,
-  `StudentID` char(10) DEFAULT NULL,
-  `PublicationID` int DEFAULT NULL,
+  `StudentID` char(10) NOT NULL,
+  `PublicationID` int NOT NULL,
   `BorrowQuantity` smallint NOT NULL,
   `StartDate` date NOT NULL,
   `DueDate` date NOT NULL,
@@ -130,7 +130,7 @@ CREATE TABLE `borrow` (
   KEY `ReturnedStatus` (`ReturnedStatus`),
   CONSTRAINT `borrow_ibfk_1` FOREIGN KEY (`StudentID`) REFERENCES `students` (`StudentID`),
   CONSTRAINT `borrow_ibfk_2` FOREIGN KEY (`PublicationID`) REFERENCES `publications` (`PublicationID`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -139,7 +139,6 @@ CREATE TABLE `borrow` (
 
 LOCK TABLES `borrow` WRITE;
 /*!40000 ALTER TABLE `borrow` DISABLE KEYS */;
-INSERT INTO `borrow` VALUES (8,'24A4040003',1,2,'2023-07-03','2023-07-10','2023-07-03',_binary '\0',_binary '');
 /*!40000 ALTER TABLE `borrow` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
@@ -151,7 +150,7 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `check_borrow_quantity` BEFORE INSERT ON `borrow` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `CHECK_BORROW_QUANTITY` BEFORE INSERT ON `borrow` FOR EACH ROW BEGIN
     DECLARE available_quantity INT;
     
     SELECT Quantity INTO available_quantity
@@ -160,7 +159,7 @@ DELIMITER ;;
     
     IF NEW.BorrowQuantity > available_quantity THEN
         SIGNAL SQLSTATE '45000'
-            SET MESSAGE_TEXT = 'Borrow quantity exceeds available quantity. Transaction rolled back.';
+            SET MESSAGE_TEXT = 'Số lượng sách mượn vượt quá số lượng hiện có.';
     END IF;
 END */;;
 DELIMITER ;
@@ -177,7 +176,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `decrease_quantity_on_borrow` AFTER INSERT ON `borrow` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `DECREASE_QUANTITY_ON_BORROW` AFTER INSERT ON `borrow` FOR EACH ROW BEGIN
     IF NEW.ReturnedStatus = 0 THEN
         UPDATE Publications
         SET Quantity = Quantity - NEW.BorrowQuantity
@@ -198,7 +197,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `increase_quantity_on_return` AFTER UPDATE ON `borrow` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `INCREASE_QUANTITY_ON_RETURN` AFTER UPDATE ON `borrow` FOR EACH ROW BEGIN
     IF NEW.ReturnedStatus = 1 AND OLD.ReturnedStatus = 0 THEN
         UPDATE Publications
         SET Quantity = Quantity + OLD.BorrowQuantity
@@ -219,12 +218,31 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `update_quantity_on_borrow_quantity_change` AFTER UPDATE ON `borrow` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `UPDATE_QUANTITY_ON_BQ_CHANGE` AFTER UPDATE ON `borrow` FOR EACH ROW BEGIN
     IF OLD.BorrowQuantity <> NEW.BorrowQuantity THEN
         UPDATE Publications
         SET Quantity = Quantity - (NEW.BorrowQuantity - OLD.BorrowQuantity)
         WHERE PublicationID = NEW.PublicationID;
     END IF;
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `DELETE_BORROW_NOT_RETURNED` AFTER DELETE ON `borrow` FOR EACH ROW BEGIN
+    UPDATE Publications
+    SET Quantity = Quantity + OLD.BorrowQuantity
+    WHERE PublicationID = OLD.PublicationID AND OLD.ReturnedStatus = 0;
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -241,8 +259,8 @@ DROP TABLE IF EXISTS `printmedia`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `printmedia` (
   `PrintMediaID` int NOT NULL AUTO_INCREMENT,
-  `ReleaseNumber` tinyint DEFAULT NULL,
-  `PrintType` varchar(20) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
+  `ReleaseNumber` tinyint NOT NULL,
+  `PrintType` varchar(20) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
   PRIMARY KEY (`PrintMediaID`),
   KEY `PrintType` (`PrintType`),
   CONSTRAINT `printmedia_ibfk_1` FOREIGN KEY (`PrintMediaID`) REFERENCES `publications` (`PublicationID`) ON DELETE CASCADE
@@ -269,13 +287,13 @@ DROP TABLE IF EXISTS `publications`;
 CREATE TABLE `publications` (
   `PublicationID` int NOT NULL AUTO_INCREMENT,
   `Title` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
-  `ReleaseDate` date NOT NULL,
+  `ReleaseDate` date DEFAULT NULL,
   `Country` varchar(20) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
   `Quantity` smallint NOT NULL,
   PRIMARY KEY (`PublicationID`),
   KEY `Title` (`Title`),
   KEY `Country` (`Country`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -284,7 +302,7 @@ CREATE TABLE `publications` (
 
 LOCK TABLES `publications` WRITE;
 /*!40000 ALTER TABLE `publications` DISABLE KEYS */;
-INSERT INTO `publications` VALUES (1,'Ngôi thứ nhất số ít','2023-05-24','Nhật Bản',8),(2,'Vùng đất quỷ tha ma bắt','2023-03-27','Đài Loan',6),(3,'Tạp chí Ngân hàng','2023-06-14','Việt Nam',3),(4,'Tạp chí Giáo dục','2023-06-16','Việt Nam',1);
+INSERT INTO `publications` VALUES (1,'Ngôi thứ nhất số ít','2023-05-24','Nhật Bản',7),(2,'Vùng đất quỷ tha ma bắt','2023-03-27','Đài Loan',5),(3,'Tạp chí Ngân hàng','2023-06-14','Việt Nam',3),(4,'Tạp chí Giáo dục','2023-06-13','Việt Nam',1);
 /*!40000 ALTER TABLE `publications` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -300,7 +318,7 @@ CREATE TABLE `publishers` (
   `PublisherName` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
   PRIMARY KEY (`PublisherID`),
   KEY `PublisherName` (`PublisherName`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -309,7 +327,7 @@ CREATE TABLE `publishers` (
 
 LOCK TABLES `publishers` WRITE;
 /*!40000 ALTER TABLE `publishers` DISABLE KEYS */;
-INSERT INTO `publishers` VALUES (3,''),(1,'Hội nhà văn'),(2,'Phụ nữ VN');
+INSERT INTO `publishers` VALUES (1,'Hội nhà văn'),(2,'Phụ nữ VN');
 /*!40000 ALTER TABLE `publishers` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -322,9 +340,9 @@ DROP TABLE IF EXISTS `staff`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `staff` (
   `StaffID` int NOT NULL AUTO_INCREMENT,
-  `Username` char(30) DEFAULT NULL,
+  `Username` char(30) NOT NULL,
   `Name` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
-  `Gender` bit(1) DEFAULT NULL,
+  `Gender` bit(1) NOT NULL,
   `Address` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
   `Email` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
   `Phone` char(10) NOT NULL,
@@ -346,7 +364,7 @@ CREATE TABLE `staff` (
 
 LOCK TABLES `staff` WRITE;
 /*!40000 ALTER TABLE `staff` DISABLE KEYS */;
-INSERT INTO `staff` VALUES (1,'librarian','Nguyễn Thị H',_binary '','21 Chùa Bộc','hnt@hvnh.edu.vn','0987654321','Thủ thư'),(2,'clerk','Nguyễn Thị L',_binary '','31 Chùa Bộc','lnt@hvnh.edu.vn','0987612345','Nhân viên');
+INSERT INTO `staff` VALUES (1,'lib','Nguyễn Thị H',_binary '','21 Chùa Bộc','hnt@hvnh.edu.vn','0987654321','Thủ thư'),(2,'staff','Nguyễn Thị L',_binary '','31 Chùa Bộc','lnt@hvnh.edu.vn','0987612345','Nhân viên');
 /*!40000 ALTER TABLE `staff` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -359,7 +377,7 @@ DROP TABLE IF EXISTS `students`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `students` (
   `StudentID` char(10) NOT NULL,
-  `Username` char(30) DEFAULT NULL,
+  `Username` char(30) NOT NULL,
   `Name` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
   `Gender` bit(1) NOT NULL,
   `Address` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
@@ -384,7 +402,7 @@ CREATE TABLE `students` (
 
 LOCK TABLES `students` WRITE;
 /*!40000 ALTER TABLE `students` DISABLE KEYS */;
-INSERT INTO `students` VALUES ('24A4040001','student1','Nguyễn Văn A',_binary '\0','123 Đường Láng','24a4040001@hvnh.edu.vn','0123456789','K24QTKDA',0,_binary '\0'),('24A4040003','student3','Hoàng Thị C',_binary '','345 Đường Láng','24a4040003@hvnh.edu.vn','0123456787','K24QTKDB',0,_binary '\0'),('24A4040004','24A4040004','Hà Thị C',_binary '','120 Đường Láng','24a4040004@hvnh.edu.vn','0987654345','K25CNTTB',0,_binary '\0'),('24A4040005','24A4040005','Lý Thị L',_binary '','123 Đường Trơn','24a40420005@hvnh.edu.vn','0987654567','K24QTKDD',0,_binary '\0'),('24A4040006','student6','Nguyễn Văn E',_binary '\0','567 Đường Láng','24a4040006@hvnh.edu.vn','0123456785','K24QTKDC',0,_binary '\0');
+INSERT INTO `students` VALUES ('24A4040001','24A4040001','Nguyễn Hoàng An',_binary '\0','123 Đường Láng','24a4040001@hvnh.edu.vn','0987654567','K24QTKDA',0,_binary '\0'),('24A4040002','24A4040002','Trần Thị Yến',_binary '','234 Đường Láng','24a4040002@hvnh.edu.vn','0987654678','K24QTKDA',0,_binary '\0'),('24A4040003','24A4040003','Kiều Lan Nhi',_binary '','345 Đường Láng','24a4040003@hvnh.edu.vn','0987654765','K24QTKDB',0,_binary '\0');
 /*!40000 ALTER TABLE `students` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -397,8 +415,8 @@ DROP TABLE IF EXISTS `users`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `users` (
   `Username` char(30) NOT NULL,
-  `Password` varchar(30) DEFAULT NULL,
-  `Type` int DEFAULT NULL,
+  `Password` varchar(30) NOT NULL,
+  `Type` int NOT NULL,
   PRIMARY KEY (`Username`),
   KEY `Password` (`Password`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -410,7 +428,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES ('24A4040004','444444',3),('24A4040005','hvnh1961',3),('clerk','2222222',2),('librarian','1',1),('student1','111111',3),('student3','333333',3),('student6','666666',3);
+INSERT INTO `users` VALUES ('24A4040001','hvnh1961',3),('24A4040002','hvnh1961',3),('24A4040003','hvnh1961',3),('lib','1111',1),('staff','2222',2);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -423,4 +441,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-07-03 20:41:17
+-- Dump completed on 2023-07-04 17:45:25

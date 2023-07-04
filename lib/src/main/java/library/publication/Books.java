@@ -19,14 +19,19 @@ public class Books extends Publication {
 	}
 
 	public String getAuthors() {
-		String buffer = "";
+	    StringBuilder buffer = new StringBuilder();
 
-		for (String auth: Authors) {
-			buffer += auth + ", ";
-		}
+	    for (int i = 0; i < Authors.size(); i++) {
+	        buffer.append(Authors.get(i));
 
-		return buffer;
+	        if (i < Authors.size() - 1) {
+	            buffer.append(", ");
+	        }
+	    }
+
+	    return buffer.toString();
 	}
+
 
 	public void setAuthors(ArrayList<String> authors) {
 		this.Authors = authors;
