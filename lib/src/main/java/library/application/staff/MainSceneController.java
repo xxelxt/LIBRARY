@@ -98,16 +98,21 @@ public class MainSceneController implements SceneFeatureGate {
     			try {
 					studentInfoSceneController.setCurrentStudent(studentDAO.loadStudent(logUser));
 				} catch (SQLException e) {
-					Toaster.showError("SQL ERROR", e.getMessage());
+					Toaster.showError("Lỗi CSDL", e.getMessage());
 					e.printStackTrace();
 				}
     		} else if (type == CLERK || type == LIBRARIAN) {
     			StaffDAO staffDAO = new StaffDAO();
-    			staffInfoSceneController.setCurrentStaff(staffDAO.loadStaff(logUser));
+    			try {
+    				staffInfoSceneController.setCurrentStaff(staffDAO.loadStaff(logUser));
+				} catch (SQLException e) {
+					Toaster.showError("Lỗi CSDL", e.getMessage());
+					e.printStackTrace();
+				}
     		}
         } else {
-            labelWarning.setText("Tên đăng nhập hoặc mật khẩu không đúng");
-            labelWarning.setFont(new Font("Calibri", 14));
+            labelWarning.setText("Thông tin đăng nhập không đúng");
+            labelWarning.setFont(new Font("System", 14));
             labelWarning.setStyle("-fx-text-fill: #ff0000;");
         }
         logUser = null;
