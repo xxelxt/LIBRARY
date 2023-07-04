@@ -217,7 +217,7 @@ public class BookSceneController implements Initializable, SceneFeatureGate {
 
         colReissue.setCellFactory(col -> new IntegerFieldTableCell<>());
         colQuantity.setCellFactory(col -> new IntegerFieldTableCell<>());
-        
+
         EventHandler<CellEditEvent<Books, Integer>> commonIntegerHandler = e -> {
         	Books book = e.getRowValue();
         	TableColumn<Books, Integer> col = e.getTableColumn();
@@ -364,9 +364,11 @@ public class BookSceneController implements Initializable, SceneFeatureGate {
     void btnActionEditBooks(ActionEvent event) {
     	if (btnEdit.isSelected()) {
     		booksTableView.setEditable(true);
+    		Toaster.showEditStatus("Bắt đầu chỉnh sửa", "Đã bắt đầu chỉnh sửa bảng");
     	} else {
     		booksTableView.edit(-1, null);
     		booksTableView.setEditable(false);
+    		Toaster.showEditStatus("Kết thúc chỉnh sửa", "Đã kết thúc chỉnh sửa bảng");
     	}
     }
 
@@ -374,9 +376,11 @@ public class BookSceneController implements Initializable, SceneFeatureGate {
     void btnActionEditBooksClerk(ActionEvent event) {
     	if (btnEditClerk.isSelected()) {
     		booksTableView.setEditable(true);
+    		Toaster.showEditStatus("Bắt đầu chỉnh sửa", "Đã bắt đầu chỉnh sửa bảng");
     	} else {
     		booksTableView.edit(-1, null);
     		booksTableView.setEditable(false);
+    		Toaster.showEditStatus("Kết thúc chỉnh sửa", "Đã kết thúc chỉnh sửa bảng");
     	}
     }
 

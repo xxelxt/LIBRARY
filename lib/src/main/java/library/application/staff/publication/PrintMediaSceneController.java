@@ -179,7 +179,7 @@ public class PrintMediaSceneController implements Initializable, SceneFeatureGat
         /**
          * Integer cell
          */
-        
+
         colReleaseNumber.setCellFactory(col -> new IntegerFieldTableCell<>());
         colQuantity.setCellFactory(col -> new IntegerFieldTableCell<>());
 
@@ -323,9 +323,11 @@ public class PrintMediaSceneController implements Initializable, SceneFeatureGat
     void btnActionEditPrintMedia(ActionEvent event) {
     	if (btnEdit.isSelected()) {
     		printMediaTableView.setEditable(true);
+    		Toaster.showEditStatus("Bắt đầu chỉnh sửa", "Đã bắt đầu chỉnh sửa bảng");
     	} else {
     		printMediaTableView.edit(-1, null);
     		printMediaTableView.setEditable(false);
+    		Toaster.showEditStatus("Kết thúc chỉnh sửa", "Đã kết thúc chỉnh sửa bảng");
     	}
     }
 
@@ -333,9 +335,11 @@ public class PrintMediaSceneController implements Initializable, SceneFeatureGat
     void btnActionEditPrintMediaClerk(ActionEvent event) {
     	if (btnEditClerk.isSelected()) {
     		printMediaTableView.setEditable(true);
+    		Toaster.showEditStatus("Bắt đầu chỉnh sửa", "Đã bắt đầu chỉnh sửa bảng");
     	} else {
     		printMediaTableView.edit(-1, null);
     		printMediaTableView.setEditable(false);
+    		Toaster.showEditStatus("Kết thúc chỉnh sửa", "Đã kết thúc chỉnh sửa bảng");
     	}
     }
 

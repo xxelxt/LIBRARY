@@ -10,6 +10,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
+import library.application.util.Toaster;
 import library.mysql.dao.StaffDAO;
 import library.mysql.dao.UserDAO;
 import library.user.Staff;
@@ -81,7 +82,9 @@ public class StaffInfoSceneController {
     		try {
     			UserDAO userDAO = new UserDAO();
 				userDAO.updatePassword(currentStaff.getAccount());
+				Toaster.showSuccess("Chỉnh sửa mật khẩu thành công", "Dữ liệu đã được cập nhật vào CSDL.");
 			} catch (Exception e) {
+				Toaster.showError("Lỗi CSDL", e.getMessage());
 				e.printStackTrace();
 			}
     	}
@@ -98,7 +101,9 @@ public class StaffInfoSceneController {
     		try {
     			StaffDAO staffDAO = new StaffDAO();
 				staffDAO.updateStaff(currentStaff);
+				Toaster.showSuccess("Chỉnh sửa thành công", "Dữ liệu đã được cập nhật vào CSDL.");
 			} catch (Exception e) {
+				Toaster.showError("Lỗi CSDL", e.getMessage());
 				e.printStackTrace();
 			}
     	}

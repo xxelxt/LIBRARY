@@ -10,6 +10,7 @@ import javafx.util.Duration;
 public class Toaster {
 	private static final Image ErrorIcon = new Image(Toaster.class.getResourceAsStream("erroricon.png"));
 	private static final Image SuccessIcon = new Image(Toaster.class.getResourceAsStream("successicon.png"));
+	private static final Image InfoIcon = new Image(Toaster.class.getResourceAsStream("infoicon.png"));
 	private static Object owner;
 
 	public static void setOwner(Object owner) {
@@ -27,7 +28,7 @@ public class Toaster {
 			.text(text)
 			.graphic(iconView)
 			.position(Pos.BOTTOM_RIGHT)
-			.hideAfter(Duration.seconds(1.75))
+			.hideAfter(Duration.seconds(2))
 			.show();
 	}
 
@@ -42,7 +43,22 @@ public class Toaster {
 			.text(text)
 			.graphic(iconView)
 			.position(Pos.BOTTOM_RIGHT)
-			.hideAfter(Duration.seconds(1.75))
+			.hideAfter(Duration.seconds(2))
+			.show();
+	}
+
+	public static void showEditStatus(String title, String text) {
+		ImageView iconView = new ImageView(InfoIcon);
+		iconView.setFitHeight(20);
+        iconView.setFitWidth(20);
+
+		Notifications.create()
+			.owner(owner)
+			.title(title)
+			.text(text)
+			.graphic(iconView)
+			.position(Pos.BOTTOM_RIGHT)
+			.hideAfter(Duration.seconds(4))
 			.show();
 	}
 }

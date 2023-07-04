@@ -13,6 +13,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.AnchorPane;
 import library.application.staff.borrow.BorrowHistorySceneController;
+import library.application.util.Toaster;
 import library.mysql.dao.StudentDAO;
 import library.mysql.dao.UserDAO;
 import library.user.Student;
@@ -95,7 +96,9 @@ public class StudentInfoSceneController {
     		try {
     			UserDAO userDAO = new UserDAO();
 				userDAO.updatePassword(currentStudent.getAccount());
+				Toaster.showSuccess("Chỉnh sửa mật khẩu thành công", "Dữ liệu đã được cập nhật vào CSDL.");
 			} catch (Exception e) {
+				Toaster.showError("Lỗi CSDL", e.getMessage());
 				e.printStackTrace();
 			}
     	}
@@ -113,7 +116,9 @@ public class StudentInfoSceneController {
     		try {
     			StudentDAO studentDAO = new StudentDAO();
 				studentDAO.updateStudent(currentStudent);
+				Toaster.showSuccess("Chỉnh sửa thành công", "Dữ liệu đã được cập nhật vào CSDL.");
 			} catch (Exception e) {
+				Toaster.showError("Lỗi CSDL", e.getMessage());
 				e.printStackTrace();
 			}
     	}

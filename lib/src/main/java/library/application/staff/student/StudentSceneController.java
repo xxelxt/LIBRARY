@@ -346,9 +346,11 @@ public class StudentSceneController implements Initializable {
     void btnActionEditStudent(ActionEvent event) {
     	if (btnEdit.isSelected()) {
     		studentTableView.setEditable(true);
+    		Toaster.showEditStatus("Bắt đầu chỉnh sửa", "Đã bắt đầu chỉnh sửa bảng");
     	} else {
     		studentTableView.edit(-1, null);
     		studentTableView.setEditable(false);
+    		Toaster.showEditStatus("Kết thúc chỉnh sửa", "Đã kết thúc chỉnh sửa bảng");
     	}
     }
 

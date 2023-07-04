@@ -303,9 +303,11 @@ public class StaffSceneController implements Initializable {
     void btnActionEditStaff(ActionEvent event) {
     	if (btnEdit.isSelected()) {
     		staffTableView.setEditable(true);
+    		Toaster.showEditStatus("Bắt đầu chỉnh sửa", "Đã bắt đầu chỉnh sửa bảng");
     	} else {
     		staffTableView.edit(-1, null);
     		staffTableView.setEditable(false);
+    		Toaster.showEditStatus("Kết thúc chỉnh sửa", "Đã kết thúc chỉnh sửa bảng");
     	}
     }
 

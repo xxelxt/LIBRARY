@@ -38,11 +38,11 @@
                <columns>
                   <TableColumn fx:id="colStudentID" prefWidth="96.0" text="Mã sinh viên" />
                   <TableColumn fx:id="colName" prefWidth="113.0" text="Họ tên" />
-                  <TableColumn fx:id="colClass" prefWidth="73.0" text="Lớp" />
-                  <TableColumn fx:id="colGender" prefWidth="61.0" text="Giới tính" />
-                  <TableColumn fx:id="colEmail" prefWidth="85.0" text="Email" />
-                  <TableColumn fx:id="colPhoneNum" prefWidth="97.0" text="Số điện thoại" />
-                  <TableColumn fx:id="colAddress" prefWidth="116.0" text="Địa chỉ" />
+                  <TableColumn fx:id="colClass" prefWidth="78.0" text="Lớp" />
+                  <TableColumn fx:id="colGender" prefWidth="70.0" text="Giới tính" />
+                  <TableColumn fx:id="colEmail" prefWidth="62.0" text="Email" />
+                  <TableColumn fx:id="colPhoneNum" prefWidth="87.0" text="Số điện thoại" />
+                  <TableColumn fx:id="colAddress" prefWidth="58.0" text="Địa chỉ" />
                   <TableColumn fx:id="colFineStatus" prefWidth="108.0" text="Tình trạng phạt" />
                   <TableColumn fx:id="colFine" prefWidth="89.0" text="Số tiền phạt" />
                   <TableColumn fx:id="colUsername" prefWidth="85.0" text="Tên đăng nhập" />

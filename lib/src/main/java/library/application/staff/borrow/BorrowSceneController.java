@@ -265,7 +265,7 @@ public class BorrowSceneController implements Initializable {
         /**
          * Integer cell
          */
-        
+
         colPublicationID.setCellFactory(col -> new IntegerFieldTableCell<>());
         colBorrowQuantity.setCellFactory(col -> new IntegerFieldTableCell<>());
 
@@ -418,9 +418,11 @@ public class BorrowSceneController implements Initializable {
     void btnActionEditBorrow(ActionEvent event) {
     	if (btnEdit.isSelected()) {
     		borrowTableView.setEditable(true);
+    		Toaster.showEditStatus("Bắt đầu chỉnh sửa", "Đã bắt đầu chỉnh sửa bảng");
     	} else {
     		borrowTableView.edit(-1, null);
     		borrowTableView.setEditable(false);
+    		Toaster.showEditStatus("Kết thúc chỉnh sửa", "Đã kết thúc chỉnh sửa bảng");
     	}
     }
 

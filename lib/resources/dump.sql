@@ -37,7 +37,7 @@ CREATE TABLE `authors` (
   `AuthorName` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
   PRIMARY KEY (`AuthorID`),
   KEY `AuthorName` (`AuthorName`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -128,9 +128,9 @@ CREATE TABLE `borrow` (
   KEY `PublicationID` (`PublicationID`),
   KEY `StudentID` (`StudentID`),
   KEY `ReturnedStatus` (`ReturnedStatus`),
-  CONSTRAINT `borrow_ibfk_1` FOREIGN KEY (`StudentID`) REFERENCES `students` (`StudentID`),
-  CONSTRAINT `borrow_ibfk_2` FOREIGN KEY (`PublicationID`) REFERENCES `publications` (`PublicationID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  CONSTRAINT `borrow_ibfk_1` FOREIGN KEY (`StudentID`) REFERENCES `students` (`StudentID`) ON DELETE CASCADE,
+  CONSTRAINT `borrow_ibfk_2` FOREIGN KEY (`PublicationID`) REFERENCES `publications` (`PublicationID`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -139,6 +139,7 @@ CREATE TABLE `borrow` (
 
 LOCK TABLES `borrow` WRITE;
 /*!40000 ALTER TABLE `borrow` DISABLE KEYS */;
+INSERT INTO `borrow` VALUES (1,'24A4040001',1,1,'2023-07-04','2023-07-11',NULL,_binary '\0',_binary '\0');
 /*!40000 ALTER TABLE `borrow` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
@@ -273,7 +274,7 @@ CREATE TABLE `printmedia` (
 
 LOCK TABLES `printmedia` WRITE;
 /*!40000 ALTER TABLE `printmedia` DISABLE KEYS */;
-INSERT INTO `printmedia` VALUES (3,6,'Tạp chí'),(4,6,'Tạp chí');
+INSERT INTO `printmedia` VALUES (3,6,'Tạp chí');
 /*!40000 ALTER TABLE `printmedia` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -302,7 +303,7 @@ CREATE TABLE `publications` (
 
 LOCK TABLES `publications` WRITE;
 /*!40000 ALTER TABLE `publications` DISABLE KEYS */;
-INSERT INTO `publications` VALUES (1,'Ngôi thứ nhất số ít','2023-05-24','Nhật Bản',7),(2,'Vùng đất quỷ tha ma bắt','2023-03-27','Đài Loan',5),(3,'Tạp chí Ngân hàng','2023-06-14','Việt Nam',3),(4,'Tạp chí Giáo dục','2023-06-13','Việt Nam',1);
+INSERT INTO `publications` VALUES (1,'Ngôi thứ nhất số ít','2023-05-24','Nhật Bản',6),(2,'Vùng đất quỷ tha ma bắt','2023-03-27','Đài Loan',5),(3,'Tạp chí Ngân hàng','2023-06-14','Việt Nam',3);
 /*!40000 ALTER TABLE `publications` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -364,7 +365,7 @@ CREATE TABLE `staff` (
 
 LOCK TABLES `staff` WRITE;
 /*!40000 ALTER TABLE `staff` DISABLE KEYS */;
-INSERT INTO `staff` VALUES (1,'lib','Nguyễn Thị H',_binary '','21 Chùa Bộc','hnt@hvnh.edu.vn','0987654321','Thủ thư'),(2,'staff','Nguyễn Thị L',_binary '','31 Chùa Bộc','lnt@hvnh.edu.vn','0987612345','Nhân viên');
+INSERT INTO `staff` VALUES (1,'lib','Nguyễn Thị Hoa',_binary '','21 Chùa Bộc','hnt@hvnh.edu.vn','0987654322','Thủ thư'),(2,'staff','Nguyễn Thị Ly',_binary '','31 Chùa Bộc','lnt@hvnh.edu.vn','0987612345','Nhân viên');
 /*!40000 ALTER TABLE `staff` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -441,4 +442,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-07-04 17:45:25
+-- Dump completed on 2023-07-04 21:22:41

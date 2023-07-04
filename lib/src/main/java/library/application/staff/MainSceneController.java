@@ -88,7 +88,7 @@ public class MainSceneController implements SceneFeatureGate {
             main.setWindowSize();
             addTabTooltip();
             primaryStage.show();
-            
+
             Integer type = logUser.getType();
 
             this.setFeatureFor(type);
@@ -112,7 +112,7 @@ public class MainSceneController implements SceneFeatureGate {
 				}
     		}
         } else {
-            labelWarning.setText("Thông tin đăng nhập không đúng");
+            labelWarning.setText("Thông tin đăng nhập không đúng.");
             labelWarning.setFont(new Font("System", 14));
             labelWarning.setStyle("-fx-text-fill: #ff0000;");
         }
