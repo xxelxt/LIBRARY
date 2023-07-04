@@ -205,7 +205,10 @@ public class BorrowSceneController implements Initializable {
 
         	try {
 				borrowDAO.updateBorrow(borrow);
+				Toaster.showSuccess("Chỉnh sửa thông tin mượn thành công", "Dữ liệu đã được cập nhật vào CSDL.");
+				refresh();
 			} catch (SQLException e1) {
+				Toaster.showError("Lỗi CSDL", e1.getMessage());
 				e1.printStackTrace();
 			}
         };
@@ -225,8 +228,10 @@ public class BorrowSceneController implements Initializable {
 
         	try {
 				borrowDAO.updateBorrow(borrow);
+				Toaster.showSuccess("Chỉnh sửa thông tin mượn thành công", "Dữ liệu đã được cập nhật vào CSDL.");
 				refresh();
 			} catch (SQLException e1) {
+				Toaster.showError("Lỗi CSDL", e1.getMessage());
 				e1.printStackTrace();
 			}
         };
@@ -260,6 +265,9 @@ public class BorrowSceneController implements Initializable {
         /**
          * Integer cell
          */
+        
+        colPublicationID.setCellFactory(col -> new IntegerFieldTableCell<>());
+        colBorrowQuantity.setCellFactory(col -> new IntegerFieldTableCell<>());
 
         EventHandler<CellEditEvent<Borrow, Integer>> commonIntegerHandler = e -> {
         	Borrow borrow = e.getRowValue();
@@ -269,14 +277,13 @@ public class BorrowSceneController implements Initializable {
 
         	try {
 				borrowDAO.updateBorrow(borrow);
+				Toaster.showSuccess("Chỉnh sửa thông tin mượn thành công", "Dữ liệu đã được cập nhật vào CSDL.");
 				refresh();
 			} catch (SQLException e1) {
+				Toaster.showError("Lỗi CSDL", e1.getMessage());
 				e1.printStackTrace();
 			}
         };
-
-        colPublicationID.setCellFactory(col -> new IntegerFieldTableCell<>());
-        colBorrowQuantity.setCellFactory(col -> new IntegerFieldTableCell<>());
 
         colPublicationID.setOnEditCommit(commonIntegerHandler);
         colBorrowQuantity.setOnEditCommit(commonIntegerHandler);

@@ -166,13 +166,16 @@ public class StudentSceneController implements Initializable {
             		std.getAccount().setPassword(e.getNewValue());
         			UserDAO userDAO = new UserDAO();
     				userDAO.updatePassword(std.getAccount());
+    				Toaster.showSuccess("Chỉnh sửa mật khẩu thành công", "Dữ liệu đã được cập nhật vào CSDL.");
 
             		return;
             	}
 
 				studentDAO.updateStudent(std);
+				Toaster.showSuccess("Chỉnh sửa sinh viên thành công", "Dữ liệu đã được cập nhật vào CSDL.");
 				refresh();
 			} catch (Exception e1) {
+				Toaster.showError("Lỗi CSDL", e1.getMessage());
 				e1.printStackTrace();
 			}
         };

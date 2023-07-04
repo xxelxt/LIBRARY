@@ -152,13 +152,16 @@ public class StaffSceneController implements Initializable {
             		stf.getAccount().setPassword(e.getNewValue());
         			UserDAO userDAO = new UserDAO();
     				userDAO.updatePassword(stf.getAccount());
+    				Toaster.showSuccess("Chỉnh sửa mật khẩu thành công", "Dữ liệu đã được cập nhật vào CSDL.");
 
             		return;
             	}
 
 				staffDAO.updateStaff(stf);
+				Toaster.showSuccess("Chỉnh sửa nhân viên thành công", "Dữ liệu đã được cập nhật vào CSDL.");
 				refresh();
 			} catch (Exception e1) {
+				Toaster.showError("Lỗi CSDL", e1.getMessage());
 				e1.printStackTrace();
 			}
         };

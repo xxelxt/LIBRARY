@@ -156,6 +156,8 @@ public class BookSceneController implements Initializable, SceneFeatureGate {
         			book.setPublisher(publisherName);
         			Integer publisherID = bookDAO.addPublisherWithCheck(publisherName);
 					bookDAO.updateBookPublisherID(book, publisherID);
+					Toaster.showSuccess("Chỉnh sửa NXB sách thành công", "Dữ liệu đã được cập nhật vào CSDL.");
+					refresh();
 				} catch (Exception e1) {
 					e1.printStackTrace();
 				}
@@ -164,6 +166,7 @@ public class BookSceneController implements Initializable, SceneFeatureGate {
         	if (col == colAuthors) {
         		try {
             		authorDAO.addManyAuthorWithCheck(book.getPublicationID(), e.getNewValue());
+            		Toaster.showSuccess("Chỉnh sửa tác giả sách thành công", "Dữ liệu đã được cập nhật vào CSDL.");
     				refresh();
     			} catch (SQLException e1) {
     				e1.printStackTrace();
@@ -171,8 +174,10 @@ public class BookSceneController implements Initializable, SceneFeatureGate {
         	} else {
         		try {
             		bookDAO.updateBook(book);
+            		Toaster.showSuccess("Chỉnh sửa sách thành công", "Dữ liệu đã được cập nhật vào CSDL.");
     				refresh();
     			} catch (SQLException e1) {
+    				Toaster.showError("Lỗi CSDL", e1.getMessage());
     				e1.printStackTrace();
     			}
         	}
@@ -197,8 +202,10 @@ public class BookSceneController implements Initializable, SceneFeatureGate {
 
                 try {
             		bookDAO.updateBook(book);
+            		Toaster.showSuccess("Chỉnh sửa sách thành công", "Dữ liệu đã được cập nhật vào CSDL.");
     				refresh();
     			} catch (SQLException e1) {
+    				Toaster.showError("Lỗi CSDL", e1.getMessage());
     				e1.printStackTrace();
     			}
             }
@@ -208,6 +215,9 @@ public class BookSceneController implements Initializable, SceneFeatureGate {
          * Integer cells
          */
 
+        colReissue.setCellFactory(col -> new IntegerFieldTableCell<>());
+        colQuantity.setCellFactory(col -> new IntegerFieldTableCell<>());
+        
         EventHandler<CellEditEvent<Books, Integer>> commonIntegerHandler = e -> {
         	Books book = e.getRowValue();
         	TableColumn<Books, Integer> col = e.getTableColumn();
@@ -216,14 +226,13 @@ public class BookSceneController implements Initializable, SceneFeatureGate {
 
         	try {
         		bookDAO.updateBook(book);
+        		Toaster.showSuccess("Chỉnh sửa sách thành công", "Dữ liệu đã được cập nhật vào CSDL.");
 				refresh();
 			} catch (SQLException e1) {
+				Toaster.showError("Lỗi CSDL", e1.getMessage());
 				e1.printStackTrace();
 			}
         };
-
-        colReissue.setCellFactory(col -> new IntegerFieldTableCell<>());
-        colQuantity.setCellFactory(col -> new IntegerFieldTableCell<>());
 
         colReissue.setOnEditCommit(commonIntegerHandler);
         colQuantity.setOnEditCommit(commonIntegerHandler);

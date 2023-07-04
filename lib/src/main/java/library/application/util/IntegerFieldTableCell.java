@@ -30,7 +30,7 @@ public class IntegerFieldTableCell<T> extends TextFieldTableCell<T, Integer> {
 
     @Override
     public void startEdit() {
-
+    	super.startEdit();
     }
 
     @Override

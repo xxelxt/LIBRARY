@@ -142,8 +142,10 @@ public class PrintMediaSceneController implements Initializable, SceneFeatureGat
 
         	try {
         		pmDAO.updatePrintMedia(pm);
+            	Toaster.showSuccess("Chỉnh sửa ấn phẩm thành công", "Dữ liệu đã được cập nhật vào CSDL.");
             	refresh();
 			} catch (SQLException e1) {
+				Toaster.showError("Lỗi CSDL", e1.getMessage());
 				e1.printStackTrace();
 			}
         };
@@ -165,8 +167,10 @@ public class PrintMediaSceneController implements Initializable, SceneFeatureGat
 
                 try {
             		pmDAO.updatePrintMedia(pm);
+                	Toaster.showSuccess("Chỉnh sửa ấn phẩm thành công", "Dữ liệu đã được cập nhật vào CSDL.");
                 	refresh();
     			} catch (SQLException e1) {
+    				Toaster.showError("Lỗi CSDL", e1.getMessage());
     				e1.printStackTrace();
     			}
             }
@@ -175,6 +179,9 @@ public class PrintMediaSceneController implements Initializable, SceneFeatureGat
         /**
          * Integer cell
          */
+        
+        colReleaseNumber.setCellFactory(col -> new IntegerFieldTableCell<>());
+        colQuantity.setCellFactory(col -> new IntegerFieldTableCell<>());
 
         EventHandler<CellEditEvent<PrintMedia, Integer>> commonIntegerHandler = e -> {
         	PrintMedia pm = e.getRowValue();
@@ -184,14 +191,13 @@ public class PrintMediaSceneController implements Initializable, SceneFeatureGat
 
         	try {
         		pmDAO.updatePrintMedia(pm);
-            	refresh();
+            	Toaster.showSuccess("Chỉnh sửa ấn phẩm thành công", "Dữ liệu đã được cập nhật vào CSDL.");
+        		refresh();
 			} catch (SQLException e1) {
+				Toaster.showError("Lỗi CSDL", e1.getMessage());
 				e1.printStackTrace();
 			}
         };
-
-        colReleaseNumber.setCellFactory(col -> new IntegerFieldTableCell<>());
-        colQuantity.setCellFactory(col -> new IntegerFieldTableCell<>());
 
         colReleaseNumber.setOnEditCommit(commonIntegerHandler);
         colQuantity.setOnEditCommit(commonIntegerHandler);

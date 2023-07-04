@@ -27,7 +27,7 @@ public class Toaster {
 			.text(text)
 			.graphic(iconView)
 			.position(Pos.BOTTOM_RIGHT)
-			.hideAfter(Duration.seconds(1.5))
+			.hideAfter(Duration.seconds(1.75))
 			.show();
 	}
 
@@ -42,7 +42,7 @@ public class Toaster {
 			.text(text)
 			.graphic(iconView)
 			.position(Pos.BOTTOM_RIGHT)
-			.hideAfter(Duration.seconds(1.5))
+			.hideAfter(Duration.seconds(1.75))
 			.show();
 	}
 }

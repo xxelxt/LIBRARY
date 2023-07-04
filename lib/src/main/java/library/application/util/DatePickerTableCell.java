@@ -77,12 +77,6 @@ public class DatePickerTableCell<T> extends TableCell<T, Date> {
 
 		if(empty || item == null) {
 			setText(null);
-			// MAY CAUSE BUG LATER
-		    if (item == null) {
-
-		    } else {
-		    	System.out.println("FUCK EMTPU");
-		    }
 		} else {
 		    datePicker.setValue(item.toLocalDate());
 		    setText(item.toString());
