@@ -37,7 +37,12 @@
                         <Font size="18.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="fieldStudentID" prefHeight="26.0" prefWidth="250.0" HBox.hgrow="ALWAYS" />
+                  <TextField fx:id="fieldStudentID" prefHeight="26.0" prefWidth="230.0" HBox.hgrow="ALWAYS" />
+                  <TextField fx:id="fieldStudentName" editable="false" prefHeight="26.0" prefWidth="400.0" HBox.hgrow="ALWAYS">
+                     <HBox.margin>
+                        <Insets left="10.0" />
+                     </HBox.margin>
+                  </TextField>
                </children>
                <padding>
                   <Insets bottom="5.0" left="30.0" right="30.0" />
@@ -50,7 +55,12 @@
                         <Font size="18.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="fieldPublicationID" prefHeight="26.0" prefWidth="250.0" HBox.hgrow="ALWAYS" />
+                  <TextField fx:id="fieldPublicationID" prefHeight="26.0" prefWidth="230.0" HBox.hgrow="ALWAYS" />
+                  <TextField fx:id="fieldPublicationTitle" editable="false" prefHeight="26.0" prefWidth="400.0" HBox.hgrow="ALWAYS">
+                     <HBox.margin>
+                        <Insets left="10.0" />
+                     </HBox.margin>
+                  </TextField>
                </children>
                <padding>
                   <Insets bottom="5.0" left="30.0" right="30.0" />

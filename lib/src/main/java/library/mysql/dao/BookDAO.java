@@ -163,4 +163,44 @@ public class BookDAO {
 
         return publisherID;
     }
+
+    public ArrayList<String> loadAllCategories() throws SQLException {
+        ArrayList<String> categories = new ArrayList<>();
+
+        String sql = "SELECT DISTINCT Category "
+        		+ "FROM Books";
+
+        PreparedStatement pstmt = DatabaseLayer.prepareStatement(sql);
+        ResultSet rs = pstmt.executeQuery();
+
+        while (rs.next()) {
+        	String category = rs.getString(1);
+        	categories.add(category);
+        }
+
+        rs.close();
+        pstmt.close();
+
+        return categories;
+    }
+
+    public ArrayList<String> loadAllPublishers() throws SQLException {
+        ArrayList<String> publishers = new ArrayList<>();
+
+        String sql = "SELECT DISTINCT PublisherName "
+        		+ "FROM Publishers";
+
+        PreparedStatement pstmt = DatabaseLayer.prepareStatement(sql);
+        ResultSet rs = pstmt.executeQuery();
+
+        while (rs.next()) {
+        	String publisher = rs.getString(1);
+        	publishers.add(publisher);
+        }
+
+        rs.close();
+        pstmt.close();
+
+        return publishers;
+    }
 }

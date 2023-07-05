@@ -3,6 +3,10 @@ package library.application.staff.add;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.ArrayList;
+
+import org.controlsfx.control.textfield.AutoCompletionBinding;
+import org.controlsfx.control.textfield.TextFields;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -13,6 +17,7 @@ import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TextField;
 import library.application.util.Toaster;
 import library.mysql.dao.PrintMediaDAO;
+import library.mysql.dao.PublicationDAO;
 
 public class AddPrintMediaController {
 
@@ -36,6 +41,17 @@ public class AddPrintMediaController {
 
     private TextField[] textFields;
 
+    private AutoCompletionBinding<String> autoCompletionCountry;
+
+    private AutoCompletionBinding<String> autoCompletionPrintType;
+
+    private ArrayList<String> countries;
+
+    private ArrayList<String> printTypes;
+
+    private PrintMediaDAO pmDAO = new PrintMediaDAO();
+    private PublicationDAO publicationDAO = new PublicationDAO();
+
     @FXML
     void btnAddPrintMedia(ActionEvent event) {
     	if (isAnyFieldNull()) {
@@ -47,14 +63,31 @@ public class AddPrintMediaController {
     	PrintMediaDAO pmDAO = new PrintMediaDAO();
 
     	try {
+    		Date publishDate = null;
+    		if (fieldPublishDate.getValue() != null) {
+    		    publishDate = Date.valueOf(fieldPublishDate.getValue());
+    		}
+
         	pmDAO.addPrintMedia(
             		fieldTitle.getText(),
-            		Date.valueOf(fieldPublishDate.getValue()),
+            		publishDate,
             		fieldCountry.getText(),
             		fieldQuantity.getValue(),
             		fieldReleaseNumber.getValue(),
             		fieldPrintType.getText()
             );
+
+        	if (autoCompletionCountry != null) {
+			    autoCompletionCountry.dispose();
+			}
+			countries = publicationDAO.loadAllCountries();
+			autoCompletionCountry = TextFields.bindAutoCompletion(fieldCountry, countries);
+
+			if (autoCompletionPrintType != null) {
+			    autoCompletionPrintType.dispose();
+			}
+			printTypes = pmDAO.loadAllPrintTypes();
+			autoCompletionPrintType = TextFields.bindAutoCompletion(fieldPrintType, printTypes);
 
         	highlightFields();
         	clearTextField();
@@ -65,13 +98,13 @@ public class AddPrintMediaController {
 			e.printStackTrace();
 		} catch (Exception e) {
 			/* Catch DateError */
-			Toaster.showError("Lỗi nhập ngày tháng", e.getMessage());
+			Toaster.showError("Lỗi", e.getMessage());
 			e.printStackTrace();
 		}
     }
 
     @FXML
-    void initialize() {
+    void initialize() throws SQLException {
         assert fieldCountry != null : "fx:id=\"fieldCountry\" was not injected: check your FXML file 'AddPrintMedia.fxml'.";
         assert fieldPrintType != null : "fx:id=\"fieldPrintType\" was not injected: check your FXML file 'AddPrintMedia.fxml'.";
         assert fieldPublishDate != null : "fx:id=\"fieldPublishDate\" was not injected: check your FXML file 'AddPrintMedia.fxml'.";
@@ -82,7 +115,7 @@ public class AddPrintMediaController {
         textFields = new TextField[]{fieldTitle, fieldCountry, fieldPrintType};
 
         fieldQuantity.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100, 1));
-        fieldReleaseNumber.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100, 1));
+        fieldReleaseNumber.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 100, 1));
 
         fieldPublishDate.setDayCellFactory(d -> new DateCell() {
             @Override public void updateItem(LocalDate item, boolean empty) {
@@ -90,6 +123,11 @@ public class AddPrintMediaController {
                 setDisable(item.isAfter(LocalDate.now()));
             }
         });
+
+        countries = publicationDAO.loadAllCountries();
+        printTypes = pmDAO.loadAllPrintTypes();
+        autoCompletionCountry = TextFields.bindAutoCompletion(fieldCountry, countries);
+        autoCompletionPrintType = TextFields.bindAutoCompletion(fieldPrintType, printTypes);
     }
 
     private boolean isAnyFieldNull() {
@@ -98,7 +136,7 @@ public class AddPrintMediaController {
                 return true;
             }
         }
-        return fieldPublishDate.getValue() == null;
+        return false;
     }
 
     private void highlightFields() {
@@ -110,11 +148,6 @@ public class AddPrintMediaController {
                 textField.setStyle("");
             }
         }
-        if (fieldPublishDate.getValue() == null) {
-            fieldPublishDate.setStyle(highlight);
-        } else {
-            fieldPublishDate.setStyle("");
-        }
     }
 
     void clearTextField() {
@@ -122,7 +155,7 @@ public class AddPrintMediaController {
     	fieldCountry.clear();
     	fieldPublishDate.setValue(null);
     	fieldQuantity.getValueFactory().setValue(1);
-    	fieldReleaseNumber.getValueFactory().setValue(1);
+    	fieldReleaseNumber.getValueFactory().setValue(0);
     	fieldPrintType.clear();
     }
 

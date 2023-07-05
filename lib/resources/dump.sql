@@ -139,7 +139,6 @@ CREATE TABLE `borrow` (
 
 LOCK TABLES `borrow` WRITE;
 /*!40000 ALTER TABLE `borrow` DISABLE KEYS */;
-INSERT INTO `borrow` VALUES (1,'24A4040001',1,1,'2023-07-04','2023-07-11',NULL,_binary '\0',_binary '\0');
 /*!40000 ALTER TABLE `borrow` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
@@ -260,7 +259,7 @@ DROP TABLE IF EXISTS `printmedia`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `printmedia` (
   `PrintMediaID` int NOT NULL AUTO_INCREMENT,
-  `ReleaseNumber` tinyint NOT NULL,
+  `ReleaseNumber` tinyint DEFAULT NULL,
   `PrintType` varchar(20) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
   PRIMARY KEY (`PrintMediaID`),
   KEY `PrintType` (`PrintType`),
@@ -303,7 +302,7 @@ CREATE TABLE `publications` (
 
 LOCK TABLES `publications` WRITE;
 /*!40000 ALTER TABLE `publications` DISABLE KEYS */;
-INSERT INTO `publications` VALUES (1,'Ngôi thứ nhất số ít','2023-05-24','Nhật Bản',6),(2,'Vùng đất quỷ tha ma bắt','2023-03-27','Đài Loan',5),(3,'Tạp chí Ngân hàng','2023-06-14','Việt Nam',3);
+INSERT INTO `publications` VALUES (1,'Ngôi thứ nhất số ít','2023-05-24','Nhật Bản',7),(2,'Vùng đất quỷ tha ma bắt','2023-03-27','Đài Loan',5),(3,'Tạp chí Ngân hàng','2023-06-14','Việt Nam',3);
 /*!40000 ALTER TABLE `publications` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -442,4 +441,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-07-04 21:22:41
+-- Dump completed on 2023-07-05 11:23:46

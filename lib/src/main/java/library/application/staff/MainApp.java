@@ -38,7 +38,7 @@ public class MainApp extends Application {
 			MainSceneController controller = loader.getController();
 			controller.setMain(this, primaryStage);
 
-	        primaryStage.setTitle("THE FINAL MOVEMENT 2.0-BETA");
+	        primaryStage.setTitle("Hệ thống quản lý thư viện");
 
 	        Scene scene = new Scene(root);
 			scene.getStylesheets().add(getClass().getResource("primer-light.css").toExternalForm());
@@ -71,8 +71,6 @@ public class MainApp extends Application {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
-
 	}
 
 	@Override

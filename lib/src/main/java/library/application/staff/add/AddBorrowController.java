@@ -6,6 +6,8 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.DateCell;
@@ -15,6 +17,7 @@ import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TextField;
 import library.application.util.Toaster;
 import library.mysql.dao.BorrowDAO;
+import library.mysql.dao.PublicationDAO;
 import library.mysql.dao.StudentDAO;
 
 public class AddBorrowController {
@@ -27,6 +30,9 @@ public class AddBorrowController {
 
     @FXML
     private TextField fieldPublicationID;
+
+    @FXML
+    private TextField fieldPublicationTitle;
 
     @FXML
     private Spinner<Integer> fieldQuantity = new Spinner<>();
@@ -42,6 +48,9 @@ public class AddBorrowController {
 
     @FXML
     private TextField fieldStudentID;
+
+    @FXML
+    private TextField fieldStudentName;
 
     private TextField[] textFields;
 
@@ -116,9 +125,11 @@ public class AddBorrowController {
     void initialize() {
         assert fieldDueDate != null : "fx:id=\"fieldDueDate\" was not injected: check your FXML file 'AddBorrow.fxml'.";
         assert fieldPublicationID != null : "fx:id=\"fieldPublicationID\" was not injected: check your FXML file 'AddBorrow.fxml'.";
+        assert fieldPublicationTitle != null : "fx:id=\"fieldPublicationTitle\" was not injected: check your FXML file 'AddBorrow.fxml'.";
         assert fieldQuantity != null : "fx:id=\"fieldQuantity\" was not injected: check your FXML file 'AddBorrow.fxml'.";
         assert fieldStartDate != null : "fx:id=\"fieldStartDate\" was not injected: check your FXML file 'AddBorrow.fxml'.";
         assert fieldStudentID != null : "fx:id=\"fieldStudentID\" was not injected: check your FXML file 'AddBorrow.fxml'.";
+        assert fieldStudentName != null : "fx:id=\"fieldStudentName\" was not injected: check your FXML file 'AddBorrow.fxml'.";
 
         textFields = new TextField[]{fieldStudentID, fieldPublicationID};
 
@@ -146,6 +157,50 @@ public class AddBorrowController {
                 		item.isAfter(LocalDate.now()));
             } /* Return date will always be after Due date */
         });
+
+        fieldStudentID.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if (!newValue.isEmpty()) {
+                    displayStudentName(newValue);
+                } else {
+                	fieldStudentName.setText(null);
+                }
+            }
+        });
+
+        fieldPublicationID.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if (newValue != null && !newValue.isEmpty()) {
+                    displayPublicationTitle(Integer.parseInt(newValue));
+                } else {
+                	fieldPublicationTitle.setText(null);
+                }
+            }
+        });
+    }
+
+    private void displayStudentName(String studentID) {
+        try {
+            StudentDAO studentDAO = new StudentDAO();
+            String studentName = studentDAO.getStudentNamebyStudentID(studentID);
+            fieldStudentName.setText(studentName);
+        } catch (SQLException e) {
+            Toaster.showError("Lỗi", e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void displayPublicationTitle(int publicationID) {
+        try {
+            PublicationDAO publicationDAO = new PublicationDAO();
+            String title = publicationDAO.getTitlebyPublicationID(publicationID);
+            fieldPublicationTitle.setText(title);
+        } catch (SQLException e) {
+            Toaster.showError("Lỗi", e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     private boolean isAnyFieldNull() {

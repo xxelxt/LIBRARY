@@ -3,6 +3,10 @@ package library.application.staff.add;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.ArrayList;
+
+import org.controlsfx.control.textfield.AutoCompletionBinding;
+import org.controlsfx.control.textfield.TextFields;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -12,7 +16,9 @@ import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TextField;
 import library.application.util.Toaster;
+import library.mysql.dao.AuthorDAO;
 import library.mysql.dao.BookDAO;
+import library.mysql.dao.PublicationDAO;
 
 public class AddBookController {
 
@@ -42,8 +48,28 @@ public class AddBookController {
 
     private TextField[] textFields;
 
+    private AutoCompletionBinding<String> autoCompletionCategory;
+
+    private AutoCompletionBinding<String> autoCompletionAuthor;
+
+    private AutoCompletionBinding<String> autoCompletionCountry;
+
+    private AutoCompletionBinding<String> autoCompletionPublisher;
+
+    private ArrayList<String> categories;
+
+    private ArrayList<String> authors;
+
+    private ArrayList<String> countries;
+
+    private ArrayList<String> publishers;
+
+    private BookDAO bookDAO = new BookDAO();
+    private AuthorDAO authorDAO = new AuthorDAO();
+    private PublicationDAO publicationDAO = new PublicationDAO();
+
     @FXML
-    void initialize() {
+    void initialize() throws SQLException {
         assert fieldAuthors != null : "fx:id=\"fieldAuthors\" was not injected: check your FXML file 'AddBook.fxml'.";
         assert fieldCategory != null : "fx:id=\"fieldCategory\" was not injected: check your FXML file 'AddBook.fxml'.";
         assert fieldCountry != null : "fx:id=\"fieldCountry\" was not injected: check your FXML file 'AddBook.fxml'.";
@@ -65,22 +91,34 @@ public class AddBookController {
                 setDisable(item.isAfter(LocalDate.now()));
             }
         });
+
+        categories = bookDAO.loadAllCategories();
+        authors = authorDAO.getAuthors();
+        countries = publicationDAO.loadAllCountries();
+        publishers = bookDAO.loadAllPublishers();
+        autoCompletionCategory = TextFields.bindAutoCompletion(fieldCategory, categories);
+        autoCompletionAuthor = TextFields.bindAutoCompletion(fieldAuthors, authors);
+        autoCompletionCountry = TextFields.bindAutoCompletion(fieldCountry, countries);
+        autoCompletionPublisher = TextFields.bindAutoCompletion(fieldPublisher, publishers);
     }
 
     @FXML
-    void btnAddBook(ActionEvent event) {
+    void btnAddBook(ActionEvent event) throws SQLException {
     	if (isAnyFieldNull()) {
     		highlightFields();
             Toaster.showError("Lỗi", "Vui lòng nhập đầy đủ thông tin sách.");
             return;
         }
 
-    	BookDAO bookDAO = new BookDAO();
-
     	try {
+    		Date publishDate = null;
+    		if (fieldPublishDate.getValue() != null) {
+    		    publishDate = Date.valueOf(fieldPublishDate.getValue());
+    		}
+
 			bookDAO.addBook(
 				fieldTitle.getText(),
-				Date.valueOf(fieldPublishDate.getValue()),
+				publishDate,
 				fieldCountry.getText(),
 				fieldQuantity.getValue(),
 				fieldCategory.getText(),
@@ -88,6 +126,30 @@ public class AddBookController {
 				fieldAuthors.getText(),
 				fieldPublisher.getText()
 			);
+
+			if (autoCompletionCategory != null) {
+			    autoCompletionCategory.dispose();
+			}
+			categories = bookDAO.loadAllCategories();
+			autoCompletionCategory = TextFields.bindAutoCompletion(fieldCategory, categories);
+
+			if (autoCompletionAuthor != null) {
+			    autoCompletionAuthor.dispose();
+			}
+			authors = authorDAO.getAuthors();
+			autoCompletionAuthor = TextFields.bindAutoCompletion(fieldAuthors, authors);
+
+			if (autoCompletionCountry != null) {
+			    autoCompletionCountry.dispose();
+			}
+			countries = publicationDAO.loadAllCountries();
+			autoCompletionCountry = TextFields.bindAutoCompletion(fieldCountry, countries);
+
+			if (autoCompletionPublisher != null) {
+			    autoCompletionPublisher.dispose();
+			}
+			publishers = bookDAO.loadAllPublishers();
+			autoCompletionPublisher = TextFields.bindAutoCompletion(fieldPublisher, publishers);
 
 			highlightFields();
 	    	clearTextField();
@@ -98,7 +160,7 @@ public class AddBookController {
 			e.printStackTrace();
 		} catch (Exception e) {
 			/* Catch DateError */
-			Toaster.showError("Lỗi nhập ngày tháng", e.getMessage());
+			Toaster.showError("Lỗi", e.getMessage());
 			e.printStackTrace();
 		}
     }
@@ -109,7 +171,7 @@ public class AddBookController {
                 return true;
             }
         }
-        return fieldPublishDate.getValue() == null;
+        return false;
     }
 
     private void highlightFields() {
@@ -120,11 +182,6 @@ public class AddBookController {
             } else {
                 textField.setStyle("");
             }
-        }
-        if (fieldPublishDate.getValue() == null) {
-            fieldPublishDate.setStyle(highlight);
-        } else {
-            fieldPublishDate.setStyle("");
         }
     }
 
@@ -138,4 +195,5 @@ public class AddBookController {
     	fieldCategory.clear();
     	fieldPublisher.clear();
     }
+
 }

@@ -58,4 +58,6 @@ run {
     }
 }
 
-mainClassName = 'library.Main'
+application {
+    mainClassName = 'library.Main'
+}

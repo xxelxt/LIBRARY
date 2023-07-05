@@ -176,4 +176,22 @@ public class StudentDAO {
         System.out.println("Updated student fine: " + studentID);
 	}
 
+	public String getStudentNamebyStudentID(String studentID) throws SQLException {
+    	String name = "";
+
+    	String sql = "SELECT Name FROM Students WHERE StudentID = ?";
+        PreparedStatement pstmt = DatabaseLayer.prepareStatement(sql);
+        pstmt.setString(1, studentID);
+
+        ResultSet rs = pstmt.executeQuery();
+
+        while (rs.next()) {
+            name = rs.getString(1);
+        }
+        rs.close();
+        pstmt.close();
+
+    	return name;
+    }
+
 }

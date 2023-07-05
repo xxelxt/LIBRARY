@@ -171,7 +171,7 @@ public class MainSceneController implements SceneFeatureGate {
 
     private void addTabTooltip() {
     	Tooltip tooltipBook = new Tooltip("Sách");
-    	Tooltip tooltipPrintMedia = new Tooltip("Báo & tạp chí");
+    	Tooltip tooltipPrintMedia = new Tooltip("Tài liệu in ấn");
     	Tooltip tooltipBorrow = new Tooltip("Mượn");
     	Tooltip tooltipStaff = new Tooltip("Nhân viên");
     	Tooltip tooltipStudent = new Tooltip("Sinh viên");

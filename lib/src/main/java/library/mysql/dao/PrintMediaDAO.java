@@ -90,4 +90,24 @@ public class PrintMediaDAO {
     public void deletePrintMedia(Integer publicationID) throws SQLException {
         publicationDAO.deletePublication(publicationID);
     }
+
+    public ArrayList<String> loadAllPrintTypes() throws SQLException {
+        ArrayList<String> printTypes = new ArrayList<>();
+
+        String sql = "SELECT DISTINCT PrintType "
+        		+ "FROM PrintMedia";
+
+        PreparedStatement pstmt = DatabaseLayer.prepareStatement(sql);
+        ResultSet rs = pstmt.executeQuery();
+
+        while (rs.next()) {
+        	String printType = rs.getString(1);
+        	printTypes.add(printType);
+        }
+
+        rs.close();
+        pstmt.close();
+
+        return printTypes;
+    }
 }
