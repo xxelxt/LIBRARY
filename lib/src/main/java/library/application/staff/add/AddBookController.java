@@ -127,29 +127,7 @@ public class AddBookController {
 				fieldPublisher.getText()
 			);
 
-			if (autoCompletionCategory != null) {
-			    autoCompletionCategory.dispose();
-			}
-			categories = bookDAO.loadAllCategories();
-			autoCompletionCategory = TextFields.bindAutoCompletion(fieldCategory, categories);
-
-			if (autoCompletionAuthor != null) {
-			    autoCompletionAuthor.dispose();
-			}
-			authors = authorDAO.getAuthors();
-			autoCompletionAuthor = TextFields.bindAutoCompletion(fieldAuthors, authors);
-
-			if (autoCompletionCountry != null) {
-			    autoCompletionCountry.dispose();
-			}
-			countries = publicationDAO.loadAllCountries();
-			autoCompletionCountry = TextFields.bindAutoCompletion(fieldCountry, countries);
-
-			if (autoCompletionPublisher != null) {
-			    autoCompletionPublisher.dispose();
-			}
-			publishers = bookDAO.loadAllPublishers();
-			autoCompletionPublisher = TextFields.bindAutoCompletion(fieldPublisher, publishers);
+			rebindAutoComplete();
 
 			highlightFields();
 	    	clearTextField();
@@ -163,6 +141,32 @@ public class AddBookController {
 			Toaster.showError("Lỗi", e.getMessage());
 			e.printStackTrace();
 		}
+    }
+
+    private void rebindAutoComplete() throws SQLException {
+    	if (autoCompletionCategory != null) {
+		    autoCompletionCategory.dispose();
+		}
+		categories = bookDAO.loadAllCategories();
+		autoCompletionCategory = TextFields.bindAutoCompletion(fieldCategory, categories);
+
+		if (autoCompletionAuthor != null) {
+		    autoCompletionAuthor.dispose();
+		}
+		authors = authorDAO.getAuthors();
+		autoCompletionAuthor = TextFields.bindAutoCompletion(fieldAuthors, authors);
+
+		if (autoCompletionCountry != null) {
+		    autoCompletionCountry.dispose();
+		}
+		countries = publicationDAO.loadAllCountries();
+		autoCompletionCountry = TextFields.bindAutoCompletion(fieldCountry, countries);
+
+		if (autoCompletionPublisher != null) {
+		    autoCompletionPublisher.dispose();
+		}
+		publishers = bookDAO.loadAllPublishers();
+		autoCompletionPublisher = TextFields.bindAutoCompletion(fieldPublisher, publishers);
     }
 
     private boolean isAnyFieldNull() {

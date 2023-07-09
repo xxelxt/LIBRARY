@@ -83,45 +83,6 @@ public class AddBorrowController {
     }
 
     @FXML
-    void btnAddBorrow(ActionEvent event) {
-    	if (isAnyFieldNull()) {
-            highlightFields();
-            Toaster.showError("Lỗi", "Vui lòng nhập đầy đủ thông tin mượn.");
-            return;
-        }
-
-    	BorrowDAO borrowDAO = new BorrowDAO();
-
-    	LocalDate dueDate = fieldDueDate.getValue();
-    	LocalDate returnedDate = fieldReturnedDate.getValue();
-
-    	try {
-    		borrowDAO.addBorrow(
-    	    		fieldStudentID.getText(),
-    	    		Integer.parseInt(fieldPublicationID.getText()),
-    	    		fieldQuantity.getValue(),
-    	    		Date.valueOf(fieldStartDate.getValue()),
-    	    		Date.valueOf(dueDate),
-    	    		(returnedDate != null ? Date.valueOf(returnedDate) : null),
-    	    		calcFineStatus(fieldStudentID.getText(), dueDate, returnedDate),
-    	    		(returnedDate != null)
-			);
-
-    		highlightFields();
-        	clearTextField();
-        	Toaster.showSuccess("Thêm mượn thành công", "Đã thêm mượn vào CSDL.");
-
-    	} catch (SQLException e) {
-			Toaster.showError("Lỗi", e.getMessage());
-			e.printStackTrace();
-		} catch (Exception e) {
-			/* Catch DateError */
-			Toaster.showError("Lỗi nhập ngày tháng", e.getMessage());
-			e.printStackTrace();
-		}
-    }
-
-    @FXML
     void initialize() {
         assert fieldDueDate != null : "fx:id=\"fieldDueDate\" was not injected: check your FXML file 'AddBorrow.fxml'.";
         assert fieldPublicationID != null : "fx:id=\"fieldPublicationID\" was not injected: check your FXML file 'AddBorrow.fxml'.";
@@ -179,6 +140,45 @@ public class AddBorrowController {
                 }
             }
         });
+    }
+
+    @FXML
+    void btnAddBorrow(ActionEvent event) {
+    	if (isAnyFieldNull()) {
+            highlightFields();
+            Toaster.showError("Lỗi", "Vui lòng nhập đầy đủ thông tin mượn.");
+            return;
+        }
+
+    	BorrowDAO borrowDAO = new BorrowDAO();
+
+    	LocalDate dueDate = fieldDueDate.getValue();
+    	LocalDate returnedDate = fieldReturnedDate.getValue();
+
+    	try {
+    		borrowDAO.addBorrow(
+    	    		fieldStudentID.getText(),
+    	    		Integer.parseInt(fieldPublicationID.getText()),
+    	    		fieldQuantity.getValue(),
+    	    		Date.valueOf(fieldStartDate.getValue()),
+    	    		Date.valueOf(dueDate),
+    	    		(returnedDate != null ? Date.valueOf(returnedDate) : null),
+    	    		calcFineStatus(fieldStudentID.getText(), dueDate, returnedDate),
+    	    		(returnedDate != null)
+			);
+
+    		highlightFields();
+        	clearTextField();
+        	Toaster.showSuccess("Thêm mượn thành công", "Đã thêm mượn vào CSDL.");
+
+    	} catch (SQLException e) {
+			Toaster.showError("Lỗi", e.getMessage());
+			e.printStackTrace();
+		} catch (Exception e) {
+			/* Catch DateError */
+			Toaster.showError("Lỗi", e.getMessage());
+			e.printStackTrace();
+		}
     }
 
     private void displayStudentName(String studentID) {

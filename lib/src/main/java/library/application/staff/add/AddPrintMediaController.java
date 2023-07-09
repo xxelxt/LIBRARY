@@ -53,6 +53,33 @@ public class AddPrintMediaController {
     private PublicationDAO publicationDAO = new PublicationDAO();
 
     @FXML
+    void initialize() throws SQLException {
+        assert fieldCountry != null : "fx:id=\"fieldCountry\" was not injected: check your FXML file 'AddPrintMedia.fxml'.";
+        assert fieldPrintType != null : "fx:id=\"fieldPrintType\" was not injected: check your FXML file 'AddPrintMedia.fxml'.";
+        assert fieldPublishDate != null : "fx:id=\"fieldPublishDate\" was not injected: check your FXML file 'AddPrintMedia.fxml'.";
+        assert fieldQuantity != null : "fx:id=\"fieldQuantity\" was not injected: check your FXML file 'AddPrintMedia.fxml'.";
+        assert fieldReleaseNumber != null : "fx:id=\"fieldReleaseNumber\" was not injected: check your FXML file 'AddPrintMedia.fxml'.";
+        assert fieldTitle != null : "fx:id=\"fieldTitle\" was not injected: check your FXML file 'AddPrintMedia.fxml'.";
+
+        textFields = new TextField[]{fieldTitle, fieldCountry, fieldPrintType};
+
+        fieldQuantity.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100, 1));
+        fieldReleaseNumber.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 100, 1));
+
+        fieldPublishDate.setDayCellFactory(d -> new DateCell() {
+            @Override public void updateItem(LocalDate item, boolean empty) {
+                super.updateItem(item, empty);
+                setDisable(item.isAfter(LocalDate.now()));
+            }
+        });
+
+        countries = publicationDAO.loadAllCountries();
+        printTypes = pmDAO.loadAllPrintTypes();
+        autoCompletionCountry = TextFields.bindAutoCompletion(fieldCountry, countries);
+        autoCompletionPrintType = TextFields.bindAutoCompletion(fieldPrintType, printTypes);
+    }
+
+    @FXML
     void btnAddPrintMedia(ActionEvent event) {
     	if (isAnyFieldNull()) {
             highlightFields();
@@ -101,33 +128,6 @@ public class AddPrintMediaController {
 			Toaster.showError("Lỗi", e.getMessage());
 			e.printStackTrace();
 		}
-    }
-
-    @FXML
-    void initialize() throws SQLException {
-        assert fieldCountry != null : "fx:id=\"fieldCountry\" was not injected: check your FXML file 'AddPrintMedia.fxml'.";
-        assert fieldPrintType != null : "fx:id=\"fieldPrintType\" was not injected: check your FXML file 'AddPrintMedia.fxml'.";
-        assert fieldPublishDate != null : "fx:id=\"fieldPublishDate\" was not injected: check your FXML file 'AddPrintMedia.fxml'.";
-        assert fieldQuantity != null : "fx:id=\"fieldQuantity\" was not injected: check your FXML file 'AddPrintMedia.fxml'.";
-        assert fieldReleaseNumber != null : "fx:id=\"fieldReleaseNumber\" was not injected: check your FXML file 'AddPrintMedia.fxml'.";
-        assert fieldTitle != null : "fx:id=\"fieldTitle\" was not injected: check your FXML file 'AddPrintMedia.fxml'.";
-
-        textFields = new TextField[]{fieldTitle, fieldCountry, fieldPrintType};
-
-        fieldQuantity.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100, 1));
-        fieldReleaseNumber.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 100, 1));
-
-        fieldPublishDate.setDayCellFactory(d -> new DateCell() {
-            @Override public void updateItem(LocalDate item, boolean empty) {
-                super.updateItem(item, empty);
-                setDisable(item.isAfter(LocalDate.now()));
-            }
-        });
-
-        countries = publicationDAO.loadAllCountries();
-        printTypes = pmDAO.loadAllPrintTypes();
-        autoCompletionCountry = TextFields.bindAutoCompletion(fieldCountry, countries);
-        autoCompletionPrintType = TextFields.bindAutoCompletion(fieldPrintType, printTypes);
     }
 
     private boolean isAnyFieldNull() {
