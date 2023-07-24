@@ -1,4 +1,0 @@
-cloud_name=xxelxt
-api_key=454484746241825
-api_secret=qxuehhttB61WCmQkIELS5va5YKs
-secure=true
