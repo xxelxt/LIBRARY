@@ -16,3 +16,5 @@ gradle-app.setting
 # Eclipse
 .settings/
 lib/src/main/java/library/mysql/user.txt
+settings.gradle
+lib/src/main/java/library/application/util/cloudinary_config.txt

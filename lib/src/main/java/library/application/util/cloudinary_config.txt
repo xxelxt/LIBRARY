@@ -1,4 +1,4 @@
-cloud_name=your_cloud_name
-api_key=your_api_key
-api_secret=your_api_secret
+cloud_name=xxelxt
+api_key=454484746241825
+api_secret=qxuehhttB61WCmQkIELS5va5YKs
 secure=true
