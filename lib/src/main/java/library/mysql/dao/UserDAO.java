@@ -84,4 +84,40 @@ public class UserDAO {
 
 		System.out.println("Updated password.");
 	}
+
+	public void updateImageURL(User user, String imageURL) throws SQLException {
+		String sql = "UPDATE Users "
+        		+ "SET ImageURL = ? "
+        		+ "WHERE Username = ?";
+
+		PreparedStatement pstmt = DatabaseLayer.prepareStatement(sql);
+		pstmt.setString(1, imageURL);
+		pstmt.setString(2, user.getUsername());
+
+		pstmt.executeUpdate();
+		pstmt.close();
+
+		System.out.println("Updated image URL.");
+    }
+
+	public String getImageURL(User user) throws SQLException {
+		String imageURL = "";
+
+		String sql = "SELECT ImageURL "
+        		+ "FROM Users "
+        		+ "WHERE Username = ?";
+
+        PreparedStatement pstmt = DatabaseLayer.prepareStatement(sql);
+        pstmt.setString(1, user.getUsername());
+        ResultSet rs = pstmt.executeQuery();
+
+        while (rs.next()) {
+        	imageURL = rs.getString(1);
+        }
+
+        rs.close();
+        pstmt.close();
+
+        return imageURL;
+    }
 }

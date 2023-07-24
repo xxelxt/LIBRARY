@@ -1,18 +1,29 @@
 package library.application.staff.info;
 
+import java.io.File;
 import java.net.URL;
 import java.sql.SQLException;
+import java.util.Map;
 import java.util.ResourceBundle;
+
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
 import library.application.staff.borrow.BorrowHistorySceneController;
+import library.application.util.CloudinaryUtil;
 import library.application.util.Toaster;
 import library.mysql.dao.StudentDAO;
 import library.mysql.dao.UserDAO;
@@ -41,6 +52,23 @@ public class StudentInfoSceneController {
         fieldFine.setText(Integer.toString(currentStudent.getFine()));
         fieldUsername.setText(currentStudent.getUsername());
         fieldPassword.setText(currentStudent.getPassword());
+
+        try {
+        	UserDAO userDAO = new UserDAO();
+        	String imageURL = userDAO.getImageURL(currentStudent.getAccount());
+
+            if (imageURL != null && !imageURL.equals("")) {
+                Image image = new Image(imageURL);
+                imageView.setImage(image);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+//        Rectangle clip = new Rectangle(imageView.getFitWidth(), imageView.getFitHeight());
+//        clip.setArcWidth(30);
+//        clip.setArcHeight(30);
+//        imageView.setClip(clip);
 	}
 
     @FXML
@@ -86,6 +114,12 @@ public class StudentInfoSceneController {
     private ToggleButton btnEditInfo;
 
     @FXML
+    private Button btnUploadImage;
+
+    @FXML
+    private ImageView imageView;
+
+    @FXML
     private BorrowHistorySceneController borrowHistorySceneController;
 
     @FXML
@@ -104,7 +138,6 @@ public class StudentInfoSceneController {
     	}
     }
 
-
     @FXML
     void btnActionEditInfo(ActionEvent event) {
     	if (!btnEditInfo.isSelected()) {
@@ -122,6 +155,41 @@ public class StudentInfoSceneController {
 				e.printStackTrace();
 			}
     	}
+    }
+
+    @FXML
+    void btnActionUploadImage(ActionEvent event) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Chọn hình ảnh");
+        fileChooser.getExtensionFilters().addAll(
+                new ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg", "*.gif")
+        );
+
+        File selectedFile = fileChooser.showOpenDialog(null);
+        if (selectedFile != null) {
+            try {
+                Cloudinary cloudinary = CloudinaryUtil.getCloudinaryInstance();
+
+                Map<String, String> uploadResult = cloudinary.uploader().upload(selectedFile, ObjectUtils.emptyMap());
+                String imageURL = uploadResult.get("secure_url");
+
+                // Update the image URL in the database using the UserDAO
+                try {
+                    UserDAO userDAO = new UserDAO();
+                    userDAO.updateImageURL(currentStudent.getAccount(), imageURL);
+                    Toaster.showSuccess("Đã cập nhật ảnh đại diện", "Tải ảnh thành công lên Cloudinary & CSDL");
+                } catch (SQLException e) {
+                    Toaster.showError("Lỗi", e.getMessage());
+                    e.printStackTrace();
+                }
+
+                // Display the uploaded image in the ImageView
+                Image image = new Image(imageURL);
+                imageView.setImage(image);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @FXML

@@ -1,19 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="586.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="library.application.staff.info.StaffInfoSceneController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="486.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="library.application.staff.info.StaffInfoSceneController">
    <children>
-      <VBox layoutX="107.0" layoutY="47.0" prefWidth="900.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <VBox layoutX="107.0" layoutY="47.0" prefWidth="900.0" spacing="10.0" AnchorPane.bottomAnchor="100.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <HBox alignment="CENTER_RIGHT" spacing="20.0" VBox.vgrow="NEVER">
                <children>
@@ -43,11 +46,31 @@
                   <Insets bottom="5.0" left="30.0" right="10.0" />
                </padding>
                <children>
+                  <VBox alignment="CENTER" layoutX="40.0" layoutY="10.0" prefHeight="200.0" prefWidth="100.0">
+                     <children>
+                        <ImageView fx:id="imageView" fitHeight="175.0" fitWidth="175.0" pickOnBounds="true" preserveRatio="true">
+                           <VBox.margin>
+                              <Insets bottom="10.0" />
+                           </VBox.margin>
+                           <image>
+                              <Image url="@../icons/default.jpg" />
+                           </image>
+                        </ImageView>
+                        <Button fx:id="btnUploadImage" alignment="CENTER" mnemonicParsing="false" onAction="#btnActionUploadImage" text="Chọn ảnh">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Button>
+                     </children>
+                     <HBox.margin>
+                        <Insets right="30.0" />
+                     </HBox.margin>
+                  </VBox>
                   <VBox prefHeight="200.0" prefWidth="100.0" spacing="5.0" HBox.hgrow="ALWAYS">
                      <children>
                         <Label prefHeight="27.0" prefWidth="130.0" text="Mã nhân viên">
                            <font>
-                              <Font size="20.0" />
+                              <Font size="16.0" />
                            </font>
                         </Label>
                         <TextField fx:id="fieldStaffID" disable="true" editable="false" prefHeight="26.0" prefWidth="250.0">
@@ -55,40 +78,26 @@
                               <Font size="14.0" />
                            </font>
                         </TextField>
-                     </children>
-                     <HBox.margin>
-                        <Insets />
-                     </HBox.margin>
-                     <padding>
-                        <Insets right="20.0" />
-                     </padding>
-                  </VBox>
-                  <VBox layoutX="40.0" layoutY="10.0" prefHeight="200.0" prefWidth="100.0" spacing="5.0" HBox.hgrow="ALWAYS">
-                     <children>
                         <Label prefHeight="27.0" prefWidth="130.0" text="Tên nhân viên">
                            <font>
-                              <Font size="20.0" />
+                              <Font size="16.0" />
                            </font>
+                           <padding>
+                              <Insets top="5.0" />
+                           </padding>
                         </Label>
                         <TextField fx:id="fieldName" editable="false" prefHeight="26.0" prefWidth="250.0">
                            <font>
                               <Font size="14.0" />
                            </font>
                         </TextField>
-                     </children>
-                     <HBox.margin>
-                        <Insets />
-                     </HBox.margin>
-                     <padding>
-                        <Insets right="20.0" />
-                     </padding>
-                  </VBox>
-                  <VBox layoutX="40.0" layoutY="10.0" prefHeight="200.0" prefWidth="100.0" spacing="5.0" HBox.hgrow="ALWAYS">
-                     <children>
                         <Label prefHeight="27.0" prefWidth="130.0" text="Chức vụ">
                            <font>
-                              <Font size="20.0" />
+                              <Font size="16.0" />
                            </font>
+                           <padding>
+                              <Insets top="5.0" />
+                           </padding>
                         </Label>
                         <TextField fx:id="fieldPosition" disable="true" editable="false" prefHeight="30.0" prefWidth="267.0">
                            <font>
@@ -108,152 +117,164 @@
                   <Insets bottom="10.0" />
                </VBox.margin>
             </HBox>
-            <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="156.0" prefHeight="0.0" prefWidth="600.0">
+            <HBox prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <Label prefHeight="27.0" prefWidth="140.0" text="Tên đăng nhập">
-                     <font>
-                        <Font size="16.0" />
-                     </font>
-                     <HBox.margin>
-                        <Insets />
-                     </HBox.margin>
-                  </Label>
-                  <TextField fx:id="fieldUsername" disable="true" editable="false" prefHeight="26.0" prefWidth="0.0" HBox.hgrow="ALWAYS">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </TextField>
-               </children>
-               <VBox.margin>
-                  <Insets />
-               </VBox.margin>
-               <padding>
-                  <Insets bottom="10.0" left="30.0" right="30.0" />
-               </padding>
-            </HBox>
-            <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="188.0" prefHeight="0.0" prefWidth="600.0">
-               <children>
-                  <Label prefHeight="27.0" prefWidth="140.0" text="Mật khẩu">
-                     <font>
-                        <Font size="16.0" />
-                     </font>
-                     <HBox.margin>
-                        <Insets />
-                     </HBox.margin>
-                  </Label>
-                  <StackPane HBox.hgrow="ALWAYS">
+                  <VBox prefHeight="200.0" prefWidth="100.0" spacing="5.0" HBox.hgrow="ALWAYS">
                      <children>
-                        <TextField fx:id="fieldPasswordAlt" visible="false">
-                           <font>
-                              <Font size="14.0" />
-                           </font>
-                        </TextField>
-                        <PasswordField fx:id="fieldPassword" editable="false">
-                           <font>
-                              <Font size="14.0" />
-                           </font>
-                        </PasswordField>
+                        <HBox alignment="CENTER_LEFT" prefHeight="0.0" prefWidth="600.0">
+                           <children>
+                              <Label prefHeight="27.0" prefWidth="140.0" text="Tên đăng nhập">
+                                 <font>
+                                    <Font size="16.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets />
+                                 </HBox.margin>
+                              </Label>
+                              <TextField fx:id="fieldUsername" disable="true" editable="false" prefHeight="26.0" prefWidth="250.0" HBox.hgrow="ALWAYS">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </TextField>
+                           </children>
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin>
+                           <padding>
+                              <Insets bottom="10.0" left="30.0" right="30.0" />
+                           </padding>
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT" prefHeight="0.0" prefWidth="600.0">
+                           <children>
+                              <Label prefHeight="27.0" prefWidth="140.0" text="Mật khẩu">
+                                 <font>
+                                    <Font size="16.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets />
+                                 </HBox.margin>
+                              </Label>
+                              <StackPane HBox.hgrow="ALWAYS">
+                                 <children>
+                                    <TextField fx:id="fieldPasswordAlt" visible="false">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </TextField>
+                                    <PasswordField fx:id="fieldPassword" editable="false" prefHeight="26.0" prefWidth="250.0">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </PasswordField>
+                                 </children>
+                              </StackPane>
+                           </children>
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin>
+                           <padding>
+                              <Insets bottom="10.0" left="30.0" right="30.0" />
+                           </padding>
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT" prefHeight="0.0" prefWidth="600.0">
+                           <children>
+                              <Label prefHeight="27.0" prefWidth="140.0" text="Giới tính">
+                                 <font>
+                                    <Font size="16.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets />
+                                 </HBox.margin>
+                              </Label>
+                              <TextField fx:id="fieldGender" disable="true" editable="false" prefHeight="26.0" prefWidth="250.0" HBox.hgrow="ALWAYS">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </TextField>
+                           </children>
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin>
+                           <padding>
+                              <Insets bottom="10.0" left="30.0" right="30.0" />
+                           </padding>
+                        </HBox>
                      </children>
-                  </StackPane>
+                  </VBox>
+                  <VBox prefHeight="200.0" prefWidth="100.0" spacing="5.0" HBox.hgrow="ALWAYS">
+                     <children>
+                        <HBox alignment="CENTER_LEFT" prefHeight="0.0" prefWidth="600.0">
+                           <children>
+                              <Label prefHeight="27.0" prefWidth="140.0" text="Email">
+                                 <font>
+                                    <Font size="16.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets />
+                                 </HBox.margin>
+                              </Label>
+                              <TextField fx:id="fieldEmail" editable="false" prefHeight="26.0" prefWidth="250.0" HBox.hgrow="ALWAYS">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </TextField>
+                           </children>
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin>
+                           <padding>
+                              <Insets bottom="10.0" left="30.0" right="30.0" />
+                           </padding>
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT" prefHeight="0.0" prefWidth="600.0">
+                           <children>
+                              <Label prefHeight="27.0" prefWidth="140.0" text="Số điện thoại">
+                                 <font>
+                                    <Font size="16.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets />
+                                 </HBox.margin>
+                              </Label>
+                              <TextField fx:id="fieldPhone" editable="false" prefHeight="26.0" prefWidth="250.0" HBox.hgrow="ALWAYS">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </TextField>
+                           </children>
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin>
+                           <padding>
+                              <Insets bottom="10.0" left="30.0" right="30.0" />
+                           </padding>
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT" prefHeight="0.0" prefWidth="600.0">
+                           <children>
+                              <Label prefHeight="27.0" prefWidth="140.0" text="Địa chỉ">
+                                 <font>
+                                    <Font size="16.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets />
+                                 </HBox.margin>
+                              </Label>
+                              <TextField fx:id="fieldAddress" editable="false" prefHeight="26.0" prefWidth="250.0" HBox.hgrow="ALWAYS">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </TextField>
+                           </children>
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin>
+                           <padding>
+                              <Insets bottom="10.0" left="30.0" right="30.0" />
+                           </padding>
+                        </HBox>
+                     </children>
+                  </VBox>
                </children>
-               <VBox.margin>
-                  <Insets />
-               </VBox.margin>
-               <padding>
-                  <Insets bottom="10.0" left="30.0" right="30.0" />
-               </padding>
-            </HBox>
-            <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="60.0" prefHeight="0.0" prefWidth="600.0">
-               <children>
-                  <Label prefHeight="27.0" prefWidth="140.0" text="Giới tính">
-                     <font>
-                        <Font size="16.0" />
-                     </font>
-                     <HBox.margin>
-                        <Insets />
-                     </HBox.margin>
-                  </Label>
-                  <TextField fx:id="fieldGender" disable="true" editable="false" prefHeight="26.0" prefWidth="656.0" HBox.hgrow="ALWAYS">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </TextField>
-               </children>
-               <VBox.margin>
-                  <Insets />
-               </VBox.margin>
-               <padding>
-                  <Insets bottom="10.0" left="30.0" right="30.0" />
-               </padding>
-            </HBox>
-            <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="60.0" prefHeight="0.0" prefWidth="600.0">
-               <children>
-                  <Label prefHeight="27.0" prefWidth="140.0" text="Email">
-                     <font>
-                        <Font size="16.0" />
-                     </font>
-                     <HBox.margin>
-                        <Insets />
-                     </HBox.margin>
-                  </Label>
-                  <TextField fx:id="fieldEmail" editable="false" prefHeight="26.0" prefWidth="250.0" HBox.hgrow="ALWAYS">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </TextField>
-               </children>
-               <VBox.margin>
-                  <Insets />
-               </VBox.margin>
-               <padding>
-                  <Insets bottom="10.0" left="30.0" right="30.0" />
-               </padding>
-            </HBox>
-            <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="92.0" prefHeight="0.0" prefWidth="600.0">
-               <children>
-                  <Label prefHeight="27.0" prefWidth="140.0" text="Số điện thoại">
-                     <font>
-                        <Font size="16.0" />
-                     </font>
-                     <HBox.margin>
-                        <Insets />
-                     </HBox.margin>
-                  </Label>
-                  <TextField fx:id="fieldPhone" editable="false" prefHeight="26.0" prefWidth="250.0" HBox.hgrow="ALWAYS">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </TextField>
-               </children>
-               <VBox.margin>
-                  <Insets />
-               </VBox.margin>
-               <padding>
-                  <Insets bottom="10.0" left="30.0" right="30.0" />
-               </padding>
-            </HBox>
-            <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="124.0" prefHeight="0.0" prefWidth="600.0">
-               <children>
-                  <Label prefHeight="27.0" prefWidth="140.0" text="Địa chỉ">
-                     <font>
-                        <Font size="16.0" />
-                     </font>
-                     <HBox.margin>
-                        <Insets />
-                     </HBox.margin>
-                  </Label>
-                  <TextField fx:id="fieldAddress" editable="false" prefHeight="26.0" prefWidth="250.0" HBox.hgrow="ALWAYS">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </TextField>
-               </children>
-               <VBox.margin>
-                  <Insets />
-               </VBox.margin>
-               <padding>
-                  <Insets bottom="10.0" left="30.0" right="30.0" />
-               </padding>
             </HBox>
          </children>
          <padding>

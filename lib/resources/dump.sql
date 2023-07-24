@@ -37,7 +37,7 @@ CREATE TABLE `authors` (
   `AuthorName` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
   PRIMARY KEY (`AuthorID`),
   KEY `AuthorName` (`AuthorName`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -46,7 +46,7 @@ CREATE TABLE `authors` (
 
 LOCK TABLES `authors` WRITE;
 /*!40000 ALTER TABLE `authors` DISABLE KEYS */;
-INSERT INTO `authors` VALUES (1,'Haruki Murakami'),(2,'Kevin Chen'),(7,'Lê Minh Hoàng'),(6,'Lê Thanh Tùng'),(4,'Thạch Lam'),(5,'Vũ Trọng Phụng'),(8,'Đỗ Xuân Lôi');
+INSERT INTO `authors` VALUES (11,'Giang Thị Thu Huyền'),(1,'Haruki Murakami'),(2,'Kevin Chen'),(7,'Lê Minh Hoàng'),(6,'Lê Thanh Tùng'),(9,'Lê Văn Hùng'),(10,'Nguyễn Thanh Thuỵ'),(4,'Thạch Lam'),(5,'Vũ Trọng Phụng'),(8,'Đỗ Xuân Lôi');
 /*!40000 ALTER TABLE `authors` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -73,7 +73,7 @@ CREATE TABLE `bookauthors` (
 
 LOCK TABLES `bookauthors` WRITE;
 /*!40000 ALTER TABLE `bookauthors` DISABLE KEYS */;
-INSERT INTO `bookauthors` VALUES (1,1),(2,2),(6,4),(7,5),(8,6),(8,7),(9,8);
+INSERT INTO `bookauthors` VALUES (1,1),(2,2),(6,4),(7,5),(8,6),(8,7),(9,8),(12,9),(12,10),(12,11);
 /*!40000 ALTER TABLE `bookauthors` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -94,7 +94,7 @@ CREATE TABLE `books` (
   KEY `Category` (`Category`),
   CONSTRAINT `books_ibfk_1` FOREIGN KEY (`BookID`) REFERENCES `publications` (`PublicationID`) ON DELETE CASCADE,
   CONSTRAINT `books_ibfk_2` FOREIGN KEY (`PublisherID`) REFERENCES `publishers` (`PublisherID`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -103,7 +103,7 @@ CREATE TABLE `books` (
 
 LOCK TABLES `books` WRITE;
 /*!40000 ALTER TABLE `books` DISABLE KEYS */;
-INSERT INTO `books` VALUES (1,'Văn học nước ngoài',0,1),(2,'Văn học nước ngoài',0,2),(6,'Văn học Việt Nam',1,2),(7,'Văn học Việt Nam',1,2),(8,'Tham khảo',0,3),(9,'Tham khảo',0,4);
+INSERT INTO `books` VALUES (1,'Văn học nước ngoài',0,1),(2,'Văn học nước ngoài',0,2),(6,'Văn học Việt Nam',1,2),(7,'Văn học Việt Nam',1,2),(8,'Tham khảo',0,3),(9,'Tham khảo',0,4),(12,'Giáo trình',0,4);
 /*!40000 ALTER TABLE `books` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -130,7 +130,7 @@ CREATE TABLE `borrow` (
   KEY `ReturnedStatus` (`ReturnedStatus`),
   CONSTRAINT `borrow_ibfk_1` FOREIGN KEY (`StudentID`) REFERENCES `students` (`StudentID`) ON DELETE CASCADE,
   CONSTRAINT `borrow_ibfk_2` FOREIGN KEY (`PublicationID`) REFERENCES `publications` (`PublicationID`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -139,7 +139,7 @@ CREATE TABLE `borrow` (
 
 LOCK TABLES `borrow` WRITE;
 /*!40000 ALTER TABLE `borrow` DISABLE KEYS */;
-INSERT INTO `borrow` VALUES (3,'24A4040001',1,2,'2023-07-08','2023-07-15',NULL,_binary '\0',_binary '\0'),(4,'24A4040002',9,1,'2023-07-09','2023-07-16',NULL,_binary '\0',_binary '\0');
+INSERT INTO `borrow` VALUES (3,'24A4040001',1,2,'2023-07-08','2023-07-15',NULL,_binary '',_binary '\0'),(4,'24A4040002',9,1,'2023-07-09','2023-07-16',NULL,_binary '',_binary '\0'),(5,'24A4040003',13,1,'2023-07-08','2023-07-15',NULL,_binary '',_binary '\0');
 /*!40000 ALTER TABLE `borrow` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
@@ -283,7 +283,7 @@ CREATE TABLE `printmedia` (
   PRIMARY KEY (`PrintMediaID`),
   KEY `PrintType` (`PrintType`),
   CONSTRAINT `printmedia_ibfk_1` FOREIGN KEY (`PrintMediaID`) REFERENCES `publications` (`PublicationID`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -292,7 +292,7 @@ CREATE TABLE `printmedia` (
 
 LOCK TABLES `printmedia` WRITE;
 /*!40000 ALTER TABLE `printmedia` DISABLE KEYS */;
-INSERT INTO `printmedia` VALUES (3,6,'Tạp chí'),(5,6,'Tạp chí'),(10,7,'Tạp chí'),(11,7,'Tạp chí');
+INSERT INTO `printmedia` VALUES (3,6,'Tạp chí'),(5,6,'Tạp chí'),(10,7,'Tạp chí'),(11,7,'Tạp chí'),(13,7,'Tạp chí');
 /*!40000 ALTER TABLE `printmedia` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -312,7 +312,7 @@ CREATE TABLE `publications` (
   PRIMARY KEY (`PublicationID`),
   KEY `Title` (`Title`),
   KEY `Country` (`Country`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -321,7 +321,7 @@ CREATE TABLE `publications` (
 
 LOCK TABLES `publications` WRITE;
 /*!40000 ALTER TABLE `publications` DISABLE KEYS */;
-INSERT INTO `publications` VALUES (1,'Ngôi thứ nhất số ít','2023-05-24','Nhật Bản',4),(2,'Vùng đất quỷ tha ma bắt','2023-03-27','Đài Loan',6),(3,'Tạp chí Ngân hàng','2023-06-14','Việt Nam',3),(5,'Tạp chí Giáo dục','2023-06-13','Việt Nam',2),(6,'Ngày mới - Việt Nam danh tác',NULL,'Việt Nam',2),(7,'Số đỏ - Việt Nam danh tác',NULL,'Việt Nam',1),(8,'Quẳng gánh IELTS đi mà vui sống',NULL,'Việt Nam',1),(9,'Cấu trúc dữ liệu và giải thuật','2006-01-24','Việt Nam',15),(10,'Tạp chí Kinh tế','2023-07-01','Việt Nam',1),(11,'The Wall Street Journal','2023-07-07','Hoa Kỳ',1);
+INSERT INTO `publications` VALUES (1,'Ngôi thứ nhất số ít','2023-05-24','Nhật Bản',4),(2,'Vùng đất quỷ tha ma bắt','2023-03-27','Đài Loan',6),(3,'Tạp chí Ngân hàng','2023-06-14','Việt Nam',3),(5,'Tạp chí Giáo dục','2023-06-13','Việt Nam',2),(6,'Ngày mới - Việt Nam danh tác',NULL,'Việt Nam',2),(7,'Số đỏ - Việt Nam danh tác',NULL,'Việt Nam',1),(8,'Quẳng gánh IELTS đi mà vui sống',NULL,'Việt Nam',1),(9,'Cấu trúc dữ liệu và giải thuật','2006-01-24','Việt Nam',20),(10,'Tạp chí Kinh tế','2023-07-01','Việt Nam',1),(11,'The Wall Street Journal','2023-07-07','Hoa Kỳ',1),(12,'Giáo trình Mạng máy tính căn bản',NULL,'Việt Nam',1),(13,'Tạp chí Kinh tế đầu tư','2023-07-09','Việt Nam',0);
 /*!40000 ALTER TABLE `publications` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -410,7 +410,7 @@ CREATE TABLE `students` (
   KEY `Name` (`Name`),
   KEY `Phone` (`Phone`),
   CONSTRAINT `students_ibfk_1` FOREIGN KEY (`Username`) REFERENCES `users` (`Username`) ON DELETE CASCADE,
-  CONSTRAINT `students_chk_1` CHECK ((not((`Name` like _utf8mb4'%[0-9]%')))),
+  CONSTRAINT `students_chk_1` CHECK ((not((`Name` like _utf8mb3'%[0-9]%')))),
   CONSTRAINT `students_chk_2` CHECK ((not((`Phone` like _utf8mb4'%[^0-9]%'))))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -421,7 +421,7 @@ CREATE TABLE `students` (
 
 LOCK TABLES `students` WRITE;
 /*!40000 ALTER TABLE `students` DISABLE KEYS */;
-INSERT INTO `students` VALUES ('24A4040001','24A4040001','Nguyễn Hoàng An',_binary '\0','123 Đường Láng','24a4040001@hvnh.edu.vn','0987654567','K24QTKDA',0,_binary '\0'),('24A4040002','24A4040002','Trần Thị Yến',_binary '','234 Đường Láng','24a4040002@hvnh.edu.vn','0987654678','K24QTKDA',0,_binary '\0'),('24A4040003','24A4040003','Kiều Lan Nhi',_binary '','345 Đường Láng','24a4040003@hvnh.edu.vn','0987654765','K24QTKDB',0,_binary '\0');
+INSERT INTO `students` VALUES ('24A4040001','24A4040001','Nguyễn Hoàng An',_binary '\0','123 Đường Láng','24a4040001@hvnh.edu.vn','0987654567','K24QTKDA',550000,_binary ''),('24A4040002','24A4040002','Trần Thị Yến',_binary '','234 Đường Láng','24a4040002@hvnh.edu.vn','0987654678','K24QTKDA',525000,_binary ''),('24A4040003','24A4040003','Kiều Lan Nhi',_binary '','345 Đường Láng','24a4040003@hvnh.edu.vn','0987654765','K24QTKDB',550000,_binary '');
 /*!40000 ALTER TABLE `students` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -436,6 +436,7 @@ CREATE TABLE `users` (
   `Username` char(30) NOT NULL,
   `Password` varchar(30) NOT NULL,
   `Type` int NOT NULL,
+  `ImageURL` text,
   PRIMARY KEY (`Username`),
   KEY `Password` (`Password`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -447,7 +448,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES ('24A4040001','hvnh1961',3),('24A4040002','hvnh1961',3),('24A4040003','hvnh1961',3),('librarian','hvnh1961',1),('staff','hvnh1961',2);
+INSERT INTO `users` VALUES ('24A4040001','hvnh1961',3,''),('24A4040002','hvnh1961',3,NULL),('24A4040003','hvnh1961',3,NULL),('librarian','hvnh1961',1,''),('staff','hvnh1961',2,NULL);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -460,4 +461,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-07-09 16:44:39
+-- Dump completed on 2023-07-24 20:08:37

@@ -7,6 +7,7 @@ public abstract class Person {
     private String Email;
     private String Phone;
     private User account;
+    private String ImageURL;
 
 	public User getAccount() {
 		return account;
@@ -72,5 +73,13 @@ public abstract class Person {
 
 	public String getGenderText() {
 		return (Gender ? "Nữ" : "Nam");
+	}
+
+	public String getImageURL() {
+		return this.ImageURL;
+	}
+
+	public void setImageURL(String ImageURL) {
+		this.ImageURL = ImageURL;
 	}
 }
